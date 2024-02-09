@@ -1,0 +1,224 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  User
+  Manager
+  Admin
+}
+
+enum AccountStatus {
+  Verifying
+  Enable
+  Disable
+}
+
+enum RosterStatus {
+  Enable
+  Military
+  Absence
+  Alumni
+}
+
+enum RosterType {
+  Athlete
+  Staff
+  Coach
+  HeadCoach
+}
+
+enum StorageType {
+  Document
+  Image
+  Video
+}
+
+enum BoardType {
+  Public
+  Notice
+  Appeal
+  Gallery
+}
+
+enum ScheduleType {
+  Exercise
+  Event
+  Game
+}
+
+enum AttendanceResponse {
+  Present
+}
+
+model User {
+  id                  Int           @id @default(autoincrement())
+  username            String        @unique @db.VarChar(32)
+  password            String        @db.VarChar(256)
+  email               String        @unique @db.VarChar(64)
+  role                Role
+  nickname            String        @db.VarChar(64)
+  createdAt           DateTime      @default(now()) @map("created_at")
+  updatedAt           DateTime      @default(now()) @map("updated_at")
+  lastPasswordChanged DateTime      @default(now()) @map("last_password_changed")
+  lastLogin           DateTime      @default(now()) @map("last_login")
+  status              AccountStatus @default(Verifying)
+
+  Rosters  Roster[]
+  Storages Storage[]
+  Posts    Post[]
+  Comment  Comment[]
+
+  @@map("user")
+}
+
+model Roster {
+  id             Int          @id @default(autoincrement())
+  userId         Int?         @map("user_id")
+  profileImageId Int?         @map("profile_image_id")
+  name           String       @db.VarChar(32)
+  status         RosterStatus
+  type           RosterType
+  offPosition    String?      @map("off_position")
+  defPosition    String?      @map("def_position")
+  splPosition    String?      @map("spl_position")
+  registerYear   Int          @map("register_year")
+  admissionYear  Int          @map("admission_year")
+  class          String       @db.VarChar(32)
+  studentId      String       @map("student_id") @db.VarChar(16)
+  backNumber     Int?         @map("back_number")
+  target         Boolean      @default(true)
+
+  Storage       Storage?       @relation(fields: [profileImageId], references: [id], onDelete: SetNull)
+  User          User?          @relation(fields: [userId], references: [id], onDelete: SetNull)
+  Attendance    Attendance[]
+  SurveyTargets SurveyTarget[]
+
+  @@map("roster")
+}
+
+model Attendance {
+  id         Int                @id @default(autoincrement())
+  rosterId   Int                @map("roster_id")
+  scheduleId Int                @map("schedule_id")
+  createdAt  DateTime           @default(now())
+  updatedAt  DateTime           @updatedAt
+  response   AttendanceResponse
+  reason     String?            @db.Text
+
+  Schedule Schedule @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
+  Roster   Roster   @relation(fields: [rosterId], references: [id], onDelete: Cascade)
+
+  @@map("attendance")
+}
+
+model Schedule {
+  id          Int          @id @default(autoincrement())
+  name        String       @db.VarChar(64)
+  date        DateTime
+  type        ScheduleType @default(Exercise)
+  description String       @db.Text
+
+  Attendances Attendance[]
+
+  @@map("schedule")
+}
+
+model SurveyGroup {
+  id        Int      @id @default(autoincrement())
+  name      String   @db.VarChar(64)
+  startedAt DateTime @map("started_at")
+  endedAt   DateTime @map("ended_at")
+  required  Boolean  @default(true)
+
+  SurveyTarget SurveyTarget[]
+
+  @@map("surveyGroup")
+}
+
+model SurveyTarget {
+  rosterId      Int     @map("roster_id")
+  surveyGroupId Int     @map("survey_group_id")
+  submit        Boolean @default(false)
+
+  Roster      Roster      @relation(fields: [rosterId], references: [id], onDelete: Cascade)
+  SurveyGroup SurveyGroup @relation(fields: [surveyGroupId], references: [id], onDelete: Cascade)
+
+  @@id([rosterId, surveyGroupId])
+  @@map("surveyTarget")
+}
+
+model Board {
+  id   Int       @id @default(autoincrement())
+  name String    @db.VarChar(64)
+  type BoardType @default(Public)
+
+  Posts Post[]
+
+  @@map("board")
+}
+
+model Post {
+  id        Int      @id @default(autoincrement())
+  boardId   Int      @map("board_id")
+  userId    Int      @map("user_id")
+  title     String   @db.Text
+  content   String   @db.Text
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  Board           Board            @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  User            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Comments        Comment[]
+  PostAttachments PostAttachment[]
+
+  @@map("post")
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  parentId  Int?     @map("parent_id")
+  postId    Int      @map("post_id")
+  userId    Int      @map("user_id")
+  content   String   @db.Text
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  Post     Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
+  User     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Parent   Comment?  @relation("SubComments", fields: [parentId], references: [id], onDelete: Cascade)
+  Children Comment[] @relation("SubComments")
+
+  @@map("comment")
+}
+
+model Storage {
+  id     Int         @id @default(autoincrement())
+  userId Int         @map("user_id")
+  uri    String      @db.Text
+  type   StorageType
+
+  User            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  PostAttachments PostAttachment[]
+  Rosters         Roster[]
+
+  @@map("storage")
+}
+
+model PostAttachment {
+  storageId Int @id @map("storage_id")
+  postId    Int @map("post_id")
+
+  Post    Post    @relation(fields: [postId], references: [id], onDelete: Cascade)
+  Storage Storage @relation(fields: [storageId], references: [id], onDelete: Cascade)
+
+  @@map("postAttachment")
+}

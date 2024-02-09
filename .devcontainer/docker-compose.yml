@@ -1,0 +1,47 @@
+version: '3'
+
+services:
+  app:
+    profiles: ['devcontainer']
+    container_name: royals-dev
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ..:/workspace:cached
+    depends_on:
+      - database
+      - minio
+    stdin_open: true
+    tty: true
+    env_file: ../.env.development
+    environment:
+      DEVCONTAINER: 1
+    network_mode: host
+
+  minio:
+    container_name: royals-minio
+    image: minio/minio
+    ports:
+      - 9000:9000
+      - 9001:9001
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: royals
+      MINIO_ROOT_PASSWORD: royals1234
+
+  database:
+    container_name: royals-database
+    image: postgres:15-alpine
+    ports:
+      - 5441:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_DB: royals
+
+  cache:
+    container_name: royals-cache
+    image: redis:7-alpine
+    ports:
+      - 6382:6379

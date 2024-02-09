@@ -1,0 +1,32 @@
+{
+  "name": "royals-devcontainer",
+  "dockerComposeFile": "./docker-compose.yml",
+  "service": "app",
+  "runServices": ["app", "database", "cache", "minio"],
+  "workspaceFolder": "/workspace",
+  "postCreateCommand": "scripts/setup.sh",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "bradlc.vscode-tailwindcss",
+        "csstools.postcss",
+        "dbaeumer.vscode-eslint",
+        "editorconfig.editorconfig",
+        "esbenp.prettier-vscode",
+        "hashicorp.terraform",
+        "hbenl.test-adapter-converter",
+        "hbenl.vscode-test-explorer",
+        "ms-azuretools.vscode-docker",
+        "prisma.prisma"
+      ]
+    }
+  },
+  "features": {
+    "ghcr.io/devcontainers-contrib/features/pnpm:2": {},
+    "ghcr.io/devcontainers/features/terraform:1": {}
+  },
+  "mounts": [
+    "source=${localEnv:HOME}/.aws,target=/home/node/.aws,type=bind,consistency=cached"
+  ],
+  "remoteUser": "node"
+}
