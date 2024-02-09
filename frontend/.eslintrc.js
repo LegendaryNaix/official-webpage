@@ -1,6 +1,10 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 module.exports = {
-  extends: ['next', 'next/core-web-vitals'],
+  extends: [
+    'next/babel',
+    'next/core-web-vitals',
+    'plugin:storybook/recommended'
+  ],
   env: {
     browser: true,
     node: true
@@ -21,6 +25,13 @@ module.exports = {
             namedComponents: 'function-declaration'
           }
         ]
+      }
+    },
+    {
+      files: ['*.stories.@(ts|tsx|js|jsx|mjs|cjs)'],
+      rules: {
+        'storybook/hierarchy-separator': 'error',
+        'storybook/default-exports': 'off'
       }
     }
   ]
