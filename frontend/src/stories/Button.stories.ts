@@ -1,50 +1,65 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import Button, { ButtonSize } from '@/components/Button'
+import { CheckCircleIcon } from '@heroicons/react/20/solid'
+import type { Meta, StoryObj } from '@storybook/react'
 
-import { Button } from './Button';
-
-// More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 const meta = {
-  title: 'Example/Button',
+  title: 'Button',
   component: Button,
   parameters: {
-    // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/configure/story-layout
-    layout: 'centered',
+    layout: 'centered'
   },
-  // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/writing-docs/autodocs
   tags: ['autodocs'],
-  // More on argTypes: https://storybook.js.org/docs/api/argtypes
   argTypes: {
-    backgroundColor: { control: 'color' },
-  },
-} satisfies Meta<typeof Button>;
+    content: {
+      description: '버튼에 표시될 텍스트'
+    },
+    size: {
+      control: { type: 'select' },
+      description: '버튼 사이즈'
+    },
+    type: {
+      control: { type: 'select' },
+      description: '버튼 종류'
+    },
+    icon: {
+      control: { disable: true },
+      description: `"@heroicons/react" 라이브러리 내 아이콘`
+    }
+  }
+} satisfies Meta<typeof Button>
 
-export default meta;
-type Story = StoryObj<typeof meta>;
+export default meta
+type Story = StoryObj<typeof meta>
 
-// More on writing stories with args: https://storybook.js.org/docs/writing-stories/args
-export const Primary: Story = {
+export const Default: Story = {
   args: {
-    primary: true,
-    label: 'Button',
-  },
-};
+    size: ButtonSize.md,
+    content: 'Button',
+    type: 'button'
+  }
+}
 
-export const Secondary: Story = {
+export const WithIcon: Story = {
   args: {
-    label: 'Button',
-  },
-};
+    size: ButtonSize.md,
+    content: 'Button',
+    type: 'button',
+    icon: CheckCircleIcon
+  }
+}
 
 export const Large: Story = {
   args: {
-    size: 'large',
-    label: 'Button',
-  },
-};
+    size: ButtonSize.lg,
+    content: 'Button',
+    type: 'button'
+  }
+}
 
 export const Small: Story = {
   args: {
-    size: 'small',
-    label: 'Button',
-  },
-};
+    size: ButtonSize.sm,
+    content: 'Button',
+    type: 'button'
+  }
+}
