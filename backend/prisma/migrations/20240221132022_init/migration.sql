@@ -26,7 +26,7 @@ CREATE TYPE "AttendanceResponse" AS ENUM ('Present');
 CREATE TABLE "user" (
     "id" SERIAL NOT NULL,
     "username" VARCHAR(32) NOT NULL,
-    "password" VARCHAR(64) NOT NULL,
+    "password" VARCHAR(512) NOT NULL,
     "email" VARCHAR(64) NOT NULL,
     "role" "Role" NOT NULL,
     "nickname" VARCHAR(64) NOT NULL,

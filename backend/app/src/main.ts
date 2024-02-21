@@ -1,9 +1,14 @@
+import { ValidationPipe } from '@nestjs/common'
 import { NestFactory } from '@nestjs/core'
 import { AppModule } from './app.module'
 
 const bootstrap = async () => {
   const app = await NestFactory.create(AppModule)
-  await app.listen(3000)
+  app.useGlobalPipes(new ValidationPipe())
+
+  if (process.env.NODE_ENV === 'production') app.setGlobalPrefix('api')
+
+  await app.listen(4000)
 }
 
 bootstrap()

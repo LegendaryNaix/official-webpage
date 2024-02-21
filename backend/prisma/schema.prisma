@@ -62,7 +62,7 @@ enum AttendanceResponse {
 model User {
   id                  Int           @id @default(autoincrement())
   username            String        @unique @db.VarChar(32)
-  password            String        @db.VarChar(256)
+  password            String        @db.VarChar(512)
   email               String        @unique @db.VarChar(64)
   role                Role
   nickname            String        @db.VarChar(64)
