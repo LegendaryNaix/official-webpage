@@ -10,6 +10,7 @@ interface ButtonProps {
   content: string
   size: ButtonSize
   type: 'submit' | 'button' | 'reset'
+  accent?: boolean
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   icon?: any
 }

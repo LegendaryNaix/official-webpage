@@ -1,5 +1,6 @@
 import Footer from '@/components/Footer'
 import Header from '@/components/Header'
+import Toaster from '@/components/ui/sooner'
 import type { Metadata } from 'next'
 import { Noto_Sans_KR } from 'next/font/google'
 import './globals.css'
@@ -24,9 +25,16 @@ export default function RootLayout({
       <body className={`${gothicA1.className} antialiased`}>
         <div className="flex min-h-screen flex-col">
           <Header />
+          <div className="h-[80px]"></div>
           {children}
           <Footer />
         </div>
+        <Toaster
+          richColors
+          position="top-center"
+          closeButton={true}
+          duration={2000}
+        />
       </body>
     </html>
   )

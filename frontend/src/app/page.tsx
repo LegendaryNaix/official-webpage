@@ -7,7 +7,7 @@ export default function Home() {
         <h1 className="text-4xl font-bold text-gray-50 lg:text-5xl">
           SKKU ROYALS
         </h1>
-        <h1 className="-mt-1.5 text-sm font-light text-gray-400 lg:text-lg">
+        <h1 className="-mt-1.5 text-sm font-light text-amber-400 lg:text-lg">
           American Football Team
         </h1>
       </div>
