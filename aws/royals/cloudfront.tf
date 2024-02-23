@@ -28,6 +28,18 @@ resource "aws_cloudfront_distribution" "main" {
     }
   }
 
+  origin {
+    domain_name = aws_lb.api.dns_name
+    origin_id   = aws_lb.api.id
+
+    custom_origin_config {
+      http_port              = 80
+      https_port             = 443
+      origin_protocol_policy = "http-only"
+      origin_ssl_protocols   = ["TLSv1.2"]
+    }
+  }
+
   enabled = true
   comment = "SKKU ROYALS CloudFront"
 
@@ -46,6 +58,16 @@ resource "aws_cloudfront_distribution" "main" {
         forward = "none"
       }
     }
+  }
+
+  ordered_cache_behavior {
+    path_pattern             = "/api/*"
+    allowed_methods          = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
+    cached_methods           = ["GET", "HEAD", "OPTIONS"]
+    target_origin_id         = aws_lb.api.id
+    viewer_protocol_policy   = "redirect-to-https"
+    cache_policy_id          = data.aws_cloudfront_cache_policy.disable.id
+    origin_request_policy_id = data.aws_cloudfront_origin_request_policy.allow_all.id
   }
 
   restrictions {

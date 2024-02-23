@@ -102,3 +102,7 @@ resource "aws_security_group" "ecs" {
     Name = "skku-royals-sg-ecs"
   }
 }
+
+data "aws_security_group" "ssh-allow" {
+  id = "sg-0f79a24f880b6d5be"
+}
