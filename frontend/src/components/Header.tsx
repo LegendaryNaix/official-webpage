@@ -1,10 +1,11 @@
 'use client'
 
+import { auth } from '@/lib/auth'
 import { Dialog } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 const navigation = [
   { name: 'Roster', href: '#' },
@@ -15,6 +16,18 @@ const navigation = [
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [isLogin, setIsLogin] = useState(false)
+
+  useEffect(() => {
+    const getSession = async () => {
+      const session = await auth()
+
+      if (session) setIsLogin(true)
+      else setIsLogin(false)
+    }
+
+    getSession()
+  }, [])
 
   return (
     <header className="fixed left-0 top-0 z-10 w-full bg-transparent backdrop-blur-md">
@@ -53,10 +66,11 @@ export default function Header() {
             </Link>
           ))}
           <Link
-            href="/login"
+            href={isLogin ? '/console' : '/login'}
             className="text-sm font-semibold leading-6 text-gray-50"
           >
-            Log in <span aria-hidden="true">&rarr;</span>
+            {isLogin ? '콘솔로 이동' : 'Log in'}{' '}
+            <span aria-hidden="true">&rarr;</span>
           </Link>
         </div>
       </nav>
@@ -108,11 +122,11 @@ export default function Header() {
               </div>
               <div className="py-6">
                 <Link
-                  href="/login"
+                  href={isLogin ? '/console' : '/login'}
                   className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-50 hover:bg-gray-400 hover:text-gray-950"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  Log in
+                  {isLogin ? '콘솔로 이동' : 'Log in'}
                 </Link>
               </div>
             </div>

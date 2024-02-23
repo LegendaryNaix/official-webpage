@@ -1,5 +1,6 @@
 import { auth } from '@/lib/auth'
 import { HttpStatus } from './http-status'
+import { API_BASE_URL } from './vars'
 
 const fetcher = {
   get<T>(url: string, cache = true): Promise<T> {
@@ -26,7 +27,7 @@ const fetcher = {
   ): Promise<T> {
     const session = await auth()
 
-    const response = await fetch(url, {
+    const response = await fetch(API_BASE_URL + url, {
       method,
       headers: {
         Authorization: session ? session.token.accessToken : ''

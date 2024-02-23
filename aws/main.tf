@@ -20,4 +20,7 @@ module "royals" {
 
   region            = var.region
   vercel_origin_dns = var.vercel_origin_dns
+  postgres_password = var.postgres_password
+  postgres_username = var.postgres_username
+  jwt_secret        = var.jwt_secret
 }

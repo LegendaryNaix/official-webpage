@@ -1,4 +1,4 @@
-import { ACCESS_TOKEN_EXPIRE_TIME } from '@/lib/vars'
+import { ACCESS_TOKEN_EXPIRE_TIME, API_BASE_URL } from '@/lib/vars'
 import {
   getServerSession,
   type NextAuthOptions,
@@ -32,7 +32,7 @@ export const authOptions: NextAuthOptions = {
         password: { label: 'password', type: 'password' }
       },
       async authorize(credentials) {
-        const res = await fetch('/auth/login', {
+        const res = await fetch(API_BASE_URL + '/auth/login', {
           method: 'POST',
           headers: {
             // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -49,7 +49,7 @@ export const authOptions: NextAuthOptions = {
             accessTokenExpires
           } = getAuthToken(res)
 
-          const userRes = await fetch('user', {
+          const userRes = await fetch(API_BASE_URL + '/user', {
             method: 'get',
             headers: {
               Authorization: accessToken

@@ -5,8 +5,7 @@ import { AppModule } from './app.module'
 const bootstrap = async () => {
   const app = await NestFactory.create(AppModule)
   app.useGlobalPipes(new ValidationPipe())
-
-  if (process.env.NODE_ENV === 'production') app.setGlobalPrefix('api')
+  app.setGlobalPrefix('api')
 
   await app.listen(4000)
 }

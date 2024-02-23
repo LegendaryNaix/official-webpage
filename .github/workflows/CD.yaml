@@ -1,0 +1,80 @@
+name: CD - production
+
+on:
+  workflow_dispatch:
+
+env:
+  AWS_REGION: ap-northeast-2
+  ECS_CLUSTER: skku_royals_api
+  ECS_SERVICE: skku-royals-ecs-service
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  build-api:
+    name: Build api image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_GITHUB_ACTION_ROLE }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build and push image
+        uses: docker/build-push-action@v5
+        with:
+          file: ./backend/Dockerfile
+          push: true
+          tags: ${{ steps.login-ecr.outputs.registry }}/skku-royals/api:latest
+
+      - name: Update ECS service
+        run: aws ecs update-service --cluster ${{ env.ECS_CLUSTER }} --service ${{ env.ECS_SERVICE }} --force-new-deployment
+
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    needs: [build-api]
+    environment: production
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_GITHUB_ACTION_ROLE }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.5.2
+
+      - name: Create Terraform variable file
+        working-directory: ./aws
+        run: |
+          echo "$TFVARS" >> terraform.tfvars
+        env:
+          TFVARS: ${{ secrets.TFVARS }}
+
+      - name: Terraform Init
+        working-directory: ./aws
+        run: terraform init
+
+      - name: Terraform Plan
+        working-directory: ./aws
+        run: terraform plan -input=false
+
+      - name: Terraform Apply
+        working-directory: ./aws
+        run: terraform apply -auto-approve -input=false

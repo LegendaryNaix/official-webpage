@@ -1,4 +1,4 @@
-import { ACCESS_TOKEN_EXPIRE_TIME } from '@/lib/vars'
+import { ACCESS_TOKEN_EXPIRE_TIME, API_BASE_URL } from '@/lib/vars'
 import { encode, getToken } from 'next-auth/jwt'
 import { parseCookie } from 'next/dist/compiled/@edge-runtime/cookies'
 import { NextResponse, type NextRequest } from 'next/server'
@@ -26,7 +26,7 @@ export const middleware = async (req: NextRequest) => {
     return NextResponse.redirect(new URL('/', req.url))
 
   if (token && token.accessTokenExpires <= Date.now()) {
-    const reissueRes = await fetch('/auth/reissue', {
+    const reissueRes = await fetch(API_BASE_URL + '/auth/reissue', {
       headers: {
         cookie: `refresh_token=${token.refreshToken}`
       },
