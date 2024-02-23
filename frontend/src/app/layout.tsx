@@ -11,8 +11,9 @@ const gothicA1 = Noto_Sans_KR({
 })
 
 export const metadata: Metadata = {
-  title: 'SKKU ROYALS',
-  description: '성균관대학교 미식축구부 로얄스 홈페이지입니다'
+  title: '성균관대학교 미식축구부 로얄스',
+  description: '성균관대학교 미식축구부 로얄스 홈페이지입니다',
+  metadataBase: new URL('https://skku-royals.com')
 }
 
 export default function RootLayout({

@@ -1,0 +1,16 @@
+{
+  "name": "성균관대학교 미식축구부 로얄스",
+  "description": "성균관대학교 미식축구부 로얄스 홈페이지입니다.",
+  "short_name": "ROYALS",
+  "icons": [
+    {
+      "src": "/android-chrome-152x152.png",
+      "sizes": "152x152",
+      "type": "image/png"
+    }
+  ],
+  "display": "standalone",
+  "start_url": "/",
+  "background_color": "#000000",
+  "theme_color": "#000000"
+}
