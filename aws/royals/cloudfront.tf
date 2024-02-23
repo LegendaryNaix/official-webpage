@@ -13,6 +13,10 @@ data "aws_cloudfront_origin_request_policy" "allow_all" {
   name = "Managed-AllViewer"
 }
 
+data "aws_cloudfront_origin_request_policy" "exclude_host_header" {
+  name = "Managed-AllViewerExceptHostHeader"
+}
+
 resource "aws_cloudfront_distribution" "main" {
   origin {
     domain_name = var.vercel_origin_dns
@@ -40,24 +44,19 @@ resource "aws_cloudfront_distribution" "main" {
     }
   }
 
-  enabled = true
-  comment = "SKKU ROYALS CloudFront"
+  enabled    = true
+  comment    = "SKKU ROYALS CloudFront"
+  web_acl_id = data.aws_wafv2_web_acl.main.arn
 
   aliases = ["skku-royals.com"]
 
   default_cache_behavior {
-    allowed_methods        = ["GET", "HEAD", "OPTIONS"]
-    cached_methods         = ["GET", "HEAD", "OPTIONS"]
-    target_origin_id       = "vercel"
-    viewer_protocol_policy = "redirect-to-https"
-
-    forwarded_values {
-      query_string = true
-
-      cookies {
-        forward = "none"
-      }
-    }
+    allowed_methods          = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
+    cached_methods           = ["GET", "HEAD", "OPTIONS"]
+    target_origin_id         = "vercel"
+    viewer_protocol_policy   = "redirect-to-https"
+    cache_policy_id          = data.aws_cloudfront_cache_policy.disable.id
+    origin_request_policy_id = data.aws_cloudfront_origin_request_policy.exclude_host_header.id
   }
 
   ordered_cache_behavior {
