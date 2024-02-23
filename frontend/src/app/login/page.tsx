@@ -8,8 +8,8 @@ export default function LoginPage() {
         <Image
           src="/text-logo.png"
           alt="ROYALS"
-          width={290}
-          height={70}
+          width={1158}
+          height={277}
           className="h-auto w-full max-w-[320px]"
         />
         <LoginForm />
