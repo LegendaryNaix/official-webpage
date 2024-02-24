@@ -24,3 +24,7 @@ module "royals" {
   postgres_username = var.postgres_username
   jwt_secret        = var.jwt_secret
 }
+
+module "cdn" {
+  source = "./cdn"
+}

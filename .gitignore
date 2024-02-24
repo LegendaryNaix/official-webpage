@@ -91,6 +91,7 @@ __debug_bin*
 ### Terraform ###
 # Local .terraform directories
 **/.terraform/*
+**/lambda_function.zip
 
 # .tfstate files
 *.tfstate
