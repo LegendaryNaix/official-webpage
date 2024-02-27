@@ -18,8 +18,8 @@ const getAuthToken = (res: Response) => {
   return {
     accessToken: Authorization,
     refreshToken,
-    accessTokenExpires: Date.now() + ACCESS_TOKEN_EXPIRE_TIME - 30 * 1000, // 29 minutes 30 seconds
-    refreshTokenExpires: Date.parse(refreshTokenExpires) - 30 * 1000 // 23 hours 59 minutes 30 seconds
+    accessTokenExpires: Date.now() + ACCESS_TOKEN_EXPIRE_TIME - 30 * 1000,
+    refreshTokenExpires: Date.parse(refreshTokenExpires) - 30 * 1000
   }
 }
 
@@ -75,7 +75,7 @@ export const authOptions: NextAuthOptions = {
   ],
   session: {
     strategy: 'jwt',
-    maxAge: 24 * 60 * 60 // 24 hours
+    maxAge: 7 * 24 * 60 * 60
   },
   callbacks: {
     jwt: async ({ token, user }: { token: JWT; user?: User }) => {
@@ -86,6 +86,32 @@ export const authOptions: NextAuthOptions = {
         token.refreshToken = user.refreshToken
         token.accessTokenExpires = user.accessTokenExpires
         token.refreshTokenExpires = user.refreshTokenExpires
+      } else if (token.accessTokenExpires <= Date.now()) {
+        const reissueRes = await fetch(API_BASE_URL + '/auth/reissue', {
+          headers: {
+            cookie: `refresh_token=${token.refreshToken}`
+          },
+          cache: 'no-store'
+        })
+
+        if (reissueRes.ok) {
+          const {
+            accessToken,
+            refreshToken,
+            accessTokenExpires,
+            refreshTokenExpires
+          } = getAuthToken(reissueRes)
+
+          token.accessToken = accessToken
+          token.refreshToken = refreshToken
+          token.accessTokenExpires = accessTokenExpires
+          token.refreshTokenExpires = refreshTokenExpires
+        } else {
+          return {
+            ...token,
+            error: 'RefreshAccessTokenError'
+          }
+        }
       }
       return token
     },
@@ -100,8 +126,12 @@ export const authOptions: NextAuthOptions = {
         accessTokenExpires: token.accessTokenExpires,
         refreshTokenExpires: token.refreshTokenExpires
       }
+      session.error = token.error
       return session
     }
+  },
+  pages: {
+    signIn: '/login'
   }
 }
 

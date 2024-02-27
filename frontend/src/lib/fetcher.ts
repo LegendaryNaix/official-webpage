@@ -44,7 +44,7 @@ const fetcher = {
     if (!response.ok) {
       if (response.status === HttpStatus.UNAUTHORIZED && !retry) {
         const session = await auth()
-        if (session) {
+        if (session && !session.error) {
           // retry request
           return this.customFetch<T>(url, method, body, cache, true)
         }
