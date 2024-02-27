@@ -55,6 +55,7 @@ export class AuthController {
     }
   }
 
+  @Public()
   @Get('reissue')
   async reIssueJwtTokens(
     @Req() req: Request,
