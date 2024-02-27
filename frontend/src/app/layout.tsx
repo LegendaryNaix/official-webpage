@@ -1,13 +1,16 @@
 import Footer from '@/components/Footer'
 import Header from '@/components/Header'
+import { ThemeProvider } from '@/components/ThemeProvider'
 import Toaster from '@/components/ui/sooner'
+import { cn } from '@/lib/utils'
 import type { Metadata } from 'next'
 import { Noto_Sans_KR } from 'next/font/google'
 import './globals.css'
 
-const gothicA1 = Noto_Sans_KR({
+const noto = Noto_Sans_KR({
   subsets: ['latin'],
-  weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900']
+  weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
+  variable: '--font-noto'
 })
 
 export const metadata: Metadata = {
@@ -23,19 +26,29 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${gothicA1.className} antialiased`}>
-        <div className="flex min-h-screen flex-col">
-          <Header />
-          <div className="h-[80px]"></div>
-          {children}
-          <Footer />
-        </div>
-        <Toaster
-          richColors
-          position="top-center"
-          closeButton={true}
-          duration={2000}
-        />
+      <body
+        className={cn('font-sans antialiased', noto.variable)}
+        suppressHydrationWarning={true}
+      >
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <div className="dark:bg-custom-black flex min-h-screen flex-col bg-white">
+            <Header />
+            <div className="h-[65px]"></div>
+            {children}
+            <Footer />
+          </div>
+          <Toaster
+            richColors
+            position="top-center"
+            closeButton={true}
+            duration={2000}
+          />
+        </ThemeProvider>
       </body>
     </html>
   )

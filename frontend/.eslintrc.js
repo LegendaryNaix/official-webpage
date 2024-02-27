@@ -9,17 +9,20 @@ module.exports = {
     '@next/next/no-html-link-for-pages': [
       'error',
       require('path').join(__dirname, 'src/app')
-    ],
-    'react/function-component-definition': [
-      'error',
-      {
-        namedComponents: 'function-declaration'
-      }
     ]
   },
   overrides: [
+    // TODO: If there is another way to solve the '@next/babel' error, remove below object
+    {
+      files: ['*.js'],
+      parser: 'espree',
+      parserOptions: {
+        ecmaVersion: 2020
+      }
+    },
     {
       files: ['*.tsx'],
+      excludedFiles: ['src/components/ui/*.tsx'],
       rules: {
         'react/function-component-definition': [
           'error',
@@ -27,7 +30,8 @@ module.exports = {
             namedComponents: 'function-declaration'
           }
         ],
-        'func-style': ['off']
+        'func-style': ['off'],
+        'no-restricted-imports': ['error']
       }
     },
     {

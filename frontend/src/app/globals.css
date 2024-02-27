@@ -44,7 +44,3 @@ html {
 html::-webkit-scrollbar {
   display: none;
 }
-
-html {
-  background-color: rgb(20, 21, 23);
-}
