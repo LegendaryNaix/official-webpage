@@ -13,6 +13,7 @@ import { Input } from '@/components/ui/input'
 import { LoginFormSchema } from '@/lib/forms'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { signIn } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
@@ -20,6 +21,7 @@ import type { z } from 'zod'
 
 export default function LoginForm() {
   const [isFetching, setIsFetching] = useState(false)
+  const router = useRouter()
 
   const form = useForm<z.infer<typeof LoginFormSchema>>({
     resolver: zodResolver(LoginFormSchema),
@@ -34,12 +36,11 @@ export default function LoginForm() {
       setIsFetching(true)
       const res = await signIn('credentials', {
         ...data,
-        redirect: true,
-        callbackUrl: '/'
+        redirect: false
       })
 
       if (!res?.error) {
-        toast.success('로그인 되었습니다')
+        router.push('/')
       } else {
         toast.error('로그인 실패')
       }
