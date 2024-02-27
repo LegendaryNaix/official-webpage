@@ -9,8 +9,24 @@ const createAccounts = async () => {
       username: 'user01',
       email: 'user01@example.com',
       nickname: 'user01',
-      password: await hash('1234'),
+      password: await hash('royals@1234'),
       role: Role.User,
+      status: AccountStatus.Enable
+    },
+    {
+      username: 'manager01',
+      email: 'manager01@example.com',
+      nickname: 'manager01',
+      password: await hash('royals@1234'),
+      role: Role.Manager,
+      status: AccountStatus.Enable
+    },
+    {
+      username: 'admin01',
+      email: 'admin01@example.com',
+      nickname: 'admin01',
+      password: await hash('royals@1234'),
+      role: Role.Admin,
       status: AccountStatus.Enable
     }
   ]

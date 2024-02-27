@@ -33,14 +33,14 @@ export default function LoginForm() {
     try {
       setIsFetching(true)
       const res = await signIn('credentials', {
-        data,
-        redirect: false
+        ...data,
+        redirect: true,
+        callbackUrl: '/'
       })
 
       if (!res?.error) {
         toast.success('로그인 되었습니다')
       } else {
-        console.log(res.error)
         toast.error('로그인 실패')
       }
     } catch (error) {

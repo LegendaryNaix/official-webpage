@@ -1,5 +1,3 @@
-import Footer from '@/components/Footer'
-import Header from '@/components/Header'
 import { ThemeProvider } from '@/components/ThemeProvider'
 import Toaster from '@/components/ui/sooner'
 import { cn } from '@/lib/utils'
@@ -36,12 +34,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <div className="dark:bg-custom-black flex min-h-screen flex-col bg-white">
-            <Header />
-            <div className="h-[65px]"></div>
-            {children}
-            <Footer />
-          </div>
+          <div className="dark:bg-custom-black bg-white">{children}</div>
           <Toaster
             richColors
             position="top-center"

@@ -9,10 +9,10 @@ import { useEffect, useState } from 'react'
 import { ThemeToggle } from './ThemeToggle'
 
 const navigation = [
-  { name: 'Roster', href: '#' },
-  { name: 'Schedule', href: '#' },
-  { name: 'Board', href: '#' },
-  { name: 'About Us', href: '#' }
+  { name: '로스터', href: '#' },
+  { name: '일정/결과', href: '#' },
+  { name: '게시판', href: '#' },
+  { name: '소개', href: '#' }
 ]
 
 export default function Header() {
@@ -71,7 +71,7 @@ export default function Header() {
           ))}
           <ThemeToggle />
           <Link
-            href={isLogin ? '/console' : '/login'}
+            href={isLogin ? '/console/dashboard' : '/login'}
             className="text-sm font-semibold leading-6 text-zinc-900 dark:text-gray-50"
           >
             {isLogin ? '콘솔로 이동' : 'Log in'}{' '}
@@ -127,7 +127,7 @@ export default function Header() {
               </div>
               <div className="py-6">
                 <Link
-                  href={isLogin ? '/console' : '/login'}
+                  href={isLogin ? '/console/dashboard' : '/login'}
                   className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-zinc-900 hover:bg-gray-400 hover:text-zinc-900/90 dark:text-gray-50"
                   onClick={() => setMobileMenuOpen(false)}
                 >
