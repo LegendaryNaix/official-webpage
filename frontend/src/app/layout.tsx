@@ -24,10 +24,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={cn('font-sans antialiased', noto.variable)}
-        suppressHydrationWarning={true}
-      >
+      <body className={cn('font-sans antialiased', noto.variable)}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

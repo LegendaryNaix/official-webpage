@@ -13,6 +13,3 @@ RUN architecture=$(dpkg --print-architecture) && if [ "$architecture" = "arm64" 
     && unzip awscli.zip \
     && ./aws/install \
     && rm -rf aws awscli.zip
-
-# Set NODE_ENV as Dev
-ENV NODE_ENV=development
