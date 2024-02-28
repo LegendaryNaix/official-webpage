@@ -10,7 +10,16 @@ export default function LoginPage() {
           alt="ROYALS"
           width={1158}
           height={277}
-          className="h-auto w-full max-w-[320px]"
+          className="hidden h-auto w-full max-w-[320px] dark:inline-block"
+          priority={true}
+        />
+        <Image
+          src="/text-logo-light.png"
+          alt="ROYALS"
+          width={1158}
+          height={277}
+          className="inline-block h-auto w-full max-w-[320px] dark:hidden"
+          priority={true}
         />
         <LoginForm />
       </div>
