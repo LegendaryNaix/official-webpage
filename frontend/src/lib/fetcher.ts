@@ -43,9 +43,10 @@ const fetcher = {
 
     if (!response.ok) {
       if (response.status === HttpStatus.UNAUTHORIZED && !retry) {
+        // when accessToken expired refresh accessToken
         const session = await auth()
-        if (session && !session.error) {
-          // retry request
+        if (session) {
+          // retry origin request
           return this.customFetch<T>(url, method, body, cache, true)
         }
       }

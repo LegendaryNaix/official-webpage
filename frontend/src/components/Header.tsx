@@ -74,7 +74,7 @@ export default function Header() {
             href={isLogin ? '/console/dashboard' : '/login'}
             className="text-sm font-semibold leading-6 text-zinc-900 dark:text-gray-50"
           >
-            {isLogin ? '콘솔로 이동' : 'Log in'}{' '}
+            {isLogin ? '콘솔로 이동' : '로그인'}{' '}
             <span aria-hidden="true">&rarr;</span>
           </Link>
         </div>
@@ -131,7 +131,7 @@ export default function Header() {
                   className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-zinc-900 hover:bg-gray-400 hover:text-zinc-900/90 dark:text-gray-50"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  {isLogin ? '콘솔로 이동' : 'Log in'}
+                  {isLogin ? '콘솔로 이동' : '로그인'}
                 </Link>
               </div>
             </div>

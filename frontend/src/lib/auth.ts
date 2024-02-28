@@ -87,32 +87,30 @@ export const authOptions: NextAuthOptions = {
         token.accessTokenExpires = user.accessTokenExpires
         token.refreshTokenExpires = user.refreshTokenExpires
       } else if (token.accessTokenExpires <= Date.now()) {
-        const reissueRes = await fetch(API_BASE_URL + '/auth/reissue', {
-          headers: {
-            cookie: `refresh_token=${token.refreshToken}`
-          },
-          cache: 'no-store'
-        })
+        try {
+          const reissueRes = await fetch(API_BASE_URL + '/auth/reissue', {
+            headers: {
+              cookie: `refresh_token=${token.refreshToken}`
+            },
+            cache: 'no-store'
+          })
 
-        if (reissueRes.ok) {
-          const {
-            accessToken,
-            refreshToken,
-            accessTokenExpires,
-            refreshTokenExpires
-          } = getAuthToken(reissueRes)
+          if (!reissueRes.ok) {
+            throw new Error('reissue failed')
+          }
 
-          token.accessToken = accessToken
-          token.refreshToken = refreshToken
-          token.accessTokenExpires = accessTokenExpires
-          token.refreshTokenExpires = refreshTokenExpires
-        } else {
+          return {
+            ...token,
+            ...getAuthToken(reissueRes)
+          }
+        } catch (error) {
           return {
             ...token,
             error: 'RefreshAccessTokenError'
           }
         }
       }
+
       return token
     },
     session: async ({ session, token }: { session: Session; token: JWT }) => {

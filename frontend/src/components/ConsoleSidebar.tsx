@@ -152,10 +152,11 @@ export default function ConsoleSidebar() {
                                 <Link
                                   href={item.href}
                                   className={clsx(
-                                    'group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6',
+                                    'group flex gap-x-3 rounded-md p-2 text-sm font-bold leading-6',
                                     {
-                                      'bg-gray-800 text-white':
-                                        pathname.startsWith(item.href),
+                                      'text-amber-400': pathname.startsWith(
+                                        item.href
+                                      ),
                                       'text-gray-400 hover:bg-gray-800 hover:text-white':
                                         !pathname.startsWith(item.href)
                                     }
@@ -212,11 +213,9 @@ export default function ConsoleSidebar() {
                         <Link
                           href={item.href}
                           className={clsx(
-                            'group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6',
+                            'group flex gap-x-3 rounded-md p-2 text-sm font-bold leading-6',
                             {
-                              'bg-gray-800 text-white': pathname.startsWith(
-                                item.href
-                              ),
+                              'text-amber-400': pathname.startsWith(item.href),
                               'text-gray-400 hover:bg-gray-800 hover:text-white':
                                 !pathname.startsWith(item.href)
                             }
