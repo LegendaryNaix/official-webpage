@@ -38,6 +38,7 @@ export const authOptions: NextAuthOptions = {
             // eslint-disable-next-line @typescript-eslint/naming-convention
             'Content-Type': 'application/json'
           },
+          cache: 'no-store',
           body: JSON.stringify(credentials)
         })
 

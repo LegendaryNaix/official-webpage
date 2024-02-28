@@ -9,6 +9,16 @@ const bootstrap = async () => {
   app.use(cookieParser())
   app.setGlobalPrefix('api')
 
+  if (process.env.NODE_ENV !== 'production') {
+    app.enableCors({
+      origin: 'http://localhost:5173',
+      credentials: true,
+      methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+      allowedHeaders: ['*'],
+      exposedHeaders: ['Content-Type', 'Authorization']
+    })
+  }
+
   await app.listen(4000)
 }
 

@@ -1,14 +1,18 @@
 'use client'
 
+import { getCurrentUserProfile } from '@/lib/actions'
 import { auth } from '@/lib/auth'
+import type { UserProfile } from '@/lib/types/user'
 import { Dialog, Transition } from '@headlessui/react'
 import {
+  ArrowRightStartOnRectangleIcon,
   Bars3Icon,
   CalendarIcon,
   ChartPieIcon,
-  Cog6ToothIcon,
+  EnvelopeIcon,
   FireIcon,
   HomeIcon,
+  LinkIcon,
   PencilIcon,
   UserIcon,
   UsersIcon,
@@ -28,10 +32,22 @@ const navigation = [
     icon: HomeIcon,
     role: 'User'
   },
-  { name: '계정정보', href: '/console/account', icon: UserIcon, role: 'User' },
+  {
+    name: '건의사항',
+    href: '/console/appeal',
+    icon: EnvelopeIcon,
+    role: 'User'
+  },
+  {
+    name: '로스터연결',
+    href: '/console/roster',
+    icon: LinkIcon,
+    role: 'User'
+  },
   { name: '부원관리', href: '#', icon: UsersIcon, role: 'Manager' },
   { name: '시합관리', href: '#', icon: FireIcon, role: 'Manager' },
   { name: '일정관리', href: '#', icon: CalendarIcon, role: 'Manager' },
+  { name: '계정관리', href: '/console/account', icon: UserIcon, role: 'Admin' },
   { name: '출석변경', href: '#', icon: PencilIcon, role: 'Admin' },
   { name: '출석통계', href: '#', icon: ChartPieIcon, role: 'Admin' }
 ]
@@ -47,6 +63,7 @@ export default function ConsoleSidebar() {
     }[]
   >([])
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [profile, setProfile] = useState<UserProfile>()
   const pathname = usePathname()
 
   useEffect(() => {
@@ -78,13 +95,22 @@ export default function ConsoleSidebar() {
     getSession()
   }, [])
 
+  useEffect(() => {
+    const getProfile = async () => {
+      const profile = await getCurrentUserProfile()
+      setProfile(profile)
+    }
+
+    getProfile()
+  }, [])
+
   return (
     <>
       <div>
         <Transition.Root show={sidebarOpen} as={Fragment}>
           <Dialog
             as="div"
-            className="relative z-50 lg:hidden"
+            className="relative z-10 lg:hidden"
             onClose={setSidebarOpen}
           >
             <Transition.Child
@@ -177,7 +203,7 @@ export default function ConsoleSidebar() {
                             href="/"
                             className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-400 hover:bg-gray-800 hover:text-white"
                           >
-                            <Cog6ToothIcon
+                            <ArrowRightStartOnRectangleIcon
                               className="h-6 w-6 shrink-0"
                               aria-hidden="true"
                             />
@@ -193,7 +219,7 @@ export default function ConsoleSidebar() {
           </Dialog>
         </Transition.Root>
 
-        <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
+        <div className="hidden lg:fixed lg:inset-y-0 lg:z-10 lg:flex lg:w-72 lg:flex-col">
           <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-gray-900 px-6 pb-4">
             <div className="flex h-16 shrink-0 items-center">
               <Image
@@ -236,7 +262,7 @@ export default function ConsoleSidebar() {
                     href="/"
                     className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-400 hover:bg-gray-800 hover:text-white"
                   >
-                    <Cog6ToothIcon
+                    <ArrowRightStartOnRectangleIcon
                       className="h-6 w-6 shrink-0"
                       aria-hidden="true"
                     />
@@ -249,7 +275,7 @@ export default function ConsoleSidebar() {
         </div>
 
         <div className="lg:pl-72">
-          <div className="sticky top-0 z-40 flex h-16 w-full shrink-0 items-center justify-end gap-x-4 border-b border-zinc-200 px-4 shadow-sm backdrop-blur-sm sm:gap-x-6 sm:px-6 lg:px-8 dark:border-zinc-800">
+          <div className="fixed top-0 z-10 flex h-16 w-full shrink-0 items-center justify-end gap-x-4 border-b border-zinc-200 px-4 shadow-sm backdrop-blur-sm sm:gap-x-6 sm:px-6 lg:sticky lg:px-8 dark:border-zinc-800">
             <button
               type="button"
               className="-m-2.5 p-2.5 text-gray-400 lg:hidden"
@@ -272,19 +298,29 @@ export default function ConsoleSidebar() {
                   aria-hidden="true"
                 />
                 <div className="flex items-center">
-                  <Image
-                    className="h-8 w-auto"
-                    src="/logo.png"
-                    alt="profile"
-                    width={128}
-                    height={128}
-                  />
+                  {profile && profile.profileImgUrl ? (
+                    <Image
+                      className="h-6 w-auto rounded-full"
+                      src={profile.profileImgUrl}
+                      alt="profile"
+                      width={128}
+                      height={128}
+                    />
+                  ) : (
+                    <Image
+                      className="h-6 w-auto"
+                      src="/logo.png"
+                      alt="profile"
+                      width={128}
+                      height={128}
+                    />
+                  )}
                   <span className="hidden lg:flex lg:items-center">
                     <span
                       className="ml-4 text-sm font-semibold leading-6 text-gray-950 dark:text-gray-50"
                       aria-hidden="true"
                     >
-                      Username
+                      {profile && profile.username}
                     </span>
                   </span>
                 </div>

@@ -7,28 +7,19 @@
     text-wrap: balance;
   }
 
-  .overflow-x-auto::-webkit-scrollbar {
+  .overflow-x-auto::-webkit-scrollbar,
+  .overflow-y-auto::-webkit-scrollbar {
     width: 8px;
     height: 8px;
   }
-  .overflow-x-auto::-webkit-scrollbar-thumb {
-    background-color: #4a5568;
-    border-radius: 3px;
-    border: 1px solid #f7fafc;
-  }
-  .overflow-x-auto::-webkit-scrollbar-track {
-    background-color: transparent;
+
+  .overflow-x-auto::-webkit-scrollbar-thumb,
+  .overflow-y-auto::-webkit-scrollbar-thumb {
+    background-color: #31304d;
+    border-radius: 2px;
   }
 
-  .overflow-y-auto::-webkit-scrollbar {
-    width: 11px;
-    height: 11px;
-  }
-  .overflow-y-auto::-webkit-scrollbar-thumb {
-    background-color: #4a5568;
-    border-radius: 3px;
-    border: 1px solid #f7fafc;
-  }
+  .overflow-x-auto::-webkit-scrollbar-track,
   .overflow-y-auto::-webkit-scrollbar-track {
     background-color: transparent;
   }

@@ -62,6 +62,10 @@ module.exports = {
           {
             selector: ['objectLiteralProperty', 'classProperty'],
             format: ['camelCase', 'PascalCase']
+          },
+          {
+            selector: ['enum', 'enumMember'],
+            format: ['PascalCase']
           }
         ]
       }

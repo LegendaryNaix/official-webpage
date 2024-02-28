@@ -31,7 +31,7 @@ export default function Header() {
   }, [])
 
   return (
-    <header className="fixed left-0 top-0 z-10 w-full border-b border-zinc-200 bg-transparent backdrop-blur-sm dark:border-zinc-600">
+    <header className="fixed left-0 top-0 z-10 w-full border-b border-zinc-200 bg-transparent backdrop-blur-sm dark:border-zinc-800">
       <nav
         className="mx-auto flex max-w-7xl items-center justify-between px-6 py-3.5 lg:px-8"
         aria-label="Global"

@@ -11,7 +11,10 @@ import {
   REFRESH_TOKEN_EXPIRE_TIME
 } from '@libs/constants'
 import { Service } from '@libs/decorator'
-import { BadRequestException, InvalidJwtTokenException } from '@libs/exception'
+import {
+  InvalidJwtTokenException,
+  ParameterValidationException
+} from '@libs/exception'
 import { Cache } from 'cache-manager'
 import type { LoginUserDto } from './dto/login-user.dto'
 
@@ -29,7 +32,9 @@ export class AuthService {
     const user = await this.userService.getUserCredential(loginUserDto.username)
 
     if (!user) {
-      throw new BadRequestException('아이디 또는 비밀번호가 일치하지 않습니다')
+      throw new ParameterValidationException(
+        '아이디 또는 비밀번호가 일치하지 않습니다'
+      )
     }
 
     const isValidUser = await this.jwtAuthService.isValidUser(
@@ -38,7 +43,9 @@ export class AuthService {
     )
 
     if (!isValidUser) {
-      throw new BadRequestException('아이디 또는 비밀번호가 일치하지 않습니다')
+      throw new ParameterValidationException(
+        '아이디 또는 비밀번호가 일치하지 않습니다'
+      )
     }
 
     await this.userService.updateLastLogin(user.username)

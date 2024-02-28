@@ -30,6 +30,8 @@ const fetcher = {
     const response = await fetch(API_BASE_URL + url, {
       method,
       headers: {
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        'Content-Type': 'application/json',
         Authorization: session ? session.token.accessToken : ''
       },
       body:
@@ -51,7 +53,7 @@ const fetcher = {
         }
       }
 
-      throw new Error(data.message ?? 'Something went wrong')
+      throw new Error('fetch failed')
     }
 
     return data as T
