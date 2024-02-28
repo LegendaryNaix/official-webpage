@@ -1,7 +1,15 @@
+import fetcher from '@/lib/fetcher'
 import Image from 'next/image'
 import LoginForm from './_components/LoginForm'
 
-export default function LoginPage() {
+export default async function LoginPage() {
+  try {
+    const data = await fetcher.get('/test')
+    console.log(data)
+  } catch (error) {
+    console.log(error)
+  }
+
   return (
     <main className="mx-auto flex w-full max-w-7xl flex-grow flex-col items-center justify-center p-6 lg:px-8">
       <div className="flex w-full max-w-[320px] flex-col items-center gap-y-10">
