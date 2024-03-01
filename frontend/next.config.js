@@ -9,7 +9,7 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: process.env.NODE_ENV === 'production' ? 'https' : 'http',
-        hostname: process.env.NEXT_PUBLIC_CDN_HOST,
+        hostname: process.env.NEXT_PUBLIC_CDN_HOST ?? 'example.com',
         port: process.env.NODE_ENV === 'production' ? undefined : '9000'
       }
     ]
