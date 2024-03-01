@@ -46,7 +46,10 @@ export class ImageStorageServiceImpl implements ImageStorageService {
       await this.s3.send(
         new PutObjectCommand({
           Bucket: this.configService.get('AWS_CDN_BUCKET_NAME'),
-          Key: key,
+          Key:
+            this.configService.get('NODE_ENV') === 'production'
+              ? keyWithoutExtenstion
+              : key,
           Body: file.buffer,
           ContentType: fileType
         })

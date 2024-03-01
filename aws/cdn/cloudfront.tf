@@ -12,11 +12,6 @@ resource "aws_cloudfront_distribution" "main" {
     target_origin_id       = aws_s3_bucket.cdn_bucket.id
     viewer_protocol_policy = "redirect-to-https"
 
-    lambda_function_association {
-      event_type = "viewer-request"
-      lambda_arn = aws_lambda_function.cdn.qualified_arn
-    }
-
     forwarded_values {
       query_string = false
 
