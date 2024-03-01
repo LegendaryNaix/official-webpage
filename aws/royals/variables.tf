@@ -42,5 +42,5 @@ variable "cdn_base_url" {
 
 variable "aws_cdn_bucket_name" {
   type    = string
-  default = "royals-cdn-bucket"
+  default = "skku-royals-cdn-bucket"
 }

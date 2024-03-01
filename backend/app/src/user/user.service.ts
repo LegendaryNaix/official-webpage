@@ -41,8 +41,6 @@ export class UserService {
         )
       }
 
-      console.log(userWithProfile)
-
       return userWithProfile
     } catch (error) {
       if (
