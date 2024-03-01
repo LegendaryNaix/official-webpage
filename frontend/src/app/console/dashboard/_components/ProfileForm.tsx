@@ -1,5 +1,6 @@
 'use client'
 
+import { ImageInput } from '@/components/ImageInput'
 import { Button } from '@/components/ui/button'
 import {
   Drawer,
@@ -25,15 +26,23 @@ import { AccountFormSchema } from '@/lib/forms'
 import type { UserProfile } from '@/lib/types/user'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
-import * as React from 'react'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import type { z } from 'zod'
 
 export function ProfileForm({ profile }: { profile: UserProfile }) {
   const ProfileFormSchema = AccountFormSchema.omit({ password: true })
-  const [open, setOpen] = React.useState(false)
+
+  const [open, setOpen] = useState(false)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_, setSelectedFile] = useState<File | null>(null)
+
   const router = useRouter()
+
+  const handleFileSelect = (file: File) => {
+    setSelectedFile(file)
+  }
 
   const form = useForm<z.infer<typeof ProfileFormSchema>>({
     resolver: zodResolver(ProfileFormSchema),
@@ -98,6 +107,12 @@ export function ProfileForm({ profile }: { profile: UserProfile }) {
                     </FormItem>
                   )}
                 />
+                <div className="mt-4">
+                  <p className="text-sm font-medium leading-6 peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                    프로필 이미지 변경
+                  </p>
+                  <ImageInput onFileSelect={handleFileSelect} />
+                </div>
               </div>
               <DrawerFooter>
                 <Button type="submit" className="w-full">
