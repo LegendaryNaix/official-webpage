@@ -74,14 +74,16 @@ resource "aws_ecs_task_definition" "api" {
   memory                   = 512
 
   container_definitions = templatefile("${path.module}/task-definition.tftpl", {
-    task_name         = "skku-royals-api",
-    database_url      = "postgresql://${var.postgres_username}:${var.postgres_password}@${aws_instance.database.private_ip}:${var.postgres_port}/royals?schema=public",
-    ecr_uri           = aws_ecr_repository.main.repository_url,
-    container_port    = 4000,
-    cloudwatch_region = var.region,
-    redis_host        = aws_instance.cache.private_ip,
-    redis_port        = var.redis_port,
-    jwt_secret        = var.jwt_secret
+    task_name           = "skku-royals-api",
+    database_url        = "postgresql://${var.postgres_username}:${var.postgres_password}@${aws_instance.database.private_ip}:${var.postgres_port}/royals?schema=public",
+    ecr_uri             = aws_ecr_repository.main.repository_url,
+    container_port      = 4000,
+    cloudwatch_region   = var.region,
+    redis_host          = aws_instance.cache.private_ip,
+    redis_port          = var.redis_port,
+    jwt_secret          = var.jwt_secret,
+    cdn_base_url        = var.cdn_base_url,
+    aws_cdn_bucket_name = var.aws_cdn_bucket_name
   })
 
   execution_role_arn = aws_iam_role.ecs_task_execution_role.arn
