@@ -12,17 +12,17 @@ export async function ProfileSection() {
     <Section title="내 정보" more={<ProfileForm profile={profile} />}>
       <div className="grid h-full grid-cols-3 gap-x-2 gap-y-5">
         <div className="col-span-3 flex items-center justify-center sm:col-span-1">
-          {profile.profileImgUrl ? (
+          {profile.profileImageUrl ? (
             <Image
-              className="h-12 w-auto rounded-full object-cover sm:h-20"
-              src={profile.profileImgUrl}
+              className="h-12 w-12 rounded-full object-cover sm:h-20 sm:w-20"
+              src={profile.profileImageUrl}
               alt="profile"
               width={128}
               height={128}
             />
           ) : (
             <Image
-              className="h-12 w-auto object-cover sm:h-20"
+              className="h-12 w-12 rounded-full object-cover sm:h-20 sm:w-20"
               src="/logo.png"
               alt="profile"
               width={128}

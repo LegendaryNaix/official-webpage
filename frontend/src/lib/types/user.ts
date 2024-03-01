@@ -18,6 +18,6 @@ export interface User extends UserBasic {
 export interface UserProfile extends UserBasic {
   nickname: string
   lastLogin: string
-  profileImgUrl?: string
+  profileImageUrl?: string
   status: AccountStatus
 }

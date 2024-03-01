@@ -35,8 +35,7 @@ export function ProfileForm({ profile }: { profile: UserProfile }) {
   const ProfileFormSchema = AccountFormSchema.omit({ password: true })
 
   const [open, setOpen] = useState(false)
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [_, setSelectedFile] = useState<File | null>(null)
+  const [selectedFile, setSelectedFile] = useState<File | null>(null)
 
   const router = useRouter()
 
@@ -54,11 +53,17 @@ export function ProfileForm({ profile }: { profile: UserProfile }) {
   const onSubmit = async (data: z.infer<typeof ProfileFormSchema>) => {
     try {
       await fetcher.put('/user', data, false)
+
+      if (selectedFile) {
+        const formData = new FormData()
+        formData.append('image', selectedFile)
+        await fetcher.put('/user/profile-image', formData, false)
+      }
+
       setOpen(false)
       toast.success('프로필 정보가 업데이트 되었습니다')
       router.refresh()
     } catch (error) {
-      console.log(error)
       toast.error('프로필 정보 업데이트 실패')
     }
   }

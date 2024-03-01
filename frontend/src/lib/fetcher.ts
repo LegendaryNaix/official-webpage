@@ -21,23 +21,26 @@ const fetcher = {
   async customFetch<T>(
     url: string,
     method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE',
-    body = {},
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    body: any,
     cache = true,
     retry = false
   ): Promise<T> {
     const session = await auth()
 
+    const headers: Record<string, string> = {
+      Authorization: session ? session.token.accessToken : ''
+    }
+
+    if (!(body instanceof FormData)) {
+      headers['Content-Type'] = 'application/json'
+      body = JSON.stringify(body)
+    }
+
     const response = await fetch(API_BASE_URL + url, {
       method,
-      headers: {
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        'Content-Type': 'application/json',
-        Authorization: session ? session.token.accessToken : ''
-      },
-      body:
-        method !== 'GET' && method !== 'DELETE'
-          ? JSON.stringify(body)
-          : undefined,
+      headers,
+      body: method !== 'GET' && method !== 'DELETE' ? body : undefined,
       cache: cache ? 'default' : 'no-store'
     })
 

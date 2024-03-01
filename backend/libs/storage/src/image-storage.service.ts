@@ -70,7 +70,7 @@ export class ImageStorageServiceImpl implements ImageStorageService {
     try {
       await this.s3.send(
         new DeleteObjectCommand({
-          Bucket: this.configService.get('AWS_CDN_ORIGIN_BUCKET_NAME'),
+          Bucket: this.configService.get('AWS_CDN_BUCKET_NAME'),
           Key: src
         })
       )

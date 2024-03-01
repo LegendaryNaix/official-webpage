@@ -71,6 +71,7 @@ model User {
   lastPasswordChanged DateTime      @default(now()) @map("last_password_changed")
   lastLogin           DateTime      @default(now()) @map("last_login")
   status              AccountStatus @default(Verifying)
+  profileImageUrl     String?       @map("profile_image_url") @db.Text
 
   Rosters  Roster[]
   Storages Storage[]
