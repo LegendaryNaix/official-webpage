@@ -2,6 +2,7 @@
   "scripts": {
     "lint": "eslint . --ext .js,.ts,.jsx,.tsx",
     "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "setup-minio": "ts-node scripts/setup-minio.ts"
   },
   "packageManager": "pnpm@8.14.1",

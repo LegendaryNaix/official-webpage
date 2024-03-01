@@ -1,0 +1,129 @@
+name: CI-Backend
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+    paths:
+      - 'backend/**'
+
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        node: [20]
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Generate Prisma Client
+        run: pnpm --filter backend exec prisma generate
+
+      - name: Build Backend
+        run: |
+          pnpm --filter backend build
+
+      - name: Cache dist
+        uses: actions/cache@v4
+        with:
+          path: ./*/dist
+          key: ${{ matrix.os }}-node-v${{ matrix.node }}-${{ github.sha }}
+
+  lint:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        node: [20]
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Lint pull request title
+        if: ${{ github.event_name == 'pull_request' }}
+        run: echo "${{ github.event.pull_request.title }}" | pnpm commitlint --verbose
+
+      - name: Check style
+        run: pnpm --filter backend format:check
+
+      - name: Lint
+        run: pnpm --filter backend lint
+
+  test:
+    runs-on: ${{ matrix.os }}
+
+    env:
+      DATABASE_URL: postgresql://postgres:1234@localhost:5432/royals?schema=public
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        node: [20]
+
+    services:
+      postgres:
+        image: postgres:15-alpine
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: 1234
+          POSTGRES_DB: royals
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Check Prisma Migration
+        run: |
+          pnpm --filter backend exec prisma migrate diff \
+            --from-migrations ./prisma/migrations \
+            --to-schema-datamodel ./prisma/schema.prisma \
+            --shadow-database-url ${{ env.DATABASE_URL }} \
+            --exit-code ||
+          echo "::error::Prisma migration is not up to date. Please run `pnpm prisma migrate dev` locally and commit the changes."
+
+      - name: Migrate Prisma
+        run: pnpm --filter backend exec prisma migrate reset --force
+
+      - name: Check types in Typescript (Backend)
+        run: pnpm --filter backend exec tsc --noEmit
+
+      - name: Test
+        run: pnpm --filter backend test
