@@ -20,7 +20,8 @@ export default defineConfig({
       '@libs/exception': './libs/exception/src/index.ts',
       '@libs/decorator': './libs/decorator/src/index.ts',
       '@libs/constants': './libs/constants/src/index.ts',
-      '@libs/cache': './libs/cache/src/index.ts'
+      '@libs/cache': './libs/cache/src/index.ts',
+      '@libs/storage': './libs/storage/src/index.ts'
     }
   },
   plugins: [swc.vite()]

@@ -6,6 +6,7 @@ import { JwtAuthGuard, JwtAuthModule, RolesModule } from '@libs/auth'
 import { CacheConfigService } from '@libs/cache'
 import { ExceptionsFilter } from '@libs/exception'
 import { PrismaModule } from '@libs/prisma'
+import { StorageModule } from '@libs/storage'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
 import { AuthModule } from './auth/auth.module'
@@ -22,7 +23,8 @@ import { UserModule } from './user/user.module'
     PrismaModule,
     JwtAuthModule,
     UserModule,
-    RolesModule
+    RolesModule,
+    StorageModule
   ],
   controllers: [AppController],
   providers: [
