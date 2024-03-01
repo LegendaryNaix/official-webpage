@@ -26,8 +26,7 @@ then
   echo "NODEMAILER_USER=\"\"" >> backend/.env
   echo "NODEMAILER_PASS=\"\"" >> backend/.env
   echo "NODEMAILER_FROM=\"\"" >> backend/.env
-  echo "CLOUDFRONT_ID_KEY=\"\"" >> backend/.env
-  echo "CLOUDFRONT_SECRET_KEY=\"\"" >> backend/.env
+  echo "CDN_BASE_URL=\"http://localhost:9000/\"" >> backend/.env
   echo "JWT_SECRET=$(head -c 64 /dev/urandom | LC_ALL=C tr -dc A-Za-z0-9 | sha256sum | head -c 64)" >> backend/.env
 fi
 
