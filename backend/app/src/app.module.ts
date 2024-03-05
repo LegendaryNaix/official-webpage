@@ -2,7 +2,12 @@ import { CacheModule } from '@nestjs/cache-manager'
 import { Module } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
 import { APP_FILTER, APP_GUARD } from '@nestjs/core'
-import { JwtAuthGuard, JwtAuthModule, RolesModule } from '@libs/auth'
+import {
+  JwtAuthGuard,
+  JwtAuthModule,
+  RolesGuard,
+  RolesModule
+} from '@libs/auth'
 import { CacheConfigService } from '@libs/cache'
 import { ExceptionsFilter } from '@libs/exception'
 import { PrismaModule } from '@libs/prisma'
@@ -32,7 +37,8 @@ import { UserModule } from './user/user.module'
   providers: [
     AppService,
     { provide: APP_FILTER, useClass: ExceptionsFilter },
-    { provide: APP_GUARD, useClass: JwtAuthGuard }
+    { provide: APP_GUARD, useClass: JwtAuthGuard },
+    { provide: APP_GUARD, useClass: RolesGuard }
   ]
 })
 export class AppModule {}

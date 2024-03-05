@@ -1,5 +1,4 @@
 import { Inject } from '@nestjs/common'
-import { ConfigService } from '@nestjs/config'
 import { Service } from '@libs/decorator'
 import {
   BusinessException,
@@ -17,8 +16,7 @@ export class UserService {
   constructor(
     private readonly prisma: PrismaService,
     @Inject('ImageStorageService')
-    private readonly imageStorageService: StorageService,
-    private readonly configService: ConfigService
+    private readonly imageStorageService: StorageService
   ) {}
 
   async getUserProfile(userId: number) {

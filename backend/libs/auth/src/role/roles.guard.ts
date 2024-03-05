@@ -1,6 +1,6 @@
 import type { CanActivate, ExecutionContext } from '@nestjs/common'
 import { Reflector } from '@nestjs/core'
-import { Guard, ROLES_KEY } from '@libs/decorator'
+import { Guard, PUBLIC_KEY, ROLES_KEY } from '@libs/decorator'
 import { ForbiddenException } from '@libs/exception'
 import { Role } from '@prisma/client'
 import type { AuthenticatedRequest } from '../authenticated-request.interface'
@@ -20,29 +20,34 @@ export class RolesGuard implements CanActivate {
   }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    try {
-      let request: AuthenticatedRequest
+    const request: AuthenticatedRequest = context.switchToHttp().getRequest()
 
-      const role =
-        this.reflector.getAllAndOverride<Role>(ROLES_KEY, [
-          context.getHandler(),
-          context.getClass()
-        ]) ?? Role.User
+    const isPublic = this.reflector.getAllAndOverride<boolean>(PUBLIC_KEY, [
+      context.getHandler(),
+      context.getClass()
+    ])
 
-      const user = request.user
-
-      if (!user.role) {
-        const userRole = (await this.service.getUserRole(user.id)).role
-        user.role = userRole
-      }
-
-      if (this.#rolesHierarchy[user.role] >= this.#rolesHierarchy[role]) {
-        return true
-      }
-
-      return false
-    } catch (error) {
-      throw new ForbiddenException('접근 권한이 없습니다')
+    if (isPublic) {
+      return true
     }
+
+    const role =
+      this.reflector.getAllAndOverride<Role>(ROLES_KEY, [
+        context.getHandler(),
+        context.getClass()
+      ]) ?? Role.User
+
+    const user = request.user
+
+    if (!user.role) {
+      const userRole = (await this.service.getUserRole(user.id)).role
+      user.role = userRole
+    }
+
+    if (this.#rolesHierarchy[user.role] >= this.#rolesHierarchy[role]) {
+      return true
+    }
+
+    throw new ForbiddenException('접근 권한이 없습니다')
   }
 }
