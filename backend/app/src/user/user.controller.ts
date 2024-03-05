@@ -12,8 +12,10 @@ import {
 } from '@nestjs/common'
 import { FileInterceptor } from '@nestjs/platform-express'
 import { AuthenticatedRequest } from '@libs/auth'
+import { Roles } from '@libs/decorator'
 import { BusinessExceptionHandler } from '@libs/exception'
 import { IMAGE_OPTIONS } from '@libs/storage'
+import { Role } from '@prisma/client'
 import { UpdateUserProfileDTO } from './dto/user.dto'
 import { UserService } from './user.service'
 
@@ -30,6 +32,7 @@ export class UserController {
     }
   }
 
+  @Roles(Role.Admin)
   @Get('list')
   async getUsers(
     @Query('page', ParseIntPipe) page: number,

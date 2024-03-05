@@ -45,7 +45,7 @@ export default function Pagination({ totalPages }: { totalPages: number }) {
             <PaginationItem key={index}>
               <PaginationLink
                 href={createPageUrl(page)}
-                isActive={index === currentPage - 1}
+                isActive={page === currentPage}
               >
                 {page}
               </PaginationLink>
