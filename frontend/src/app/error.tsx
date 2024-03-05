@@ -21,8 +21,8 @@ export default function Error({ error }: Props) {
         className="h-auto w-40 sm:w-60"
         alt="ROYALS"
       />
-      <p className="mt-8 text-2xl font-extrabold text-amber-400">
-        Something Went Wrong!
+      <p className="mt-8 text-2xl font-extrabold text-red-500">
+        예상치 못한 오류가 발생했습니다
       </p>
       <p className="mb-4 max-w-[36rem] text-lg font-semibold">
         {error.message || 'Unknown Error'}

@@ -21,3 +21,10 @@ export interface UserProfile extends UserBasic {
   profileImageUrl?: string
   status: AccountStatus
 }
+
+export interface UserListItem extends UserProfile {}
+
+export interface UserList {
+  total: number
+  users: UserListItem[]
+}

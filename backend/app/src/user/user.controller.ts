@@ -3,7 +3,9 @@ import {
   Body,
   Controller,
   Get,
+  ParseIntPipe,
   Put,
+  Query,
   Req,
   UploadedFile,
   UseInterceptors
@@ -23,6 +25,18 @@ export class UserController {
   async getUserProfile(@Req() req: AuthenticatedRequest) {
     try {
       return await this.userService.getUserProfile(req.user.id)
+    } catch (error) {
+      BusinessExceptionHandler(error)
+    }
+  }
+
+  @Get('list')
+  async getUsers(
+    @Query('page', ParseIntPipe) page: number,
+    @Query('limit', new ParseIntPipe({ optional: true })) limit?: number
+  ) {
+    try {
+      return await this.userService.getUsers(page, limit)
     } catch (error) {
       BusinessExceptionHandler(error)
     }

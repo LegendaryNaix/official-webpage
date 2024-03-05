@@ -56,7 +56,7 @@ const fetcher = {
         }
       }
 
-      throw new Error('fetch failed')
+      throw new Error(data.message ?? 'Internal Server Error')
     }
 
     return data as T

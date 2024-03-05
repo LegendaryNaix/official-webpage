@@ -8,7 +8,7 @@ import {
 } from '@libs/exception'
 import { PrismaService } from '@libs/prisma'
 import { StorageService } from '@libs/storage'
-import { formatFileUrl } from '@libs/utils'
+import { calculatePaginationOffset, formatFileUrl } from '@libs/utils'
 import { Prisma } from '@prisma/client'
 import type { UpdateUserProfileDTO } from './dto/user.dto'
 
@@ -52,6 +52,26 @@ export class UserService {
 
       throw new UnexpectedException(error)
     }
+  }
+
+  async getUsers(page: number, limit = 10) {
+    const users = await this.prisma.user.findMany({
+      skip: calculatePaginationOffset(page, limit),
+      take: limit,
+      select: {
+        id: true,
+        username: true,
+        nickname: true,
+        role: true,
+        email: true,
+        lastLogin: true,
+        profileImageUrl: true,
+        status: true
+      }
+    })
+
+    const total = await this.prisma.user.count()
+    return { users, total }
   }
 
   async updateProfile(userId: number, userDTO: UpdateUserProfileDTO) {
