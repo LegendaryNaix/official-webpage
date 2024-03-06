@@ -19,13 +19,13 @@ data "aws_cloudfront_origin_request_policy" "exclude_host_header" {
 
 resource "aws_cloudfront_distribution" "main" {
   origin {
-    domain_name = var.vercel_origin_dns
-    origin_id   = "vercel"
+    domain_name = "https://main.d266s39inqzl61.amplifyapp.com"
+    origin_id   = "amplify"
 
     custom_origin_config {
       http_port              = 80
       https_port             = 443
-      origin_protocol_policy = "http-only"
+      origin_protocol_policy = "https-only"
       origin_ssl_protocols   = ["TLSv1.2"]
     }
   }
@@ -50,7 +50,7 @@ resource "aws_cloudfront_distribution" "main" {
   default_cache_behavior {
     allowed_methods          = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
     cached_methods           = ["GET", "HEAD", "OPTIONS"]
-    target_origin_id         = "vercel"
+    target_origin_id         = "amplify"
     viewer_protocol_policy   = "redirect-to-https"
     cache_policy_id          = data.aws_cloudfront_cache_policy.disable.id
     origin_request_policy_id = data.aws_cloudfront_origin_request_policy.exclude_host_header.id
