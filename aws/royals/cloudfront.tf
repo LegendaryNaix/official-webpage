@@ -19,7 +19,7 @@ data "aws_cloudfront_origin_request_policy" "exclude_host_header" {
 
 resource "aws_cloudfront_distribution" "main" {
   origin {
-    domain_name = "https://main.d266s39inqzl61.amplifyapp.com"
+    domain_name = "main.d266s39inqzl61.amplifyapp.com"
     origin_id   = "amplify"
 
     custom_origin_config {
