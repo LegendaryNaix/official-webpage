@@ -44,9 +44,8 @@ resource "aws_cloudfront_distribution" "main" {
     }
   }
 
-  enabled    = true
-  comment    = "SKKU ROYALS CloudFront"
-  web_acl_id = data.aws_wafv2_web_acl.main.arn
+  enabled = true
+  comment = "SKKU ROYALS CloudFront"
 
   aliases = ["skku-royals.com"]
 
