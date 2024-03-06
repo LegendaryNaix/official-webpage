@@ -21,10 +21,9 @@ resource "aws_cloudfront_distribution" "main" {
     }
   }
 
-  price_class = "PriceClass_200"
-  enabled     = true
-  comment     = "skku-royals-cdn-cloudfront-distribution"
-  aliases     = ["cdn.skku-royals.com"]
+  enabled = true
+  comment = "skku-royals-cdn-cloudfront-distribution"
+  aliases = ["cdn.skku-royals.com"]
 
 
   restrictions {
