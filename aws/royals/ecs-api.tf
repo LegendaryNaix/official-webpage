@@ -84,6 +84,7 @@ resource "aws_ecs_task_definition" "api" {
     jwt_secret          = var.jwt_secret,
     cdn_base_url        = var.cdn_base_url,
     aws_cdn_bucket_name = var.aws_cdn_bucket_name
+    vercel_hostname     = var.vercel_origin_dns
   })
 
   execution_role_arn = aws_iam_role.ecs_task_execution_role.arn
