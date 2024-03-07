@@ -35,6 +35,7 @@ CREATE TABLE "user" (
     "last_password_changed" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "last_login" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "status" "AccountStatus" NOT NULL DEFAULT 'Verifying',
+    "profile_image_url" TEXT,
 
     CONSTRAINT "user_pkey" PRIMARY KEY ("id")
 );
@@ -76,6 +77,7 @@ CREATE TABLE "attendance" (
 -- CreateTable
 CREATE TABLE "schedule" (
     "id" SERIAL NOT NULL,
+    "survey_group_id" INTEGER NOT NULL,
     "name" VARCHAR(64) NOT NULL,
     "date" TIMESTAMP(3) NOT NULL,
     "type" "ScheduleType" NOT NULL DEFAULT 'Exercise',
@@ -174,6 +176,9 @@ ALTER TABLE "attendance" ADD CONSTRAINT "attendance_schedule_id_fkey" FOREIGN KE
 
 -- AddForeignKey
 ALTER TABLE "attendance" ADD CONSTRAINT "attendance_roster_id_fkey" FOREIGN KEY ("roster_id") REFERENCES "roster"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "schedule" ADD CONSTRAINT "schedule_survey_group_id_fkey" FOREIGN KEY ("survey_group_id") REFERENCES "surveyGroup"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "surveyTarget" ADD CONSTRAINT "surveyTarget_roster_id_fkey" FOREIGN KEY ("roster_id") REFERENCES "roster"("id") ON DELETE CASCADE ON UPDATE CASCADE;

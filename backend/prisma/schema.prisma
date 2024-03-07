@@ -76,7 +76,7 @@ model User {
   Rosters  Roster[]
   Storages Storage[]
   Posts    Post[]
-  Comment  Comment[]
+  Comments Comment[]
 
   @@map("user")
 }
@@ -100,7 +100,7 @@ model Roster {
 
   Storage       Storage?       @relation(fields: [profileImageId], references: [id], onDelete: SetNull)
   User          User?          @relation(fields: [userId], references: [id], onDelete: SetNull)
-  Attendance    Attendance[]
+  Attendances   Attendance[]
   SurveyTargets SurveyTarget[]
 
   @@map("roster")
@@ -122,12 +122,14 @@ model Attendance {
 }
 
 model Schedule {
-  id          Int          @id @default(autoincrement())
-  name        String       @db.VarChar(64)
-  date        DateTime
-  type        ScheduleType @default(Exercise)
-  description String       @db.Text
+  id            Int          @id @default(autoincrement())
+  surveyGroupId Int          @map("survey_group_id")
+  name          String       @db.VarChar(64)
+  date          DateTime
+  type          ScheduleType @default(Exercise)
+  description   String       @db.Text
 
+  SurveyGroup SurveyGroup  @relation(fields: [surveyGroupId], references: [id], onDelete: Cascade)
   Attendances Attendance[]
 
   @@map("schedule")
@@ -140,7 +142,8 @@ model SurveyGroup {
   endedAt   DateTime @map("ended_at")
   required  Boolean  @default(true)
 
-  SurveyTarget SurveyTarget[]
+  SurveyTargets SurveyTarget[]
+  Schedules     Schedule[]
 
   @@map("surveyGroup")
 }
@@ -193,10 +196,10 @@ model Comment {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  Post     Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
-  User     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  Parent   Comment?  @relation("SubComments", fields: [parentId], references: [id], onDelete: Cascade)
-  Children Comment[] @relation("SubComments")
+  Post      Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
+  User      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Parent    Comment?  @relation("SubComments", fields: [parentId], references: [id], onDelete: Cascade)
+  Childrens Comment[] @relation("SubComments")
 
   @@map("comment")
 }

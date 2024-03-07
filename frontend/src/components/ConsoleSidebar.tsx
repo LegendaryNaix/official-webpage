@@ -1,19 +1,13 @@
 'use client'
 
-import { getCurrentUserProfile } from '@/lib/actions'
 import { auth } from '@/lib/auth'
+import fetcher from '@/lib/fetcher'
 import type { UserProfile } from '@/lib/types/user'
 import { Dialog, Transition } from '@headlessui/react'
 import {
   ArrowRightStartOnRectangleIcon,
   Bars3Icon,
-  CalendarIcon,
-  ChartPieIcon,
-  EnvelopeIcon,
-  FireIcon,
   HomeIcon,
-  LinkIcon,
-  PencilIcon,
   UserIcon,
   UsersIcon,
   XMarkIcon
@@ -32,24 +26,29 @@ const navigation = [
     icon: HomeIcon,
     role: 'User'
   },
+  // {
+  //   name: '건의사항',
+  //   href: '/console/appeal',
+  //   icon: EnvelopeIcon,
+  //   role: 'User'
+  // },
+  // {
+  //   name: '로스터연결',
+  //   href: '/console/roster',
+  //   icon: LinkIcon,
+  //   role: 'User'
+  // },
   {
-    name: '건의사항',
-    href: '/console/appeal',
-    icon: EnvelopeIcon,
-    role: 'User'
-  },
-  {
-    name: '로스터연결',
+    name: '부원관리',
     href: '/console/roster',
-    icon: LinkIcon,
-    role: 'User'
+    icon: UsersIcon,
+    role: 'Manager'
   },
-  { name: '부원관리', href: '#', icon: UsersIcon, role: 'Manager' },
-  { name: '시합관리', href: '#', icon: FireIcon, role: 'Manager' },
-  { name: '일정관리', href: '#', icon: CalendarIcon, role: 'Manager' },
-  { name: '계정관리', href: '/console/account', icon: UserIcon, role: 'Admin' },
-  { name: '출석변경', href: '#', icon: PencilIcon, role: 'Admin' },
-  { name: '출석통계', href: '#', icon: ChartPieIcon, role: 'Admin' }
+  // { name: '시합관리', href: '#', icon: FireIcon, role: 'Manager' },
+  // { name: '일정관리', href: '#', icon: CalendarIcon, role: 'Manager' },
+  { name: '계정관리', href: '/console/account', icon: UserIcon, role: 'Admin' }
+  // { name: '출석변경', href: '#', icon: PencilIcon, role: 'Admin' },
+  // { name: '출석통계', href: '#', icon: ChartPieIcon, role: 'Admin' }
 ]
 
 export default function ConsoleSidebar() {
@@ -97,7 +96,7 @@ export default function ConsoleSidebar() {
 
   useEffect(() => {
     const getProfile = async () => {
-      const profile = await getCurrentUserProfile()
+      const profile = await fetcher.get<UserProfile>('/user')
       setProfile(profile)
     }
 

@@ -4,7 +4,7 @@ import { calculateTotalPages } from '@/lib/utils'
 import { PAGINATION_LIMIT_DEFAULT } from '@/lib/vars'
 import UserListTable from './_component/UserListTable'
 
-export default async function Account({
+export default async function AccountPage({
   searchParams
 }: {
   searchParams?: {
