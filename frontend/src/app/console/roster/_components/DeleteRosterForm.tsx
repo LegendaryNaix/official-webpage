@@ -1,53 +1,83 @@
 'use client'
 
+import { Button } from '@/components/ui/button'
 import {
   Drawer,
+  DrawerClose,
   DrawerContent,
   DrawerDescription,
+  DrawerFooter,
   DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger
+  DrawerTitle
 } from '@/components/ui/drawer'
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
-  FormLabel
+  FormLabel,
+  FormMessage
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import fetcher from '@/lib/fetcher'
 import { RosterFormSchema } from '@/lib/forms'
 import type { RosterListItem } from '@/lib/types/roster'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import type { Dispatch, SetStateAction } from 'react'
 import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
 import type { z } from 'zod'
 
-export function DeleteRosterForm({ roster }: { roster: RosterListItem }) {
+export function DeleteRosterForm({
+  roster,
+  open,
+  setOpen
+}: {
+  roster: RosterListItem
+  open: boolean
+  setOpen: Dispatch<SetStateAction<boolean>>
+}) {
+  const router = useRouter()
+
   const DeleteRosterFormSchema = RosterFormSchema.pick({
     id: true,
     name: true,
     studentId: true
   })
 
-  const [open, setOpen] = useState(false)
-
   const form = useForm<z.infer<typeof DeleteRosterFormSchema>>({
     resolver: zodResolver(DeleteRosterFormSchema),
     defaultValues: {
-      id: roster.id
+      id: roster.id,
+      name: '',
+      studentId: ''
     }
   })
 
+  const onSubmit = async (data: z.infer<typeof DeleteRosterFormSchema>) => {
+    if (data.name !== roster.name || data.studentId !== roster.studentId) {
+      toast.warning('이름 또는 학번을 확인해주세요')
+      return
+    }
+
+    try {
+      await fetcher.delete<RosterListItem>(`/rosters/${roster.id}`, {}, false)
+
+      setOpen(false)
+      toast.success(`부원 ${roster.name}을 삭제했습니다`)
+      router.refresh()
+    } catch (error) {
+      toast.error('부원을 삭제하지 못했습니다')
+    }
+  }
+
   return (
     <Drawer open={open} onOpenChange={setOpen}>
-      <DrawerTrigger asChild>
-        <button>삭제</button>
-      </DrawerTrigger>
       <DrawerContent>
         <div className="mx-auto w-full max-w-sm">
           <Form {...form}>
-            <form>
+            <form onSubmit={form.handleSubmit(onSubmit)}>
               <DrawerHeader>
                 <DrawerTitle>로스터 삭제</DrawerTitle>
                 <DrawerDescription>
@@ -62,8 +92,9 @@ export function DeleteRosterForm({ roster }: { roster: RosterListItem }) {
                     <FormItem>
                       <FormLabel>이름</FormLabel>
                       <FormControl>
-                        <Input {...field} placeholder={roster.backNumber} />
+                        <Input {...field} placeholder={roster.name} />
                       </FormControl>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -76,10 +107,19 @@ export function DeleteRosterForm({ roster }: { roster: RosterListItem }) {
                       <FormControl>
                         <Input {...field} placeholder={roster.studentId} />
                       </FormControl>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
               </div>
+              <DrawerFooter>
+                <Button type="submit" className="w-full">
+                  삭제하기
+                </Button>
+                <DrawerClose asChild>
+                  <Button variant="outline">취소</Button>
+                </DrawerClose>
+              </DrawerFooter>
             </form>
           </Form>
         </div>

@@ -17,6 +17,8 @@ import { UserIcon } from '@heroicons/react/24/outline'
 import type { ColumnDef } from '@tanstack/react-table'
 import { MoreHorizontal } from 'lucide-react'
 import Image from 'next/image'
+import { useState } from 'react'
+import { toast } from 'sonner'
 import { DeleteRosterForm } from './DeleteRosterForm'
 
 export default function RosterListTable({
@@ -24,7 +26,15 @@ export default function RosterListTable({
 }: {
   rosters: RosterListItem[]
 }) {
-  const createTypeBadge = (type: RosterType) => {
+  const [open, setOpen] = useState(false)
+  const [targetRoster, setTargetRoster] = useState<RosterListItem>()
+
+  const handleClick = (roster: RosterListItem) => {
+    setTargetRoster(roster)
+    setOpen(true)
+  }
+
+  const renderRosterType = (type: RosterType) => {
     switch (type) {
       case RosterType.Athlete:
         return <Badge color={BadgeColor.indigo} content="선수" />
@@ -35,6 +45,19 @@ export default function RosterListTable({
       case RosterType.HeadCoach:
       default:
         return <Badge color={BadgeColor.red} content="감독" />
+    }
+  }
+
+  const renderAthletePosition = (roster: RosterListItem) => {
+    const positions = []
+    switch (roster.type) {
+      case RosterType.Athlete:
+        roster.offPosition ? positions.push(roster.offPosition) : null
+        roster.defPosition ? positions.push(roster.defPosition) : null
+        roster.splPosition ? positions.push(roster.splPosition) : null
+        return <p>{positions.join('/')}</p>
+      default:
+        return <p>-</p>
     }
   }
 
@@ -69,7 +92,15 @@ export default function RosterListTable({
       accessorKey: 'type',
       header: '구분',
       cell: ({ row }) => {
-        return createTypeBadge(row.getValue('type'))
+        return renderRosterType(row.getValue('type'))
+      }
+    },
+    {
+      id: 'position',
+      header: '포지션',
+      cell: ({ row }) => {
+        const roster = row.original
+        return renderAthletePosition(roster)
       }
     },
     {
@@ -100,11 +131,13 @@ export default function RosterListTable({
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>메뉴</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => alert(roster.id)}>
+              <DropdownMenuItem
+                onClick={() => toast.warning('준비중인 기능입니다')}
+              >
                 수정
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <DeleteRosterForm roster={roster} />
+              <DropdownMenuItem onClick={() => handleClick(roster)}>
+                삭제
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -113,5 +146,12 @@ export default function RosterListTable({
     }
   ]
 
-  return <DataTable columns={columns} data={rosters} />
+  return (
+    <>
+      <DataTable columns={columns} data={rosters} />
+      {targetRoster && (
+        <DeleteRosterForm roster={targetRoster} open={open} setOpen={setOpen} />
+      )}
+    </>
+  )
 }

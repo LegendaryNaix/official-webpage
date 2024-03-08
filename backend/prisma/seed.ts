@@ -146,7 +146,7 @@ const createAccounts = async () => {
       registerYear: 2019,
       studentId: '2019310003',
       status: RosterStatus.Enable,
-      type: RosterType.Athlete
+      type: RosterType.Staff
     },
     {
       name: 'staff02',
