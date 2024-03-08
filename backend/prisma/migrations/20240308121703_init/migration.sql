@@ -20,7 +20,7 @@ CREATE TYPE "BoardType" AS ENUM ('Public', 'Notice', 'Appeal', 'Gallery');
 CREATE TYPE "ScheduleType" AS ENUM ('Exercise', 'Event', 'Game');
 
 -- CreateEnum
-CREATE TYPE "AttendanceResponse" AS ENUM ('Present');
+CREATE TYPE "AttendanceResponse" AS ENUM ('Present', 'Absence', 'Tardy');
 
 -- CreateTable
 CREATE TABLE "user" (
@@ -44,7 +44,7 @@ CREATE TABLE "user" (
 CREATE TABLE "roster" (
     "id" SERIAL NOT NULL,
     "user_id" INTEGER,
-    "profile_image_id" INTEGER,
+    "profile_image_url" TEXT,
     "name" VARCHAR(32) NOT NULL,
     "status" "RosterStatus" NOT NULL,
     "type" "RosterType" NOT NULL,
@@ -165,8 +165,8 @@ CREATE UNIQUE INDEX "user_username_key" ON "user"("username");
 -- CreateIndex
 CREATE UNIQUE INDEX "user_email_key" ON "user"("email");
 
--- AddForeignKey
-ALTER TABLE "roster" ADD CONSTRAINT "roster_profile_image_id_fkey" FOREIGN KEY ("profile_image_id") REFERENCES "storage"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+-- CreateIndex
+CREATE UNIQUE INDEX "roster_student_id_key" ON "roster"("student_id");
 
 -- AddForeignKey
 ALTER TABLE "roster" ADD CONSTRAINT "roster_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "user"("id") ON DELETE SET NULL ON UPDATE CASCADE;

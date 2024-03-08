@@ -57,6 +57,8 @@ enum ScheduleType {
 
 enum AttendanceResponse {
   Present
+  Absence
+  Tardy
 }
 
 model User {
@@ -82,23 +84,22 @@ model User {
 }
 
 model Roster {
-  id             Int          @id @default(autoincrement())
-  userId         Int?         @map("user_id")
-  profileImageId Int?         @map("profile_image_id")
-  name           String       @db.VarChar(32)
-  status         RosterStatus
-  type           RosterType
-  offPosition    String?      @map("off_position")
-  defPosition    String?      @map("def_position")
-  splPosition    String?      @map("spl_position")
-  registerYear   Int          @map("register_year")
-  admissionYear  Int          @map("admission_year")
-  class          String       @db.VarChar(32)
-  studentId      String       @map("student_id") @db.VarChar(16)
-  backNumber     Int?         @map("back_number")
-  target         Boolean      @default(true)
+  id              Int          @id @default(autoincrement())
+  userId          Int?         @map("user_id")
+  profileImageUrl String?      @map("profile_image_url") @db.Text
+  name            String       @db.VarChar(32)
+  status          RosterStatus
+  type            RosterType
+  offPosition     String?      @map("off_position")
+  defPosition     String?      @map("def_position")
+  splPosition     String?      @map("spl_position")
+  registerYear    Int          @map("register_year")
+  admissionYear   Int          @map("admission_year")
+  class           String       @db.VarChar(32)
+  studentId       String       @unique @map("student_id") @db.VarChar(16)
+  backNumber      Int?         @map("back_number")
+  target          Boolean      @default(true)
 
-  Storage       Storage?       @relation(fields: [profileImageId], references: [id], onDelete: SetNull)
   User          User?          @relation(fields: [userId], references: [id], onDelete: SetNull)
   Attendances   Attendance[]
   SurveyTargets SurveyTarget[]
@@ -212,7 +213,6 @@ model Storage {
 
   User            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
   PostAttachments PostAttachment[]
-  Rosters         Roster[]
 
   @@map("storage")
 }
