@@ -18,11 +18,13 @@ terraform {
 module "royals" {
   source = "./royals"
 
-  region            = var.region
-  vercel_origin_dns = var.vercel_origin_dns
-  postgres_password = var.postgres_password
-  postgres_username = var.postgres_username
-  jwt_secret        = var.jwt_secret
+  region              = var.region
+  vercel_origin_dns   = var.vercel_origin_dns
+  postgres_password   = var.postgres_password
+  postgres_username   = var.postgres_username
+  jwt_secret          = var.jwt_secret
+  cdn_base_url        = var.cdn_base_url
+  aws_cdn_bucket_name = var.aws_cdn_bucket_name
 }
 
 module "cdn" {

@@ -36,11 +36,9 @@ variable "redis_port" {
 }
 
 variable "cdn_base_url" {
-  type    = string
-  default = "cdn.skku-royals.com"
+  type = string
 }
 
 variable "aws_cdn_bucket_name" {
-  type    = string
-  default = "skku-royals-cdn-bucket"
+  type = string
 }
