@@ -30,7 +30,7 @@ export class RosterController {
     @Query('page', ParseIntPipe) page: number,
     @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
     @Query('filter') filter?: string
-  ): Promise<Roster[]> {
+  ): Promise<{ total: number; rosters: Roster[] }> {
     try {
       return await this.rosterService.getRosters(page, limit, filter)
     } catch (error) {

@@ -25,3 +25,13 @@ export const AccountFormSchema = z.object({
     message: '비밀번호는 최소 6글자 이상이어야 합니다'
   })
 })
+
+export const RosterFormSchema = z.object({
+  id: z.number(),
+  name: z.string().min(1, {
+    message: '필수 입력 사항압니다'
+  }),
+  studentId: z.string().min(1, {
+    message: '필수 입력 사항입니다'
+  })
+})

@@ -5,7 +5,7 @@ import LocalTime from '@/components/Localtime'
 import type { UserListItem } from '@/lib/types/user'
 import type { ColumnDef } from '@tanstack/react-table'
 
-export const columns: ColumnDef<UserListItem>[] = [
+const columns: ColumnDef<UserListItem>[] = [
   {
     accessorKey: 'id',
     header: 'ID'

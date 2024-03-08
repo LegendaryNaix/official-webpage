@@ -42,11 +42,11 @@ export class RosterService {
     page: number,
     limit = 10,
     filter?: string
-  ): Promise<Roster[]> {
+  ): Promise<{ total: number; rosters: Roster[] }> {
     try {
       const status = this.checkRosterStatus(filter)
 
-      return await this.prisma.roster.findMany({
+      const rosters = await this.prisma.roster.findMany({
         where: {
           status
         },
@@ -56,6 +56,14 @@ export class RosterService {
           name: 'asc'
         }
       })
+
+      const total = await this.prisma.roster.count({
+        where: {
+          status
+        }
+      })
+
+      return { total, rosters }
     } catch (error) {
       if (error instanceof BusinessException) throw error
       throw new UnexpectedException(error)
