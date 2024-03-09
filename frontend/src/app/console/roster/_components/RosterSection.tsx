@@ -4,9 +4,9 @@ import { getRosters } from '@/lib/actions'
 import { calculateTotalPages } from '@/lib/utils'
 import { PAGINATION_LIMIT_DEFAULT } from '@/lib/vars'
 import Link from 'next/link'
-import RosterListTable from './_components/RosterListTable'
+import RosterListTable from './RosterListTable'
 
-export default async function RosterPage({
+export default async function RosterSection({
   searchParams
 }: {
   searchParams?: {
@@ -17,7 +17,7 @@ export default async function RosterPage({
   const rosterList = await getRosters(currentPage)
 
   return (
-    <main className="mx-auto flex w-full flex-grow flex-col items-center justify-start">
+    <section className="w-full">
       <div className="mt-4 flex w-full items-center justify-between px-4 text-left sm:px-6">
         <h1 className="text-base font-bold sm:text-xl">부원명단</h1>
         <Link href="/console/roster/new">
@@ -33,6 +33,6 @@ export default async function RosterPage({
           )}
         />
       </div>
-    </main>
+    </section>
   )
 }

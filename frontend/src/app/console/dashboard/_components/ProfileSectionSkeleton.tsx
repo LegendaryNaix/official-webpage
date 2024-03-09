@@ -9,10 +9,10 @@ export default function ProfileSectionSkeleton() {
           <Skeleton className="h-20 w-20 rounded-full" />
         </div>
         <div className="col-span-3 flex h-full flex-col items-center justify-center space-y-1.5 sm:col-span-2 sm:items-start">
-          <Skeleton className="h-[20px] w-52 rounded-full" />
-          <Skeleton className="h-[20px] w-52 rounded-full" />
-          <Skeleton className="h-[20px] w-52 rounded-full" />
-          <Skeleton className="h-[20px] w-52 rounded-full" />
+          <Skeleton className="h-[14px] w-52 rounded-full" />
+          <Skeleton className="h-[14px] w-52 rounded-full" />
+          <Skeleton className="h-[14px] w-52 rounded-full" />
+          <Skeleton className="h-[14px] w-52 rounded-full" />
         </div>
       </div>
     </Section>
