@@ -96,3 +96,13 @@ export const RosterFormSchema = z.object({
       }
     )
 })
+
+export const SurveyGroupSchema = z.object({
+  id: z.number(),
+  name: z.string().min(1, { message: '필수 입력 항목입니다' }),
+  startedAtDate: z.date(),
+  startedAtTime: z.string().min(1, { message: '필수 입력 항목입니다' }),
+  endedAtDate: z.date(),
+  endedAtTime: z.string().min(1, { message: '필수 입력 항목입니다' }),
+  required: z.boolean()
+})

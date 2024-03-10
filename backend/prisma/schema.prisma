@@ -50,7 +50,8 @@ enum BoardType {
 }
 
 enum ScheduleType {
-  Exercise
+  IntegratedExercise
+  SeperatedExercise
   Event
   Game
 }
@@ -59,6 +60,12 @@ enum AttendanceResponse {
   Present
   Absence
   Tardy
+}
+
+enum AttendanceLocation {
+  Seoul
+  Suwon
+  Other
 }
 
 model User {
@@ -108,13 +115,15 @@ model Roster {
 }
 
 model Attendance {
-  id         Int                @id @default(autoincrement())
-  rosterId   Int                @map("roster_id")
-  scheduleId Int                @map("schedule_id")
-  createdAt  DateTime           @default(now())
-  updatedAt  DateTime           @updatedAt
+  id         Int                 @id @default(autoincrement())
+  rosterId   Int                 @map("roster_id")
+  scheduleId Int                 @map("schedule_id")
+  createdAt  DateTime            @default(now())
+  updatedAt  DateTime            @updatedAt
   response   AttendanceResponse
-  reason     String?            @db.Text
+  reason     String?             @db.Text
+  result     AttendanceResponse?
+  location   AttendanceLocation?
 
   Schedule Schedule @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
   Roster   Roster   @relation(fields: [rosterId], references: [id], onDelete: Cascade)
@@ -126,8 +135,9 @@ model Schedule {
   id            Int          @id @default(autoincrement())
   surveyGroupId Int          @map("survey_group_id")
   name          String       @db.VarChar(64)
-  date          DateTime
-  type          ScheduleType @default(Exercise)
+  startedAt     DateTime     @map("started_at")
+  endedAt       DateTime     @map("ended_at")
+  type          ScheduleType @default(IntegratedExercise)
   description   String       @db.Text
 
   SurveyGroup SurveyGroup  @relation(fields: [surveyGroupId], references: [id], onDelete: Cascade)

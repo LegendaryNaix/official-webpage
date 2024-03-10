@@ -1,12 +1,12 @@
 import Pagination from '@/components/Pagination'
 import { Button } from '@/components/ui/button'
-import { getRosters } from '@/lib/actions'
+import { getSurveyGroups } from '@/lib/actions'
 import { calculateTotalPages } from '@/lib/utils'
 import { PAGINATION_LIMIT_DEFAULT } from '@/lib/vars'
 import Link from 'next/link'
-import RosterListTable from './RosterListTable'
+import SurveyGroupListTable from './_components/SurveyGroupListTable'
 
-export default async function RosterSection({
+export default async function SurveyPage({
   searchParams
 }: {
   searchParams?: {
@@ -14,25 +14,25 @@ export default async function RosterSection({
   }
 }) {
   const currentPage = Number(searchParams?.page) || 1
-  const rosterList = await getRosters(currentPage)
+  const surveyGroupList = await getSurveyGroups(currentPage)
 
   return (
-    <section className="w-full">
+    <main className="mx-auto flex w-full flex-grow flex-col items-center justify-start">
       <div className="mt-4 flex w-full items-center justify-between px-4 text-left sm:px-6">
-        <h1 className="text-base font-bold sm:text-xl">부원명단</h1>
-        <Link href="/console/roster/new">
-          <Button variant="outline">부원 생성하기</Button>
+        <h1 className="text-base font-bold sm:text-xl">출석조사 목록</h1>
+        <Link href="/console/survey/new">
+          <Button variant="outline">출석조사 생성</Button>
         </Link>
       </div>
       <div className="flex w-full flex-grow flex-col gap-5 py-4 sm:px-6">
-        <RosterListTable rosters={rosterList.rosters} />
+        <SurveyGroupListTable surveyGroups={surveyGroupList.surveyGroups} />
         <Pagination
           totalPages={calculateTotalPages(
-            rosterList.total,
+            surveyGroupList.total,
             PAGINATION_LIMIT_DEFAULT
           )}
         />
       </div>
-    </section>
+    </main>
   )
 }

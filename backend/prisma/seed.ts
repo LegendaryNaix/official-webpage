@@ -180,6 +180,49 @@ const createAccounts = async () => {
   await prisma.roster.createMany({
     data: rosters
   })
+
+  const surveyGroups: Prisma.SurveyGroupCreateManyInput[] = [
+    {
+      name: '1주차 출석조사',
+      startedAt: new Date('2024-01-01T01:00:00.000Z'),
+      endedAt: new Date('2024-01-03T11:00:00.000Z'),
+      required: true
+    },
+    {
+      name: '2주차 출석조사',
+      startedAt: new Date('2024-01-08T01:00:00.000Z'),
+      endedAt: new Date('2024-01-10T11:00:00.000Z'),
+      required: true
+    },
+    {
+      name: '3주차 출석조사',
+      startedAt: new Date('2024-02-01T01:00:00.000Z'),
+      endedAt: new Date('2024-02-03T11:00:00.000Z'),
+      required: false
+    },
+    {
+      name: '4주차 출석조사',
+      startedAt: new Date('2024-03-01T01:00:00.000Z'),
+      endedAt: new Date('2024-03-03T11:00:00.000Z'),
+      required: true
+    },
+    {
+      name: '5주차 출석조사',
+      startedAt: new Date('2024-03-05T01:00:00.000Z'),
+      endedAt: new Date('2024-03-15T11:00:00.000Z'),
+      required: true
+    },
+    {
+      name: '6주차 출석조사',
+      startedAt: new Date('2024-03-25T01:00:00.000Z'),
+      endedAt: new Date('2024-03-28T11:00:00.000Z'),
+      required: true
+    }
+  ]
+
+  await prisma.surveyGroup.createMany({
+    data: surveyGroups
+  })
 }
 
 const main = async () => {

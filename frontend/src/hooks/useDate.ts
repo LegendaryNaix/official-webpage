@@ -25,11 +25,12 @@ export const useDate = () => {
 
   /**
    * 로컬 시간대를 기준으로 특정 날짜를 생성합니다.
-   * @param {string} dateString - 날짜 문자열 ("YYYY-MM-DD" 형식)
+   * @param {string} dateString - 날짜 문자열 ("YYYY-MM-DD HH:mm" 형식)
+   * @param {string} format - 제공된 날짜 문자열의 형식
    * @returns {Moment} 생성된 Moment 객체
    */
-  const createLocalDate = (dateString: string): Moment => {
-    return moment(dateString)
+  const createLocalDate = (dateString: string, format: string): Moment => {
+    return moment(dateString, format)
   }
 
   /**

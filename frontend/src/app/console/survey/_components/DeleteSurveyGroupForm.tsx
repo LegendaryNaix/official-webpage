@@ -1,5 +1,3 @@
-'use client'
-
 import { Button } from '@/components/ui/button'
 import {
   Drawer,
@@ -20,8 +18,8 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import fetcher from '@/lib/fetcher'
-import { RosterFormSchema } from '@/lib/forms'
-import type { RosterListItem } from '@/lib/types/roster'
+import { SurveyGroupSchema } from '@/lib/forms'
+import type { SurveyGroupListItem } from '@/lib/types/survey'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
 import { useEffect, type Dispatch, type SetStateAction, useState } from 'react'
@@ -29,12 +27,12 @@ import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import type { z } from 'zod'
 
-export function DeleteRosterForm({
-  roster,
+export default function DeleteSurveyGroupForm({
+  surveyGroup,
   open,
   setOpen
 }: {
-  roster: RosterListItem
+  surveyGroup: SurveyGroupListItem
   open: boolean
   setOpen: Dispatch<SetStateAction<boolean>>
 }) {
@@ -42,35 +40,35 @@ export function DeleteRosterForm({
 
   const [isFetching, setIsFetching] = useState(false)
 
-  const DeleteRosterFormSchema = RosterFormSchema.pick({
-    name: true,
-    studentId: true
+  const DeleteSurveyGroupFormSchema = SurveyGroupSchema.pick({
+    name: true
   })
 
-  const form = useForm<z.infer<typeof DeleteRosterFormSchema>>({
-    resolver: zodResolver(DeleteRosterFormSchema),
+  const form = useForm<z.infer<typeof DeleteSurveyGroupFormSchema>>({
+    resolver: zodResolver(DeleteSurveyGroupFormSchema),
     defaultValues: {
-      name: '',
-      studentId: ''
+      name: ''
     }
   })
 
-  const onSubmit = async (data: z.infer<typeof DeleteRosterFormSchema>) => {
+  const onSubmit = async (
+    data: z.infer<typeof DeleteSurveyGroupFormSchema>
+  ) => {
     setIsFetching(true)
 
-    if (data.name !== roster.name || data.studentId !== roster.studentId) {
-      toast.warning('이름 또는 학번을 확인해주세요')
+    if (data.name !== surveyGroup.name) {
+      toast.warning('출석조사명을 확인해주세요')
       return
     }
 
     try {
-      await fetcher.delete<RosterListItem>(`/rosters/${roster.id}`, {}, false)
+      await fetcher.delete(`/surveys/groups/${surveyGroup.id}`)
 
       setOpen(false)
-      toast.success(`부원 ${roster.name}을 삭제했습니다`)
+      toast.success('출석조사를 삭제했습니다')
       router.refresh()
     } catch (error) {
-      toast.error('부원을 삭제하지 못했습니다')
+      toast.error('출석조사를 삭제하지 못했습니다')
     } finally {
       setIsFetching(false)
     }
@@ -101,22 +99,9 @@ export function DeleteRosterForm({
                   name="name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>이름</FormLabel>
+                      <FormLabel>출석조사명</FormLabel>
                       <FormControl>
-                        <Input {...field} placeholder={roster.name} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="studentId"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>학번</FormLabel>
-                      <FormControl>
-                        <Input {...field} placeholder={roster.studentId} />
+                        <Input {...field} placeholder={surveyGroup.name} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

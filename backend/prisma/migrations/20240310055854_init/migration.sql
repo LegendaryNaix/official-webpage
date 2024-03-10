@@ -17,10 +17,13 @@ CREATE TYPE "StorageType" AS ENUM ('Document', 'Image', 'Video');
 CREATE TYPE "BoardType" AS ENUM ('Public', 'Notice', 'Appeal', 'Gallery');
 
 -- CreateEnum
-CREATE TYPE "ScheduleType" AS ENUM ('Exercise', 'Event', 'Game');
+CREATE TYPE "ScheduleType" AS ENUM ('IntegratedExercise', 'SeperatedExercise', 'Event', 'Game');
 
 -- CreateEnum
 CREATE TYPE "AttendanceResponse" AS ENUM ('Present', 'Absence', 'Tardy');
+
+-- CreateEnum
+CREATE TYPE "AttendanceLocation" AS ENUM ('Seoul', 'Suwon', 'Other');
 
 -- CreateTable
 CREATE TABLE "user" (
@@ -70,6 +73,8 @@ CREATE TABLE "attendance" (
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "response" "AttendanceResponse" NOT NULL,
     "reason" TEXT,
+    "result" "AttendanceResponse",
+    "location" "AttendanceLocation",
 
     CONSTRAINT "attendance_pkey" PRIMARY KEY ("id")
 );
@@ -79,8 +84,9 @@ CREATE TABLE "schedule" (
     "id" SERIAL NOT NULL,
     "survey_group_id" INTEGER NOT NULL,
     "name" VARCHAR(64) NOT NULL,
-    "date" TIMESTAMP(3) NOT NULL,
-    "type" "ScheduleType" NOT NULL DEFAULT 'Exercise',
+    "started_at" TIMESTAMP(3) NOT NULL,
+    "ended_at" TIMESTAMP(3) NOT NULL,
+    "type" "ScheduleType" NOT NULL DEFAULT 'IntegratedExercise',
     "description" TEXT NOT NULL,
 
     CONSTRAINT "schedule_pkey" PRIMARY KEY ("id")

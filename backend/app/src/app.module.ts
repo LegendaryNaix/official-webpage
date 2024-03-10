@@ -14,8 +14,10 @@ import { PrismaModule } from '@libs/prisma'
 import { StorageModule } from '@libs/storage'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
+import { AttendanceModule } from './attendance/attendance.module'
 import { AuthModule } from './auth/auth.module'
 import { RosterModule } from './roster/roster.module'
+import { SurveyModule } from './survey/survey.module'
 import { UserModule } from './user/user.module'
 
 @Module({
@@ -31,7 +33,9 @@ import { UserModule } from './user/user.module'
     UserModule,
     RolesModule,
     StorageModule,
-    RosterModule
+    RosterModule,
+    SurveyModule,
+    AttendanceModule
   ],
   controllers: [AppController],
   providers: [

@@ -22,12 +22,15 @@ import { RosterFormSchema } from '@/lib/forms'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { SelectValue } from '@radix-ui/react-select'
 import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import type { z } from 'zod'
 
 export default function CreateRosterForm() {
   const router = useRouter()
+
+  const [isFetching, setIsFetching] = useState(false)
 
   const CreateRosterFormSchema = RosterFormSchema.omit({ id: true })
 
@@ -44,6 +47,8 @@ export default function CreateRosterForm() {
   })
 
   const onSubmit = async (data: z.infer<typeof CreateRosterFormSchema>) => {
+    setIsFetching(true)
+
     try {
       await fetcher.post('/rosters', {
         ...data,
@@ -53,6 +58,8 @@ export default function CreateRosterForm() {
       toast.success('부원을 등록했습니다')
     } catch (error) {
       toast.error('부원을 등록하지 못했습니다')
+    } finally {
+      setIsFetching(false)
     }
   }
 
@@ -251,7 +258,9 @@ export default function CreateRosterForm() {
           </>
         )}
         <div className="col-span-12 flex space-x-1">
-          <Button type="submit">생성하기</Button>
+          <Button type="submit" disabled={isFetching}>
+            생성하기
+          </Button>
           <Button variant={'outline'} onClick={() => router.back()}>
             목록으로
           </Button>
