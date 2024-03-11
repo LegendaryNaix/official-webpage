@@ -54,7 +54,7 @@ export default function CreateRosterForm() {
         ...data,
         class: data.class === '' ? '없음' : data.class
       })
-      router.push('/console/roster')
+      router.push('/console/roster?revalidate=true')
       toast.success('부원을 등록했습니다')
     } catch (error) {
       toast.error('부원을 등록하지 못했습니다')
@@ -261,7 +261,11 @@ export default function CreateRosterForm() {
           <Button type="submit" disabled={isFetching}>
             생성하기
           </Button>
-          <Button variant={'outline'} onClick={() => router.back()}>
+          <Button
+            type="button"
+            variant={'outline'}
+            onClick={() => router.back()}
+          >
             목록으로
           </Button>
         </div>

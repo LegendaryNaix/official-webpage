@@ -23,3 +23,10 @@ export enum RosterType {
   Coach = 'Coach',
   HeadCoach = 'HeadCoach'
 }
+
+export enum ScheduleType {
+  IntegratedExercise = 'IntegratedExercise',
+  SeperatedExercise = 'SeperatedExercise',
+  Game = 'Game',
+  Event = 'Event'
+}

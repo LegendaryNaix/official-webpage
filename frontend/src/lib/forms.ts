@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { RosterStatus, RosterType } from './enums'
+import { RosterStatus, RosterType, ScheduleType } from './enums'
 
 export const LoginFormSchema = z.object({
   username: z.string().min(1, {
@@ -105,4 +105,16 @@ export const SurveyGroupSchema = z.object({
   endedAtDate: z.date(),
   endedAtTime: z.string().min(1, { message: '필수 입력 항목입니다' }),
   required: z.boolean()
+})
+
+export const ScheduleSchema = z.object({
+  id: z.number(),
+  surveyGroupId: z.number(),
+  name: z.string().min(1, { message: '필수 입력 항목입니다' }),
+  startedAtDate: z.date(),
+  startedAtTime: z.string().min(1, { message: '필수 입력 항목입니다' }),
+  endedAtDate: z.date(),
+  endedAtTime: z.string().min(1, { message: '필수 입력 항목입니다' }),
+  type: z.nativeEnum(ScheduleType),
+  description: z.string().min(1, { message: '필수 입력 항목입니다' })
 })

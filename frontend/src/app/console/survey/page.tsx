@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button'
 import { getSurveyGroups } from '@/lib/actions'
 import { calculateTotalPages } from '@/lib/utils'
 import { PAGINATION_LIMIT_DEFAULT } from '@/lib/vars'
+import { revalidatePath } from 'next/cache'
 import Link from 'next/link'
 import SurveyGroupListTable from './_components/SurveyGroupListTable'
 
@@ -11,10 +12,15 @@ export default async function SurveyPage({
 }: {
   searchParams?: {
     page?: string
+    revalidate?: string
   }
 }) {
   const currentPage = Number(searchParams?.page) || 1
   const surveyGroupList = await getSurveyGroups(currentPage)
+
+  if (searchParams?.revalidate) {
+    revalidatePath('/console/roster')
+  }
 
   return (
     <main className="mx-auto flex w-full flex-grow flex-col items-center justify-start">

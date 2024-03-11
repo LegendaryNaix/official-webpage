@@ -89,7 +89,7 @@ export default function UpdateSurveyGroupForm({
     const data = {
       startedAt: toUTCString(
         createLocalDate(
-          formData.startedAtDate.toISOString().substring(0, 10) +
+          `${formData.startedAtDate.getFullYear()}-${formData.startedAtDate.getMonth() + 1}-${formData.startedAtDate.getDate()}` +
             ' ' +
             formData.startedAtTime,
           'YYYY-MM-DD HH:mm'
@@ -97,7 +97,7 @@ export default function UpdateSurveyGroupForm({
       ),
       endedAt: toUTCString(
         createLocalDate(
-          formData.endedAtDate.toISOString().substring(0, 10) +
+          `${formData.endedAtDate.getFullYear()}-${formData.endedAtDate.getMonth() + 1}-${formData.endedAtDate.getDate()}` +
             ' ' +
             formData.endedAtTime,
           'YYYY-MM-DD HH:mm'
