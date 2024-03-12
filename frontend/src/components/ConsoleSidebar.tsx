@@ -192,6 +192,7 @@ export default function ConsoleSidebar() {
                                         !pathname.startsWith(item.href)
                                     }
                                   )}
+                                  onClick={() => setSidebarOpen(false)}
                                 >
                                   <item.icon
                                     className="h-6 w-6 shrink-0"
