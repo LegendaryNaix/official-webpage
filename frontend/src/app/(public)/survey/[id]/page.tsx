@@ -2,6 +2,7 @@ import { getSurveyGroup } from '@/lib/actions'
 import type { Metadata } from 'next'
 import StudentIdForm from './_components/StudentIdForm'
 import SubmitSurveySection from './_components/SubmitSurveySection'
+import SurveyGroupCardSection from './_components/SurveyGroupCardSection'
 
 export async function generateMetadata({
   params
@@ -27,10 +28,10 @@ export default async function SubmitSurvey({
 }) {
   return (
     <main className="mx-auto flex w-full max-w-7xl flex-grow flex-col items-center justify-center p-6 lg:px-8">
-      <div className="flex w-full max-w-[480px] flex-col items-center gap-y-10">
+      <div className="flex w-full max-w-[320px] flex-col items-center gap-y-10">
+        <SurveyGroupCardSection params={params} />
         {searchParams?.studentId ? (
           <div className="flex w-full flex-col space-y-3">
-            <h1 className="text-lg font-bold sm:text-xl">선택한 출석조사</h1>
             <SubmitSurveySection params={params} searchParams={searchParams} />
           </div>
         ) : (

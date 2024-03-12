@@ -117,7 +117,7 @@ export default function SubmitSurveyForm({
         <div className="flex w-full flex-col space-y-5">
           {form.getValues('attendances').map((attendance, index) => {
             return (
-              <Card key={index} className="py-10">
+              <Card key={index} className="py-5">
                 <CardTitle className="px-6">
                   #{index + 1} {schedules[index].name}
                 </CardTitle>

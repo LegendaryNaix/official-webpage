@@ -1,6 +1,5 @@
 import { getSurveyGroupWithSchedules } from '@/lib/actions'
 import SubmitSurveyForm from './SubmitSurveyForm'
-import SurveyGroupCard from './SurveyGroupCard'
 
 export default async function SubmitSurveySection({
   params,
@@ -9,13 +8,10 @@ export default async function SubmitSurveySection({
   params: { id: number }
   searchParams?: { studentId?: string }
 }) {
-  const { surveyGroup, schedules } = await getSurveyGroupWithSchedules(
-    params.id
-  )
+  const { schedules } = await getSurveyGroupWithSchedules(params.id)
 
   return (
     <section>
-      <SurveyGroupCard surveyGroup={surveyGroup} />
       {searchParams?.studentId && (
         <SubmitSurveyForm
           schedules={schedules}
