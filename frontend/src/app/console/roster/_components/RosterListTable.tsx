@@ -55,9 +55,9 @@ export default function RosterListTable({
         roster.offPosition ? positions.push(roster.offPosition) : null
         roster.defPosition ? positions.push(roster.defPosition) : null
         roster.splPosition ? positions.push(roster.splPosition) : null
-        return <p>{positions.join('/')}</p>
+        return <p className="text-nowrap">{positions.join('/')}</p>
       default:
-        return <p>-</p>
+        return <p className="text-nowrap">-</p>
     }
   }
 
@@ -83,7 +83,7 @@ export default function RosterListTable({
                 <UserIcon />
               )}
             </div>
-            <p>{roster.name}</p>
+            <p className="text-nowrap">{roster.name}</p>
           </div>
         )
       }

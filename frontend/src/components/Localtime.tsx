@@ -1,6 +1,7 @@
 'use client'
 
 import { useDate } from '@/hooks/useDate'
+import clsx from 'clsx'
 
 export default function LocalTime({
   utc,
@@ -14,7 +15,11 @@ export default function LocalTime({
 }) {
   const { parseUTCDate, formatDate } = useDate()
   return (
-    <time defaultValue={utc} className={className} {...props}>
+    <time
+      defaultValue={utc}
+      className={clsx('text-nowrap', className)}
+      {...props}
+    >
       {formatDate(parseUTCDate(utc), format)}
     </time>
   )
