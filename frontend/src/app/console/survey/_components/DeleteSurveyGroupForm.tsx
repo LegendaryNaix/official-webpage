@@ -58,6 +58,7 @@ export default function DeleteSurveyGroupForm({
 
     if (data.name !== surveyGroup.name) {
       toast.warning('출석조사명을 확인해주세요')
+      setIsFetching(false)
       return
     }
 

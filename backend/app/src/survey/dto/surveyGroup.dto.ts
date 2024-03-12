@@ -1,10 +1,12 @@
+import { CreateAttendanceDTO } from '@/attendance/dto/attendance.dto'
 import { Type } from 'class-transformer'
 import {
   IsBoolean,
   IsDate,
   IsNotEmpty,
   IsOptional,
-  IsString
+  IsString,
+  ValidateNested
 } from 'class-validator'
 
 export class CreateSurveyGroupDTO {
@@ -45,4 +47,14 @@ export class UpdateSurveyGroupDTO {
   @IsBoolean()
   @IsOptional()
   required?: boolean
+}
+
+export class SubmitSurveyDTO {
+  @IsString()
+  @IsNotEmpty()
+  studentId: string
+
+  @ValidateNested({ each: true })
+  @Type(() => CreateAttendanceDTO)
+  attendances: CreateAttendanceDTO[]
 }

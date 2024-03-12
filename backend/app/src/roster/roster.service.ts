@@ -38,6 +38,24 @@ export class RosterService {
     }
   }
 
+  async getRosterByStudentId(studentId: string): Promise<Roster> {
+    try {
+      return await this.prisma.roster.findUniqueOrThrow({
+        where: {
+          studentId
+        }
+      })
+    } catch (error) {
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === 'P2025'
+      ) {
+        throw new EntityNotExistException('로스터가 존재하지 않습니다')
+      }
+      throw new UnexpectedException(error)
+    }
+  }
+
   async getRosters(
     page: number,
     limit = 10,

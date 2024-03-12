@@ -1,17 +1,33 @@
+import { AttendanceService } from '@/attendance/attendance.service'
+import { RosterService } from '@/roster/roster.service'
 import { Service } from '@libs/decorator'
-import { EntityNotExistException, UnexpectedException } from '@libs/exception'
+import {
+  BusinessException,
+  EntityNotExistException,
+  UnexpectedException
+} from '@libs/exception'
 import { PrismaService } from '@libs/prisma'
 import { calculatePaginationOffset } from '@libs/utils'
-import { Prisma, type Schedule, type SurveyGroup } from '@prisma/client'
+import {
+  Prisma,
+  RosterStatus,
+  type Schedule,
+  type SurveyGroup
+} from '@prisma/client'
 import type { CreateScheduleDTO, UpdateScheduleDTO } from './dto/schedule.dto'
 import type {
   CreateSurveyGroupDTO,
+  SubmitSurveyDTO,
   UpdateSurveyGroupDTO
 } from './dto/surveyGroup.dto'
 
 @Service()
 export class SurveyService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly rosterService: RosterService,
+    private readonly attendanceService: AttendanceService
+  ) {}
 
   async getSurveyGroup(surveyGroupId: number): Promise<SurveyGroup> {
     try {
@@ -91,10 +107,18 @@ export class SurveyService {
     surveyGroupDTO: CreateSurveyGroupDTO
   ): Promise<SurveyGroup> {
     try {
-      return await this.prisma.surveyGroup.create({
+      const surveyGroup = await this.prisma.surveyGroup.create({
         data: surveyGroupDTO
       })
+
+      if (surveyGroupDTO.required)
+        await this.createSurveyTargets(surveyGroup.id)
+
+      return surveyGroup
     } catch (error) {
+      if (error instanceof BusinessException) {
+        throw error
+      }
       throw new UnexpectedException(error)
     }
   }
@@ -192,6 +216,77 @@ export class SurveyService {
         throw new EntityNotExistException('스케쥴이 존재하지 않습니다')
       }
       throw new UnexpectedException(error)
+    }
+  }
+
+  async submitSurvey(
+    surveyGroupId: number,
+    surveyDTO: SubmitSurveyDTO
+  ): Promise<{ count: number }> {
+    try {
+      const { studentId, attendances } = surveyDTO
+      const roster = await this.rosterService.getRosterByStudentId(studentId)
+
+      await this.prisma.surveyTarget.update({
+        where: {
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          rosterId_surveyGroupId: {
+            rosterId: roster.id,
+            surveyGroupId
+          }
+        },
+        data: {
+          submit: true
+        }
+      })
+
+      return await this.attendanceService.createAttendances(
+        roster.id,
+        attendances
+      )
+    } catch (error) {
+      if (error instanceof BusinessException) {
+        throw error
+      }
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === 'P2025'
+      ) {
+        throw new EntityNotExistException('출석조사 대상이 아닙니다')
+      }
+      throw new UnexpectedException(error)
+    }
+  }
+
+  private async createSurveyTargets(surveyGroupId: number): Promise<void> {
+    try {
+      const surveyTargetRosters = await this.prisma.roster.findMany({
+        where: {
+          status: RosterStatus.Enable
+        },
+        select: {
+          id: true
+        }
+      })
+
+      const surveyTargets = surveyTargetRosters.map((surveyTargetRoster) => {
+        return {
+          rosterId: surveyTargetRoster.id,
+          surveyGroupId,
+          submit: false
+        }
+      })
+
+      await this.prisma.surveyTarget.createMany({
+        data: surveyTargets
+      })
+    } catch (error) {
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === 'P2003'
+      ) {
+        throw new EntityNotExistException('출석조사 그룹이 존재하지 않습니다')
+      }
     }
   }
 }

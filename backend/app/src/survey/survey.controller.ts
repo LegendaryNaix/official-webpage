@@ -15,7 +15,8 @@ import { Role, type Schedule, type SurveyGroup } from '@prisma/client'
 import { CreateScheduleDTO, UpdateScheduleDTO } from './dto/schedule.dto'
 import {
   CreateSurveyGroupDTO,
-  UpdateSurveyGroupDTO
+  UpdateSurveyGroupDTO,
+  SubmitSurveyDTO
 } from './dto/surveyGroup.dto'
 import { SurveyService } from './survey.service'
 
@@ -73,6 +74,19 @@ export class SurveyController {
   ): Promise<SurveyGroup> {
     try {
       return await this.surveyService.createSurveyGroup(surveyGroupDTO)
+    } catch (error) {
+      BusinessExceptionHandler(error)
+    }
+  }
+
+  @Public()
+  @Post('/groups/:surveyGroupId/submit')
+  async submitSurvey(
+    @Param('surveyGroupId', ParseIntPipe) surveyGroupId: number,
+    @Body() surveyDTO: SubmitSurveyDTO
+  ): Promise<{ count: number }> {
+    try {
+      return await this.surveyService.submitSurvey(surveyGroupId, surveyDTO)
     } catch (error) {
       BusinessExceptionHandler(error)
     }

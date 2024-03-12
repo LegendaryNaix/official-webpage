@@ -108,6 +108,7 @@ export default function CreateSurveyForm() {
 
     if (surveyGroupData.startedAt >= surveyGroupData.endedAt) {
       toast.warning('출석조사 시작시간은 종료시간보다 빨라야합니다')
+      setIsFetching(false)
       return
     }
 
@@ -140,6 +141,7 @@ export default function CreateSurveyForm() {
         toast.warning(
           `일정 시작시간은 종료시간보다 빨라야합니다 [일정 #${index + 1}]`
         )
+        setIsFetching(false)
         return
       }
     })

@@ -30,3 +30,15 @@ export enum ScheduleType {
   Game = 'Game',
   Event = 'Event'
 }
+
+export enum AttendanceStatus {
+  Present = 'Present',
+  Absence = 'Absence',
+  Tardy = 'Tardy'
+}
+
+export enum AttendanceLocation {
+  Seoul = 'Seoul',
+  Suwon = 'Suwon',
+  Other = 'Other'
+}

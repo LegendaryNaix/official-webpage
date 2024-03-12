@@ -50,6 +50,18 @@ export class RosterController {
     }
   }
 
+  @Public()
+  @Get('studentId/:studentId')
+  async getRostersByStudentId(
+    @Param('studentId') studentId: string
+  ): Promise<Roster> {
+    try {
+      return await this.rosterService.getRosterByStudentId(studentId)
+    } catch (error) {
+      BusinessExceptionHandler(error)
+    }
+  }
+
   @Roles(Role.Admin)
   @Put(':rosterId')
   async updateRoster(
