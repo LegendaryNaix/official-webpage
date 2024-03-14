@@ -72,7 +72,9 @@ export class RosterService {
         skip: calculatePaginationOffset(page, limit),
         orderBy: [
           {
-            admissionYear: 'asc',
+            admissionYear: 'asc'
+          },
+          {
             name: 'asc'
           }
         ]
