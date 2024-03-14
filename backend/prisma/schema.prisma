@@ -167,7 +167,7 @@ model SurveyTarget {
   Roster      Roster      @relation(fields: [rosterId], references: [id], onDelete: Cascade)
   SurveyGroup SurveyGroup @relation(fields: [surveyGroupId], references: [id], onDelete: Cascade)
 
-  @@id([rosterId, surveyGroupId])
+  @@unique([rosterId, surveyGroupId])
   @@map("surveyTarget")
 }
 

@@ -107,9 +107,7 @@ CREATE TABLE "surveyGroup" (
 CREATE TABLE "surveyTarget" (
     "roster_id" INTEGER NOT NULL,
     "survey_group_id" INTEGER NOT NULL,
-    "submit" BOOLEAN NOT NULL DEFAULT false,
-
-    CONSTRAINT "surveyTarget_pkey" PRIMARY KEY ("roster_id","survey_group_id")
+    "submit" BOOLEAN NOT NULL DEFAULT false
 );
 
 -- CreateTable
@@ -173,6 +171,9 @@ CREATE UNIQUE INDEX "user_email_key" ON "user"("email");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "roster_student_id_key" ON "roster"("student_id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "surveyTarget_roster_id_survey_group_id_key" ON "surveyTarget"("roster_id", "survey_group_id");
 
 -- AddForeignKey
 ALTER TABLE "roster" ADD CONSTRAINT "roster_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "user"("id") ON DELETE SET NULL ON UPDATE CASCADE;
