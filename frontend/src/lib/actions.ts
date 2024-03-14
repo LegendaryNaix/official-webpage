@@ -1,7 +1,10 @@
 'use server'
 
+import type { RosterType } from './enums'
 import fetcher from './fetcher'
+import type { AttendanceList } from './types/attendance'
 import type { RosterList } from './types/roster'
+import type { ScheduleList, ScheduleListItem } from './types/schedule'
 import type {
   SurveyGroupList,
   SurveyGroupListItem,
@@ -45,5 +48,28 @@ export const getSurveyGroupWithSchedules = async (
 ): Promise<SurveyGroupWithSchedules> => {
   return await fetcher.get<SurveyGroupWithSchedules>(
     `/surveys/groups/${surveyGroupId}/schedules`
+  )
+}
+
+export const getSchedules = async (page: number): Promise<ScheduleList> => {
+  return await fetcher.get<ScheduleList>(
+    `/surveys/schedules?page=${page}&limit=${PAGINATION_LIMIT_DEFAULT}`
+  )
+}
+
+export const getSchedule = async (
+  scheduleId: number
+): Promise<ScheduleListItem> => {
+  return await fetcher.get<ScheduleListItem>(`/surveys/schedules/${scheduleId}`)
+}
+
+export const getAttendances = async (
+  scheduleId: number,
+  page: number,
+  rosterType: RosterType,
+  searchTerm: string
+): Promise<AttendanceList> => {
+  return await fetcher.get<AttendanceList>(
+    `/attendances?scheduleId=${scheduleId}&page=${page}&rosterType=${rosterType}&searchTerm=${searchTerm}&limit=${PAGINATION_LIMIT_DEFAULT}`
   )
 }

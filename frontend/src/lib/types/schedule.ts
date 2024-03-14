@@ -10,3 +10,9 @@ type ScheduleBasic = {
 }
 
 export interface Schedule extends ScheduleBasic {}
+export interface ScheduleListItem extends ScheduleBasic {}
+
+export interface ScheduleList {
+  schedules: ScheduleListItem[]
+  total: number
+}

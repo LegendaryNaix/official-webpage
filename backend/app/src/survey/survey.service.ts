@@ -103,6 +103,45 @@ export class SurveyService {
     }
   }
 
+  async getSchedules(
+    page: number,
+    limit = 10
+  ): Promise<{ schedules: Schedule[]; total: number }> {
+    try {
+      const schedules = await this.prisma.schedule.findMany({
+        take: limit,
+        skip: calculatePaginationOffset(page, limit),
+        orderBy: {
+          startedAt: 'desc'
+        }
+      })
+
+      const total = await this.prisma.schedule.count()
+
+      return { schedules, total }
+    } catch (error) {
+      throw new UnexpectedException(error)
+    }
+  }
+
+  async getSchedule(scheduleId: number): Promise<Schedule> {
+    try {
+      return await this.prisma.schedule.findUniqueOrThrow({
+        where: {
+          id: scheduleId
+        }
+      })
+    } catch (error) {
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === 'P2025'
+      ) {
+        throw new EntityNotExistException('일정이 존재하지 않습니다')
+      }
+      throw new UnexpectedException(error)
+    }
+  }
+
   async createSurveyGroup(
     surveyGroupDTO: CreateSurveyGroupDTO
   ): Promise<SurveyGroup> {

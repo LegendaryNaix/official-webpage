@@ -64,6 +64,31 @@ export class SurveyController {
   }
 
   @Public()
+  @Get('/schedules')
+  async getSchedules(
+    @Query('page', ParseIntPipe) page: number,
+    @Query('limit', new ParseIntPipe({ optional: true })) limit?: number
+  ): Promise<{ schedules: Schedule[]; total: number }> {
+    try {
+      return await this.surveyService.getSchedules(page, limit)
+    } catch (error) {
+      BusinessExceptionHandler(error)
+    }
+  }
+
+  @Public()
+  @Get('/schedules/:scheduleId')
+  async getSchedule(
+    @Param('scheduleId', ParseIntPipe) scheduleId: number
+  ): Promise<Schedule> {
+    try {
+      return await this.surveyService.getSchedule(scheduleId)
+    } catch (error) {
+      BusinessExceptionHandler(error)
+    }
+  }
+
+  @Public()
   @Get('/groups')
   async getSurveyGroups(
     @Query('page', ParseIntPipe) page: number,

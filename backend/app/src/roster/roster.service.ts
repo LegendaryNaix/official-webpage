@@ -70,9 +70,12 @@ export class RosterService {
         },
         take: limit,
         skip: calculatePaginationOffset(page, limit),
-        orderBy: {
-          name: 'asc'
-        }
+        orderBy: [
+          {
+            admissionYear: 'asc',
+            name: 'asc'
+          }
+        ]
       })
 
       const total = await this.prisma.roster.count({

@@ -50,53 +50,94 @@ export class AttendanceService {
 
   async getAttendances(
     scheduleId: number,
-    searchTerm: string,
+    searchTerm = '',
     page: number,
+    rosterType?: string,
     limit = 10
-  ): Promise<{ attendances: AttendanceWithRoster[] }> {
+  ): Promise<{ attendances: AttendanceWithRoster[]; total: number }> {
     try {
       const attendances = await this.prisma.attendance.findMany({
         where: {
           scheduleId,
           Roster: {
-            OR: [
+            AND: [
               {
-                offPosition: {
-                  contains: searchTerm
-                },
-                defPosition: {
-                  contains: searchTerm
-                },
-                splPosition: {
-                  contains: searchTerm
-                }
+                type: this.transformRosterType(rosterType)
+              },
+              {
+                OR: [
+                  {
+                    offPosition: {
+                      contains: searchTerm
+                    }
+                  },
+                  {
+                    defPosition: {
+                      contains: searchTerm
+                    }
+                  },
+                  {
+                    splPosition: {
+                      contains: searchTerm
+                    }
+                  }
+                ]
               }
             ]
           }
         },
         include: {
-          Roster: {
-            select: {
-              id: true,
-              name: true,
-              type: true,
-              registerYear: true,
-              offPosition: true,
-              defPosition: true,
-              splPosition: true
-            }
-          }
+          Roster: true
         },
         take: limit,
         skip: calculatePaginationOffset(page, limit),
-        orderBy: {
+        orderBy: [
+          {
+            Roster: {
+              admissionYear: 'asc'
+            }
+          },
+          {
+            Roster: {
+              name: 'asc'
+            }
+          }
+        ]
+      })
+
+      const total = await this.prisma.attendance.count({
+        where: {
+          scheduleId,
           Roster: {
-            name: 'asc'
+            AND: [
+              {
+                type: this.transformRosterType(rosterType)
+              },
+              {
+                OR: [
+                  {
+                    offPosition: {
+                      contains: searchTerm
+                    }
+                  },
+                  {
+                    defPosition: {
+                      contains: searchTerm
+                    }
+                  },
+                  {
+                    splPosition: {
+                      contains: searchTerm
+                    }
+                  }
+                ]
+              }
+            ]
           }
         }
       })
 
-      return { attendances }
+      return { attendances, total }
     } catch (error) {
       throw new UnexpectedException(error)
     }
@@ -243,5 +284,13 @@ export class AttendanceService {
     })
 
     return positionCounts
+  }
+
+  private transformRosterType(rosterType: string): RosterType {
+    try {
+      return RosterType[rosterType]
+    } catch (error) {
+      return RosterType.Athlete
+    }
   }
 }

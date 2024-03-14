@@ -4,13 +4,14 @@ import {
   Role,
   AccountStatus,
   RosterStatus,
-  RosterType
+  RosterType,
+  ScheduleType
 } from '@prisma/client'
 import { hash } from 'argon2'
 
 const prisma = new PrismaClient()
 
-const createAccounts = async () => {
+const seedingDatabase = async () => {
   const accounts: Prisma.UserCreateManyInput[] = [
     {
       username: 'user01',
@@ -223,10 +224,100 @@ const createAccounts = async () => {
   await prisma.surveyGroup.createMany({
     data: surveyGroups
   })
+
+  const schedules: Prisma.ScheduleCreateManyInput[] = [
+    {
+      name: '월요일 캠퍼스별 훈련',
+      description: '월요일 캠퍼스별 훈련',
+      surveyGroupId: 1,
+      startedAt: new Date('2024-01-01T08:00:00.000Z'),
+      endedAt: new Date('2024-01-01T11:00:00.000Z'),
+      type: ScheduleType.SeperatedExercise
+    },
+    {
+      name: '수요일 캠퍼스별 훈련',
+      description: '수요일 캠퍼스별 훈련',
+      surveyGroupId: 1,
+      startedAt: new Date('2024-01-03T08:00:00.000Z'),
+      endedAt: new Date('2024-01-03T11:00:00.000Z'),
+      type: ScheduleType.SeperatedExercise
+    },
+    {
+      name: '금요일 통합훈련',
+      description: '금요일 통합훈련',
+      surveyGroupId: 1,
+      startedAt: new Date('2024-01-05T08:00:00.000Z'),
+      endedAt: new Date('2024-01-05T11:00:00.000Z'),
+      type: ScheduleType.IntegratedExercise
+    },
+    {
+      name: '토요일 통합훈련',
+      description: '토요일 통합훈련',
+      surveyGroupId: 1,
+      startedAt: new Date('2024-01-05T23:00:00.000Z'),
+      endedAt: new Date('2024-01-06T02:00:00.000Z'),
+      type: ScheduleType.IntegratedExercise
+    }
+  ]
+
+  await prisma.schedule.createMany({
+    data: schedules
+  })
+
+  const attendances: Prisma.AttendanceCreateManyInput[] = [
+    {
+      scheduleId: 1,
+      rosterId: 1,
+      response: 'Present'
+    },
+    {
+      scheduleId: 1,
+      rosterId: 2,
+      response: 'Present'
+    },
+    {
+      scheduleId: 1,
+      rosterId: 3,
+      response: 'Present'
+    },
+    {
+      scheduleId: 1,
+      rosterId: 5,
+      response: 'Tardy',
+      reason: '수업'
+    },
+    {
+      scheduleId: 1,
+      rosterId: 6,
+      response: 'Tardy',
+      reason: '수업'
+    },
+    {
+      scheduleId: 1,
+      rosterId: 7,
+      response: 'Absence',
+      reason: '수업'
+    },
+    {
+      scheduleId: 1,
+      rosterId: 9,
+      response: 'Present'
+    },
+    {
+      scheduleId: 1,
+      rosterId: 9,
+      response: 'Absence',
+      reason: '수업'
+    }
+  ]
+
+  await prisma.attendance.createMany({
+    data: attendances
+  })
 }
 
 const main = async () => {
-  await createAccounts()
+  await seedingDatabase()
 }
 
 main()

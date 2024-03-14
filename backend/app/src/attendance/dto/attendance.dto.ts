@@ -2,7 +2,7 @@ import {
   AttendanceLocation,
   AttendanceResponse,
   type Attendance,
-  type RosterType
+  type Roster
 } from '@prisma/client'
 import {
   IsEnum,
@@ -50,13 +50,5 @@ export class UpdateAttendanceDTO {
 
 export interface AttendanceWithRoster extends Attendance {
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  Roster: {
-    id: number
-    name: string
-    type: RosterType
-    registerYear: number
-    offPosition?: string
-    defPosition?: string
-    splPosition?: string
-  }
+  Roster: Roster
 }

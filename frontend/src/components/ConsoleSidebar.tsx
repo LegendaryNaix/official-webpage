@@ -9,7 +9,8 @@ import {
   Bars3Icon,
   CalendarIcon,
   HomeIcon,
-  UserIcon,
+  LockClosedIcon,
+  PencilSquareIcon,
   UsersIcon,
   XMarkIcon
 } from '@heroicons/react/24/outline'
@@ -45,16 +46,26 @@ const navigation = [
     icon: UsersIcon,
     role: 'Manager'
   },
+  {
+    name: '계정관리',
+    href: '/console/account',
+    icon: LockClosedIcon,
+    role: 'Admin'
+  },
   // { name: '시합관리', href: '#', icon: FireIcon, role: 'Manager' },
   {
     name: '출석조사',
     href: '/console/survey',
-    icon: CalendarIcon,
+    icon: PencilSquareIcon,
     role: 'Manager'
   },
-  { name: '계정관리', href: '/console/account', icon: UserIcon, role: 'Admin' }
   // { name: '출석변경', href: '#', icon: PencilIcon, role: 'Admin' },
-  // { name: '출석통계', href: '#', icon: ChartPieIcon, role: 'Admin' }
+  {
+    name: '출결관리',
+    href: '/console/schedule',
+    icon: CalendarIcon,
+    role: 'Manager'
+  }
 ]
 
 export default function ConsoleSidebar() {
