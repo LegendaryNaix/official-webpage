@@ -1,3 +1,4 @@
+import type { UnsubmitRosterListItem } from './roster'
 import type { Schedule } from './schedule'
 
 type SurveyGroupBasic = {
@@ -18,4 +19,8 @@ export interface SurveyGroupList {
 export interface SurveyGroupWithSchedules {
   surveyGroup: SurveyGroupBasic
   schedules: Schedule[]
+}
+
+export interface SurveyUnsubmitList {
+  rosters: UnsubmitRosterListItem[]
 }

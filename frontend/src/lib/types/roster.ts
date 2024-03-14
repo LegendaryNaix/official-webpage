@@ -37,3 +37,9 @@ export interface RosterList {
   total: number
   rosters: RosterListItem[]
 }
+
+export interface UnsubmitRosterListItem {
+  name: string
+  admissionYear: number
+  profileImageUrl?: string
+}

@@ -5,7 +5,8 @@ import {
   AccountStatus,
   RosterStatus,
   RosterType,
-  ScheduleType
+  ScheduleType,
+  AttendanceLocation
 } from '@prisma/client'
 import { hash } from 'argon2'
 
@@ -268,29 +269,34 @@ const seedingDatabase = async () => {
     {
       scheduleId: 1,
       rosterId: 1,
-      response: 'Present'
+      response: 'Present',
+      location: AttendanceLocation.Seoul
     },
     {
       scheduleId: 1,
       rosterId: 2,
-      response: 'Present'
+      response: 'Present',
+      location: AttendanceLocation.Seoul
     },
     {
       scheduleId: 1,
       rosterId: 3,
-      response: 'Present'
+      response: 'Present',
+      location: AttendanceLocation.Seoul
     },
     {
       scheduleId: 1,
       rosterId: 5,
       response: 'Tardy',
-      reason: '수업'
+      reason: '수업',
+      location: AttendanceLocation.Suwon
     },
     {
       scheduleId: 1,
       rosterId: 6,
       response: 'Tardy',
-      reason: '수업'
+      reason: '수업',
+      location: AttendanceLocation.Suwon
     },
     {
       scheduleId: 1,
@@ -313,6 +319,33 @@ const seedingDatabase = async () => {
 
   await prisma.attendance.createMany({
     data: attendances
+  })
+
+  const surveyTargets: Prisma.SurveyTargetCreateManyInput[] = [
+    {
+      surveyGroupId: 2,
+      rosterId: 1
+    },
+    {
+      surveyGroupId: 2,
+      rosterId: 2
+    },
+    {
+      surveyGroupId: 2,
+      rosterId: 3
+    },
+    {
+      surveyGroupId: 2,
+      rosterId: 4
+    },
+    {
+      surveyGroupId: 2,
+      rosterId: 5
+    }
+  ]
+
+  await prisma.surveyTarget.createMany({
+    data: surveyTargets
   })
 }
 

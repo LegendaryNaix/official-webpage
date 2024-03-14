@@ -31,8 +31,6 @@ export default async function AttendanceStatisticPage({
     searchTerm
   )
 
-  console.log(attendanceList)
-
   return (
     <main className="mx-auto flex w-full flex-grow flex-col items-center justify-start">
       <div className="mt-4 flex w-full items-center justify-between px-4 text-left sm:px-6">

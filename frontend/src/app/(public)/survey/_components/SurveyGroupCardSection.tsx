@@ -25,6 +25,14 @@ export default async function SurveyGroupCardSection() {
     return <Badge color={BadgeColor.indigo} content="시작전" />
   }
 
+  const isClosedSurvey = (surveyGroup: SurveyGroupListItem) => {
+    const now = new Date()
+    return (
+      now <= new Date(surveyGroup.startedAt) ||
+      now >= new Date(surveyGroup.endedAt)
+    )
+  }
+
   return (
     <>
       <h1 className="text-xl font-bold">출석조사 목록</h1>
@@ -48,27 +56,27 @@ export default async function SurveyGroupCardSection() {
                     시작:{' '}
                     <LocalTime
                       utc={surveyGroup.startedAt}
-                      format="YYYY-MM-DD A HH:mm"
+                      format="YYYY-MM-DD ddd HH:mm"
                     />
                   </p>
                   <p>
                     마감:{' '}
                     <LocalTime
                       utc={surveyGroup.endedAt}
-                      format="YYYY-MM-DD A HH:mm"
+                      format="YYYY-MM-DD ddd HH:mm"
                     />
                   </p>
                 </div>
               </CardContent>
               <CardFooter>
-                <Link href={`/survey/${surveyGroup.id}`}>
-                  <Button
-                    disabled={
-                      new Date() <= new Date(surveyGroup.startedAt) ||
-                      new Date() >= new Date(surveyGroup.endedAt)
-                    }
-                    size="sm"
-                  >
+                <Link
+                  href={
+                    isClosedSurvey(surveyGroup)
+                      ? '#'
+                      : `/survey/${surveyGroup.id}`
+                  }
+                >
+                  <Button disabled={isClosedSurvey(surveyGroup)} size="sm">
                     제출하러가기
                   </Button>
                 </Link>

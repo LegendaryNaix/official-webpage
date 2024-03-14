@@ -15,6 +15,7 @@ import {
 import type { SurveyGroupListItem } from '@/lib/types/survey'
 import type { ColumnDef } from '@tanstack/react-table'
 import { MoreHorizontal } from 'lucide-react'
+import Link from 'next/link'
 import { useState } from 'react'
 import DeleteSurveyGroupForm from './DeleteSurveyGroupForm'
 import UpdateSurveyGroupForm from './UpdateSurveyGroupForm'
@@ -85,7 +86,7 @@ export default function SurveyGroupListTable({
       cell: ({ row }) => {
         return (
           <LocalTime
-            format="YYYY-MM-DD A hh:mm:ss"
+            format="YYYY-MM-DD ddd hh:mm:ss"
             utc={row.getValue('startedAt')}
           />
         )
@@ -97,7 +98,7 @@ export default function SurveyGroupListTable({
       cell: ({ row }) => {
         return (
           <LocalTime
-            format="YYYY-MM-DD A hh:mm:ss"
+            format="YYYY-MM-DD ddd hh:mm:ss"
             utc={row.getValue('endedAt')}
           />
         )
@@ -126,6 +127,12 @@ export default function SurveyGroupListTable({
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>메뉴</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>
+                <Link href={`/console/survey/${surveyGroup.id}/unsubmit`}>
+                  미응답자 확인
+                </Link>
+              </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => handleUpdateClick(surveyGroup)}>
                 수정

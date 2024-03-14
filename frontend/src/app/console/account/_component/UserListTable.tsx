@@ -8,10 +8,6 @@ import type { ColumnDef } from '@tanstack/react-table'
 export default function UserListTable({ users }: { users: UserListItem[] }) {
   const columns: ColumnDef<UserListItem>[] = [
     {
-      accessorKey: 'id',
-      header: 'ID'
-    },
-    {
       accessorKey: 'username',
       header: '아이디'
     },
@@ -38,7 +34,7 @@ export default function UserListTable({ users }: { users: UserListItem[] }) {
         return (
           <LocalTime
             utc={row.getValue('lastLogin')}
-            format="YYYY-MM-DD A hh:mm:ss"
+            format="YYYY-MM-DD ddd HH:mm:ss"
           />
         )
       }

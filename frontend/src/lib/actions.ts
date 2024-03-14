@@ -8,7 +8,8 @@ import type { ScheduleList, ScheduleListItem } from './types/schedule'
 import type {
   SurveyGroupList,
   SurveyGroupListItem,
-  SurveyGroupWithSchedules
+  SurveyGroupWithSchedules,
+  SurveyUnsubmitList
 } from './types/survey'
 import type { UserList, UserProfile } from './types/user'
 import { PAGINATION_LIMIT_DEFAULT } from './vars'
@@ -71,5 +72,11 @@ export const getAttendances = async (
 ): Promise<AttendanceList> => {
   return await fetcher.get<AttendanceList>(
     `/attendances?scheduleId=${scheduleId}&page=${page}&rosterType=${rosterType}&searchTerm=${searchTerm}&limit=${PAGINATION_LIMIT_DEFAULT}`
+  )
+}
+
+export const getSurveyUnsubmits = async (surveyGroupId: number) => {
+  return await fetcher.get<SurveyUnsubmitList>(
+    `/surveys/groups/${surveyGroupId}/unsubmits`
   )
 }
