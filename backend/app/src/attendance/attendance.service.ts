@@ -2,11 +2,22 @@ import { Service } from '@libs/decorator'
 import { EntityNotExistException, UnexpectedException } from '@libs/exception'
 import { PrismaService } from '@libs/prisma'
 import { calculatePaginationOffset } from '@libs/utils'
-import { Prisma } from '@prisma/client'
+import {
+  Prisma,
+  RosterType,
+  type Attendance,
+  type Roster
+} from '@prisma/client'
 import type {
   AttendanceWithRoster,
   CreateAttendanceDTO
 } from './dto/attendance.dto'
+
+export type AttendanceCount = {
+  present: number
+  absence: number
+  tardy: number
+}
 
 @Service()
 export class AttendanceService {
@@ -89,5 +100,148 @@ export class AttendanceService {
     } catch (error) {
       throw new UnexpectedException(error)
     }
+  }
+
+  async getAttendancesGroupedByPosition(scheduleId: number) {
+    try {
+      const athleteAttendances = await this.prisma.attendance.findMany({
+        where: {
+          scheduleId,
+          Roster: {
+            registerYear: {
+              not: new Date().getFullYear()
+            },
+            type: RosterType.Athlete
+          }
+        },
+        include: {
+          Roster: true
+        }
+      })
+
+      const athleteNewbieAttendances = await this.prisma.attendance.findMany({
+        where: {
+          scheduleId,
+          Roster: {
+            registerYear: new Date().getFullYear(),
+            type: RosterType.Athlete
+          }
+        },
+        include: {
+          Roster: true
+        }
+      })
+
+      const staffAttendances = await this.prisma.attendance.findMany({
+        where: {
+          scheduleId,
+          Roster: {
+            type: RosterType.Staff
+          }
+        },
+        include: {
+          Roster: true
+        }
+      })
+
+      return {
+        athlete: this.calculateAthleteAttendances(athleteAttendances),
+        athleteNewbie: this.calculateAthleteAttendances(
+          athleteNewbieAttendances
+        ),
+        staff: this.calculateStaffAttendances(staffAttendances)
+      }
+    } catch (error) {
+      throw new UnexpectedException(error)
+    }
+  }
+
+  private calculateStaffAttendances(
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    attendancesWithRosters: (Attendance & { Roster: Roster })[]
+  ): Record<string, Record<string, AttendanceCount>> {
+    const positionCounts = {
+      staff: {
+        normal: {
+          present: 0,
+          absence: 0,
+          tardy: 0
+        },
+        newbie: {
+          present: 0,
+          absence: 0,
+          tardy: 0
+        }
+      }
+    }
+
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    attendancesWithRosters.forEach(({ Roster, response }) => {
+      const isNewbie = Roster.registerYear === new Date().getFullYear()
+      const counts = positionCounts['staff'][isNewbie ? 'newbie' : 'normal']
+
+      switch (response) {
+        case 'Present':
+          counts.present++
+          break
+        case 'Absence':
+          counts.absence++
+          break
+        case 'Tardy':
+          counts.tardy++
+          break
+      }
+    })
+
+    return positionCounts
+  }
+
+  private calculateAthleteAttendances(
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    attendancesWithRosters: (Attendance & { Roster: Roster })[]
+  ): Record<string, Record<string, AttendanceCount>> {
+    const positionCounts = {
+      off: {},
+      def: {},
+      spl: {}
+    }
+
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    attendancesWithRosters.forEach(({ Roster, response }) => {
+      const updateCounts = (
+        positionType: string,
+        positionValue: string | null
+      ) => {
+        if (positionValue) {
+          if (!positionCounts[positionType][positionValue]) {
+            positionCounts[positionType][positionValue] = {
+              present: 0,
+              absence: 0,
+              tardy: 0
+            }
+          }
+
+          const counts = positionCounts[positionType][positionValue]
+
+          switch (response) {
+            case 'Present':
+              counts.present++
+              break
+            case 'Absence':
+              counts.absence++
+              break
+            case 'Tardy':
+              counts.tardy++
+              break
+          }
+        }
+      }
+
+      updateCounts('off', Roster.offPosition)
+      updateCounts('def', Roster.defPosition)
+      updateCounts('spl', Roster.splPosition)
+    })
+
+    return positionCounts
   }
 }

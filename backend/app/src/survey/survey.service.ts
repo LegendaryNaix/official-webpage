@@ -258,6 +258,44 @@ export class SurveyService {
     }
   }
 
+  async getUnsubmitList(surveyGroupId: number) {
+    try {
+      const surveyTargets = await this.prisma.surveyTarget.findMany({
+        where: {
+          surveyGroupId,
+          submit: false
+        },
+        select: {
+          Roster: {
+            select: {
+              name: true,
+              admissionYear: true,
+              profileImageUrl: true
+            }
+          }
+        }
+      })
+
+      const unsubmitList = surveyTargets.map((item) => {
+        return {
+          name: item.Roster.name,
+          admissionYear: item.Roster.admissionYear,
+          profileImageUrl: item.Roster.profileImageUrl
+        }
+      })
+
+      return { rosters: unsubmitList }
+    } catch (error) {
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === 'P2003'
+      ) {
+        throw new EntityNotExistException('출석조사가 존재하지 않습니다')
+      }
+      throw new UnexpectedException(error)
+    }
+  }
+
   private async createSurveyTargets(surveyGroupId: number): Promise<void> {
     try {
       const surveyTargetRosters = await this.prisma.roster.findMany({

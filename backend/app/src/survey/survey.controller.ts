@@ -51,6 +51,18 @@ export class SurveyController {
     }
   }
 
+  @Roles(Role.Manager)
+  @Get('/groups/:surveyGroupId/unsubmits')
+  async getUnsubmitList(
+    @Param('surveyGroupId', ParseIntPipe) surveyGroupId: number
+  ) {
+    try {
+      return await this.surveyService.getUnsubmitList(surveyGroupId)
+    } catch (error) {
+      BusinessExceptionHandler(error)
+    }
+  }
+
   @Public()
   @Get('/groups')
   async getSurveyGroups(
