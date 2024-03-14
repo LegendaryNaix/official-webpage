@@ -173,6 +173,9 @@ CREATE UNIQUE INDEX "user_email_key" ON "user"("email");
 CREATE UNIQUE INDEX "roster_student_id_key" ON "roster"("student_id");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "attendance_roster_id_schedule_id_key" ON "attendance"("roster_id", "schedule_id");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "surveyTarget_roster_id_survey_group_id_key" ON "surveyTarget"("roster_id", "survey_group_id");
 
 -- AddForeignKey

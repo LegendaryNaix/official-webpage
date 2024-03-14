@@ -267,6 +267,11 @@ export class SurveyService {
       const { studentId, attendances } = surveyDTO
       const roster = await this.rosterService.getRosterByStudentId(studentId)
 
+      const result = await this.attendanceService.createAttendances(
+        roster.id,
+        attendances
+      )
+
       await this.prisma.surveyTarget.update({
         where: {
           // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -280,10 +285,7 @@ export class SurveyService {
         }
       })
 
-      return await this.attendanceService.createAttendances(
-        roster.id,
-        attendances
-      )
+      return result
     } catch (error) {
       if (error instanceof BusinessException) {
         throw error

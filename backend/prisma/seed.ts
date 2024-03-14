@@ -306,7 +306,7 @@ const seedingDatabase = async () => {
     },
     {
       scheduleId: 1,
-      rosterId: 9,
+      rosterId: 8,
       response: 'Present'
     },
     {

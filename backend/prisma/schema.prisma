@@ -128,6 +128,7 @@ model Attendance {
   Schedule Schedule @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
   Roster   Roster   @relation(fields: [rosterId], references: [id], onDelete: Cascade)
 
+  @@unique([rosterId, scheduleId])
   @@map("attendance")
 }
 
