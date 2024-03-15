@@ -13,7 +13,10 @@ export async function generateMetadata({
 
   return {
     title: `${surveyGroup.name}`,
-    description: '성균관대학교 미식축구부 로얄스 홈페이지'
+    description: '성균관대학교 미식축구부 로얄스 홈페이지',
+    openGraph: {
+      images: ['/survey-og.png']
+    }
   }
 }
 
