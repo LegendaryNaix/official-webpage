@@ -37,6 +37,18 @@ export class SurveyController {
   }
 
   @Public()
+  @Get('/groups/:surveyGroupId/is-ended')
+  async checkIsEndedSurvey(
+    @Param('surveyGroupId', ParseIntPipe) surveyGroupId: number
+  ): Promise<{ ended: boolean }> {
+    try {
+      return await this.surveyService.checkIsEndedSurvey(surveyGroupId)
+    } catch (error) {
+      BusinessExceptionHandler(error)
+    }
+  }
+
+  @Public()
   @Get('/groups/:surveyGroupId/schedules')
   async getSurveyGroupWithSchedule(
     @Param('surveyGroupId', ParseIntPipe) surveyGroupId: number

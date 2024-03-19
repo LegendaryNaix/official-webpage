@@ -44,6 +44,15 @@ export const getSurveyGroups = async (
   )
 }
 
+export const getIsEndedSurvey = async (
+  surveyGroupId: number
+): Promise<{ ended: boolean }> => {
+  return await fetcher.get<{ ended: boolean }>(
+    `/surveys/groups/${surveyGroupId}/is-ended`,
+    false
+  )
+}
+
 export const getSurveyGroupWithSchedules = async (
   surveyGroupId: number
 ): Promise<SurveyGroupWithSchedules> => {

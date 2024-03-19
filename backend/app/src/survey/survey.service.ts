@@ -80,6 +80,33 @@ export class SurveyService {
     }
   }
 
+  async checkIsEndedSurvey(surveyGroupId: number): Promise<{
+    ended: boolean
+  }> {
+    try {
+      const now = new Date()
+
+      const { endedAt } = await this.prisma.surveyGroup.findUniqueOrThrow({
+        where: {
+          id: surveyGroupId
+        },
+        select: {
+          endedAt: true
+        }
+      })
+
+      return { ended: new Date(endedAt) >= now }
+    } catch (error) {
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === 'P2025'
+      ) {
+        throw new EntityNotExistException('출석조사 그룹이 존재하지 않습니다')
+      }
+      throw new UnexpectedException(error)
+    }
+  }
+
   async getSurveyGroups(
     page: number,
     limit = 10
