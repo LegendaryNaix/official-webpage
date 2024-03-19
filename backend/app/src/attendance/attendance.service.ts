@@ -10,7 +10,8 @@ import {
 } from '@prisma/client'
 import type {
   AttendanceWithRoster,
-  CreateAttendanceDTO
+  CreateAttendanceDTO,
+  UpdateAttendanceDTO
 } from './dto/attendance.dto'
 
 export type AttendanceCount = {
@@ -193,6 +194,56 @@ export class AttendanceService {
         staff: this.calculateStaffAttendances(staffAttendances)
       }
     } catch (error) {
+      throw new UnexpectedException(error)
+    }
+  }
+
+  async checkAttendance(
+    attendanceId: number,
+    attendanceDTO: UpdateAttendanceDTO
+  ): Promise<Attendance> {
+    try {
+      return await this.prisma.attendance.update({
+        where: {
+          id: attendanceId
+        },
+        data: {
+          result: attendanceDTO.result
+        }
+      })
+    } catch (error) {
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === 'P2025'
+      ) {
+        throw new EntityNotExistException('출결정보가 존재하지 않습니다')
+      }
+      throw new UnexpectedException(error)
+    }
+  }
+
+  async updateAttendance(
+    attendanceId: number,
+    attendanceDTO: UpdateAttendanceDTO
+  ): Promise<Attendance> {
+    try {
+      return await this.prisma.attendance.update({
+        where: {
+          id: attendanceId
+        },
+        data: {
+          location: attendanceDTO.location,
+          response: attendanceDTO.response,
+          reason: attendanceDTO.reason
+        }
+      })
+    } catch (error) {
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === 'P2025'
+      ) {
+        throw new EntityNotExistException('출결정보가 존재하지 않습니다')
+      }
       throw new UnexpectedException(error)
     }
   }

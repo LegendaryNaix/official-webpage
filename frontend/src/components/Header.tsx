@@ -5,6 +5,7 @@ import { Dialog } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import Image from 'next/image'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { ThemeToggle } from './ThemeToggle'
 
@@ -18,6 +19,7 @@ const navigation = [
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [isLogin, setIsLogin] = useState(false)
+  const pathname = usePathname()
 
   useEffect(() => {
     const getSession = async () => {
@@ -28,7 +30,7 @@ export default function Header() {
     }
 
     getSession()
-  }, [])
+  }, [pathname])
 
   return (
     <header className="fixed left-0 top-0 z-10 w-full border-b border-zinc-200 bg-transparent backdrop-blur-sm dark:border-zinc-800">

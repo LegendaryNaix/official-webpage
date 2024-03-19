@@ -8,7 +8,7 @@ export default function ConsoleLayout({
   return (
     <div className="flex min-h-screen flex-col">
       <ConsoleSidebar />
-      <div className="mt-16 flex flex-grow flex-col lg:mt-0 lg:pl-72">
+      <div className="mt-16 flex flex-grow flex-col pb-24 lg:mt-0 lg:pl-72">
         {children}
       </div>
     </div>

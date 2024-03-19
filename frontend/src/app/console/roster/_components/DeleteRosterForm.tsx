@@ -29,7 +29,7 @@ import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import type { z } from 'zod'
 
-export function DeleteRosterForm({
+export default function DeleteRosterForm({
   roster,
   open,
   setOpen

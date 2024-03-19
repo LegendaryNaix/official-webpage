@@ -1,9 +1,21 @@
-import { Controller, Get, ParseIntPipe, Query } from '@nestjs/common'
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+  Put,
+  Query
+} from '@nestjs/common'
 import { Roles } from '@libs/decorator'
 import { BusinessExceptionHandler } from '@libs/exception'
-import { Role } from '@prisma/client'
+import { Role, type Attendance } from '@prisma/client'
 import { AttendanceService } from './attendance.service'
-import type { AttendanceWithRoster } from './dto/attendance.dto'
+import {
+  type AttendanceWithRoster,
+  UpdateAttendanceDTO
+} from './dto/attendance.dto'
 
 @Controller('attendances')
 export class AttendanceController {
@@ -25,6 +37,38 @@ export class AttendanceController {
         page,
         rosterType,
         limit
+      )
+    } catch (error) {
+      BusinessExceptionHandler(error)
+    }
+  }
+
+  @Put(':attendanceId')
+  @Roles(Role.Manager)
+  async updateAttendance(
+    @Param('attendanceId', ParseIntPipe) attendanceId: number,
+    @Body() attendanceDTO: UpdateAttendanceDTO
+  ): Promise<Attendance> {
+    try {
+      return await this.attendanceService.updateAttendance(
+        attendanceId,
+        attendanceDTO
+      )
+    } catch (error) {
+      BusinessExceptionHandler(error)
+    }
+  }
+
+  @Post(':attendanceId/check')
+  @Roles(Role.Manager)
+  async checkAttendance(
+    @Param('attendanceId', ParseIntPipe) attendanceId: number,
+    @Body() attendanceDTO: UpdateAttendanceDTO
+  ): Promise<Attendance> {
+    try {
+      return await this.attendanceService.checkAttendance(
+        attendanceId,
+        attendanceDTO
       )
     } catch (error) {
       BusinessExceptionHandler(error)

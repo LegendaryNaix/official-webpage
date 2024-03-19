@@ -123,7 +123,7 @@ model Attendance {
   response   AttendanceResponse
   reason     String?             @db.Text
   result     AttendanceResponse?
-  location   AttendanceLocation?
+  location   AttendanceLocation? @default(Other)
 
   Schedule Schedule @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
   Roster   Roster   @relation(fields: [rosterId], references: [id], onDelete: Cascade)

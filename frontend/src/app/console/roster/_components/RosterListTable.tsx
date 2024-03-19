@@ -19,7 +19,7 @@ import { MoreHorizontal } from 'lucide-react'
 import Image from 'next/image'
 import { useState } from 'react'
 import { toast } from 'sonner'
-import { DeleteRosterForm } from './DeleteRosterForm'
+import DeleteRosterForm from './DeleteRosterForm'
 
 export default function RosterListTable({
   rosters

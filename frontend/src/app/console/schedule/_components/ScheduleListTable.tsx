@@ -3,7 +3,6 @@
 import Badge, { BadgeColor } from '@/components/Badge'
 import { DataTable } from '@/components/DataTable'
 import LocalTime from '@/components/Localtime'
-import { Button } from '@/components/ui/button'
 import { ScheduleType } from '@/lib/enums'
 import type { ScheduleListItem } from '@/lib/types/schedule'
 import { ArrowRightIcon } from '@heroicons/react/24/outline'
@@ -72,13 +71,11 @@ export default function ScheduleListTable({
     },
     {
       id: 'action',
-      header: '상세보기',
+      header: '',
       cell: ({ row }) => {
         return (
           <Link href={`/console/schedule/${row.getValue('id')}`}>
-            <Button variant="ghost">
-              <ArrowRightIcon className="h-4 w-4" />
-            </Button>
+            <ArrowRightIcon className="h-3 w-3" />
           </Link>
         )
       }

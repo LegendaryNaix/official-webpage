@@ -68,10 +68,11 @@ export const getAttendances = async (
   scheduleId: number,
   page: number,
   rosterType: RosterType,
-  searchTerm: string
+  searchTerm: string,
+  limit?: number
 ): Promise<AttendanceList> => {
   return await fetcher.get<AttendanceList>(
-    `/attendances?scheduleId=${scheduleId}&page=${page}&rosterType=${rosterType}&searchTerm=${searchTerm}&limit=${PAGINATION_LIMIT_DEFAULT}`
+    `/attendances?scheduleId=${scheduleId}&page=${page}&rosterType=${rosterType}&searchTerm=${searchTerm}&limit=${limit ? limit : PAGINATION_LIMIT_DEFAULT}`
   )
 }
 

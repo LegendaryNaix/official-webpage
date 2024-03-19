@@ -17,6 +17,7 @@ import type { ColumnDef } from '@tanstack/react-table'
 import { MoreHorizontal } from 'lucide-react'
 import Link from 'next/link'
 import { useState } from 'react'
+import { toast } from 'sonner'
 import DeleteSurveyGroupForm from './DeleteSurveyGroupForm'
 import UpdateSurveyGroupForm from './UpdateSurveyGroupForm'
 
@@ -128,6 +129,15 @@ export default function SurveyGroupListTable({
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>메뉴</DropdownMenuLabel>
               <DropdownMenuSeparator />
+              <DropdownMenuItem
+                onClick={async () => {
+                  const link = `https://skku-royals.com/survey/${surveyGroup.id}`
+                  await navigator.clipboard.writeText(link)
+                  toast.info('클립보드에 링크가 복사되었습니다')
+                }}
+              >
+                링크 복사
+              </DropdownMenuItem>
               <DropdownMenuItem>
                 <Link href={`/console/survey/${surveyGroup.id}/unsubmit`}>
                   미응답자 확인
