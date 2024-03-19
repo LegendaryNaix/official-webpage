@@ -3,12 +3,21 @@ import LocalTime from '@/components/Localtime'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import type { SurveyGroupListItem } from '@/lib/types/survey'
 import { PencilSquareIcon } from '@heroicons/react/24/outline'
+import { useRouter } from 'next/navigation'
+import { toast } from 'sonner'
 
 export default async function SurveyGroupCard({
   surveyGroup
 }: {
   surveyGroup: SurveyGroupListItem
 }) {
+  const router = useRouter()
+
+  if (new Date(surveyGroup.endedAt) >= new Date()) {
+    toast.error('마감된 출석조사입니다')
+    router.push('/survey')
+  }
+
   const renderSurveyStatus = (surveyGroup: SurveyGroupListItem) => {
     const now = new Date()
     if (now > new Date(surveyGroup.endedAt)) {
@@ -42,12 +51,15 @@ export default async function SurveyGroupCard({
             시작:{' '}
             <LocalTime
               utc={surveyGroup.startedAt}
-              format="YYYY-MM-DD A HH:mm"
+              format="YYYY-MM-DD ddd HH:mm"
             />
           </p>
           <p>
             마감:{' '}
-            <LocalTime utc={surveyGroup.endedAt} format="YYYY-MM-DD A HH:mm" />
+            <LocalTime
+              utc={surveyGroup.endedAt}
+              format="YYYY-MM-DD ddd HH:mm"
+            />
           </p>
         </div>
       </CardContent>
