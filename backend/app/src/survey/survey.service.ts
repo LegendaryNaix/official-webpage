@@ -95,7 +95,7 @@ export class SurveyService {
         }
       })
 
-      return { ended: new Date(endedAt) >= now }
+      return { ended: now >= new Date(endedAt) }
     } catch (error) {
       if (
         error instanceof Prisma.PrismaClientKnownRequestError &&
