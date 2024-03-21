@@ -5,11 +5,12 @@ import { PrismaService } from '@libs/prisma'
 export class RolesService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getUserRole(userId: number) {
+  async getUserRoleAndStatus(userId: number) {
     return await this.prisma.user.findUniqueOrThrow({
       where: { id: userId },
       select: {
-        role: true
+        role: true,
+        status: true
       }
     })
   }

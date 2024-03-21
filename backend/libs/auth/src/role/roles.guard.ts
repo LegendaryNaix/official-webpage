@@ -2,7 +2,7 @@ import type { CanActivate, ExecutionContext } from '@nestjs/common'
 import { Reflector } from '@nestjs/core'
 import { Guard, PUBLIC_KEY, ROLES_KEY } from '@libs/decorator'
 import { ForbiddenException } from '@libs/exception'
-import { Role } from '@prisma/client'
+import { AccountStatus, Role } from '@prisma/client'
 import type { AuthenticatedRequest } from '../authenticated-request.interface'
 import { RolesService } from './roles.service'
 
@@ -39,12 +39,16 @@ export class RolesGuard implements CanActivate {
 
     const user = request.user
 
-    if (!user.role) {
-      const userRole = (await this.service.getUserRole(user.id)).role
-      user.role = userRole
+    if (!user.role || !user.status) {
+      const result = await this.service.getUserRoleAndStatus(user.id)
+      user.role = result.role
+      user.status = result.status
     }
 
-    if (this.#rolesHierarchy[user.role] >= this.#rolesHierarchy[role]) {
+    if (
+      this.#rolesHierarchy[user.role] >= this.#rolesHierarchy[role] &&
+      user.status === AccountStatus.Enable
+    ) {
       return true
     }
 
