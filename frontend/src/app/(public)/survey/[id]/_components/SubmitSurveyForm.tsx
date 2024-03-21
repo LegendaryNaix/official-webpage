@@ -125,11 +125,12 @@ export default function SubmitSurveyForm({
                   {
                     <LocalTime
                       utc={schedules[index].startedAt}
-                      format="MM/DD dd HH:mm"
+                      format="MM/DD ddd HH:mm"
                     />
                   }{' '}
                   ~{' '}
                   {<LocalTime utc={schedules[index].endedAt} format="HH:mm" />}
+                  <p>{schedules[index].description}</p>
                 </CardDescription>
                 <CardContent className="mt-2 flex flex-col space-y-3">
                   <FormField

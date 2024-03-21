@@ -87,7 +87,7 @@ export default function SurveyGroupListTable({
       cell: ({ row }) => {
         return (
           <LocalTime
-            format="YYYY-MM-DD ddd hh:mm:ss"
+            format="YYYY-MM-DD ddd HH:mm"
             utc={row.getValue('startedAt')}
           />
         )
@@ -99,7 +99,7 @@ export default function SurveyGroupListTable({
       cell: ({ row }) => {
         return (
           <LocalTime
-            format="YYYY-MM-DD ddd hh:mm:ss"
+            format="YYYY-MM-DD ddd HH:mm"
             utc={row.getValue('endedAt')}
           />
         )
