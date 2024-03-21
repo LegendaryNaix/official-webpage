@@ -342,7 +342,19 @@ export class SurveyService {
               profileImageUrl: true
             }
           }
-        }
+        },
+        orderBy: [
+          {
+            Roster: {
+              admissionYear: 'asc'
+            }
+          },
+          {
+            Roster: {
+              name: 'asc'
+            }
+          }
+        ]
       })
 
       const unsubmitList = surveyTargets.map((item) => {
