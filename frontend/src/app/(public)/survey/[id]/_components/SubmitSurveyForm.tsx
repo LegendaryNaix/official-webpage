@@ -87,7 +87,7 @@ export default function SubmitSurveyForm({
       setIsFetching(true)
 
       data.attendances.forEach((attendance) => {
-        if (attendance.response !== AttendanceStatus.Present) {
+        if (attendance.response === AttendanceStatus.Absence) {
           attendance.location = AttendanceLocation.Other
         }
       })
