@@ -79,7 +79,7 @@ model User {
   updatedAt           DateTime      @default(now()) @map("updated_at")
   lastPasswordChanged DateTime      @default(now()) @map("last_password_changed")
   lastLogin           DateTime      @default(now()) @map("last_login")
-  status              AccountStatus @default(Verifying)
+  status              AccountStatus @default(Disable)
   profileImageUrl     String?       @map("profile_image_url") @db.Text
 
   Rosters  Roster[]
