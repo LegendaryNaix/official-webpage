@@ -8,8 +8,8 @@ import {
 import { PrismaService } from '@libs/prisma'
 import { StorageService } from '@libs/storage'
 import { calculatePaginationOffset, formatFileUrl } from '@libs/utils'
-import { Prisma } from '@prisma/client'
-import type { UpdateUserProfileDTO } from './dto/user.dto'
+import { Prisma, type User } from '@prisma/client'
+import type { UpdateUserDTO, UpdateUserProfileDTO } from './dto/user.dto'
 
 @Service()
 export class UserService {
@@ -85,6 +85,28 @@ export class UserService {
           id: true,
           nickname: true,
           email: true
+        }
+      })
+    } catch (error) {
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === 'P2025'
+      ) {
+        throw new EntityNotExistException('계정정보가 존재하지 않습니다')
+      }
+
+      throw new UnexpectedException(error)
+    }
+  }
+
+  async updateUser(userId: number, userDTO: UpdateUserDTO): Promise<User> {
+    try {
+      return await this.prisma.user.update({
+        where: {
+          id: userId
+        },
+        data: {
+          ...userDTO
         }
       })
     } catch (error) {

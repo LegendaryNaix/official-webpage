@@ -3,6 +3,7 @@ import {
   Body,
   Controller,
   Get,
+  Param,
   ParseIntPipe,
   Put,
   Query,
@@ -15,8 +16,8 @@ import { AuthenticatedRequest } from '@libs/auth'
 import { Roles } from '@libs/decorator'
 import { BusinessExceptionHandler } from '@libs/exception'
 import { IMAGE_OPTIONS } from '@libs/storage'
-import { Role } from '@prisma/client'
-import { UpdateUserProfileDTO } from './dto/user.dto'
+import { Role, type User } from '@prisma/client'
+import { UpdateUserProfileDTO, type UpdateUserDTO } from './dto/user.dto'
 import { UserService } from './user.service'
 
 @Controller('user')
@@ -52,6 +53,19 @@ export class UserController {
   ) {
     try {
       return await this.userService.updateProfile(req.user.id, userDTO)
+    } catch (error) {
+      BusinessExceptionHandler(error)
+    }
+  }
+
+  @Roles(Role.Admin)
+  @Put(':userId')
+  async updateUser(
+    @Param('userId', ParseIntPipe) userId: number,
+    @Body() userDTO: UpdateUserDTO
+  ): Promise<User> {
+    try {
+      return await this.userService.updateUser(userId, userDTO)
     } catch (error) {
       BusinessExceptionHandler(error)
     }
