@@ -61,9 +61,9 @@ export default function SubmitSurveyForm({
           scheduleId: schedule.id,
           response: AttendanceStatus.Present,
           location:
-            schedule.type === ScheduleType.IntegratedExercise
-              ? AttendanceLocation.Other
-              : AttendanceLocation.Seoul,
+            schedule.type === ScheduleType.SeperatedExercise
+              ? AttendanceLocation.Seoul
+              : AttendanceLocation.Other,
           reason: ''
         }
       })
@@ -71,6 +71,7 @@ export default function SubmitSurveyForm({
   })
 
   const onSubmit = async (data: z.infer<typeof CreateAttendanceFormSchema>) => {
+    setIsFetching(true)
     data.attendances.forEach((attendance, index) => {
       if (
         attendance.response !== AttendanceStatus.Present &&
@@ -79,13 +80,12 @@ export default function SubmitSurveyForm({
         toast.warning(
           `[#${index + 1} ${schedules[index].name}]의 불참 또는 부분참석 사유를 입력하지 않았습니다`
         )
+        setIsFetching(false)
         return
       }
     })
 
     try {
-      setIsFetching(true)
-
       data.attendances.forEach((attendance) => {
         if (attendance.response === AttendanceStatus.Absence) {
           attendance.location = AttendanceLocation.Other
