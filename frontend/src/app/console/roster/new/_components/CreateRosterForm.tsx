@@ -52,7 +52,9 @@ export default function CreateRosterForm() {
     try {
       await fetcher.post('/rosters', {
         ...data,
-        class: data.class === '' ? '없음' : data.class
+        class: data.class === '' ? '없음' : data.class,
+        offPosition:
+          data.type !== RosterType.Athlete ? data.type : data.offPosition
       })
       router.push('/console/roster?revalidate=true')
       toast.success('부원을 등록했습니다')
