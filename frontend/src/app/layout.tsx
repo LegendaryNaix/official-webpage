@@ -23,7 +23,6 @@ export const metadata: Metadata = {
     title: 'ROYALS',
     statusBarStyle: 'black-translucent',
     startupImage: [
-      '/splashscreens/iphonex_splash.png',
       {
         url: '/splashscreens/iphone5_splash.png',
         media:
