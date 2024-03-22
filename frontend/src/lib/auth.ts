@@ -62,6 +62,7 @@ export const authOptions: NextAuthOptions = {
             return {
               username: user.username,
               role: user.role,
+              status: user.status,
               accessToken,
               refreshToken,
               accessTokenExpires,
@@ -83,6 +84,7 @@ export const authOptions: NextAuthOptions = {
       if (user) {
         token.username = user.username
         token.role = user.role
+        token.status = user.status
         token.accessToken = user.accessToken
         token.refreshToken = user.refreshToken
         token.accessTokenExpires = user.accessTokenExpires
@@ -117,7 +119,8 @@ export const authOptions: NextAuthOptions = {
     session: async ({ session, token }: { session: Session; token: JWT }) => {
       session.user = {
         username: token.username,
-        role: token.role
+        role: token.role,
+        status: token.status
       }
       session.token = {
         accessToken: token.accessToken,

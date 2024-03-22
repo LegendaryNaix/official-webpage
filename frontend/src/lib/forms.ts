@@ -16,6 +16,23 @@ export const LoginFormSchema = z.object({
   })
 })
 
+export const SignUpFormSchema = z.object({
+  username: z.string().min(6, {
+    message: '아이디는 최소 6글자 이상이어야 합니다'
+  }),
+  password: z.string().min(6, {
+    message: '비밀번호는 최소 6글자 이상이어야 합니다'
+  }),
+  email: z.string().email(),
+  nickname: z.string().min(3, {
+    message: '별명은 최소 3글자 이상이어야 합니다'
+  })
+})
+
+export const VerifyEmailFormSchema = z.object({
+  pin: z.string().length(6, { message: '인증 코드는 6자리입니다' })
+})
+
 export const AccountFormSchema = z.object({
   nickname: z.string().min(1, {
     message: '필수 입력 사항입니다'

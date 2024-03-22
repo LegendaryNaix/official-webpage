@@ -52,6 +52,12 @@ export class RolesGuard implements CanActivate {
       return true
     }
 
+    console.log(request.url)
+
+    if (user && request.url === '/api/user') {
+      return true
+    }
+
     throw new ForbiddenException('접근 권한이 없습니다')
   }
 }

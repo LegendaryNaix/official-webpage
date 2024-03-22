@@ -1,8 +1,10 @@
+import type { AccountStatus } from '@/lib/enums'
 import type { DefaultSession, DefaultUser } from 'next-auth'
 
 interface UserData {
   username: string
   role: string
+  status: AccountStatus
 }
 
 interface Token {
