@@ -7,7 +7,8 @@ import {
   BusinessException,
   ConflictFoundException,
   EntityNotExistException,
-  UnexpectedException
+  UnexpectedException,
+  UnprocessableDataException
 } from '@libs/exception'
 import { PrismaService } from '@libs/prisma'
 import { StorageService } from '@libs/storage'
@@ -108,10 +109,15 @@ export class UserService {
   }
 
   async updateUser(
+    requestUserId: number,
     userId: number,
     userDTO: UpdateUserDTO
   ): Promise<ReducedUserDTO> {
     try {
+      if (requestUserId === userId) {
+        throw new UnprocessableDataException('자신의 권한은 수정할 수 없습니다')
+      }
+
       const user = await this.prisma.user.update({
         where: {
           id: userId
@@ -123,13 +129,15 @@ export class UserService {
 
       return this.removePassword(user)
     } catch (error) {
+      if (error instanceof BusinessException) {
+        throw error
+      }
       if (
         error instanceof Prisma.PrismaClientKnownRequestError &&
         error.code === 'P2025'
       ) {
         throw new EntityNotExistException('계정정보가 존재하지 않습니다')
       }
-
       throw new UnexpectedException(error)
     }
   }
@@ -317,6 +325,23 @@ export class UserService {
         throw new EntityNotExistException('계정정보가 존재하지 않습니다')
       }
 
+      throw new UnexpectedException(error)
+    }
+  }
+
+  async createTempUser(userDTO: CreateUserDTO): Promise<ReducedUserDTO> {
+    try {
+      const user = await this.prisma.user.create({
+        data: {
+          ...userDTO,
+          role: Role.User,
+          status: AccountStatus.Enable,
+          password: await hash(userDTO.password)
+        }
+      })
+
+      return this.removePassword(user)
+    } catch (error) {
       throw new UnexpectedException(error)
     }
   }

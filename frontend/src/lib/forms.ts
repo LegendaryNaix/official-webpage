@@ -1,7 +1,9 @@
 import { z } from 'zod'
 import {
+  AccountStatus,
   AttendanceLocation,
   AttendanceStatus,
+  Role,
   RosterStatus,
   RosterType,
   ScheduleType
@@ -23,7 +25,9 @@ export const SignUpFormSchema = z.object({
   password: z.string().min(6, {
     message: '비밀번호는 최소 6글자 이상이어야 합니다'
   }),
-  email: z.string().email(),
+  email: z.string().email({
+    message: '이메일 형식이 아닙니다'
+  }),
   nickname: z.string().min(3, {
     message: '별명은 최소 3글자 이상이어야 합니다'
   })
@@ -47,7 +51,9 @@ export const AccountFormSchema = z.object({
     }),
   password: z.string().min(6, {
     message: '비밀번호는 최소 6글자 이상이어야 합니다'
-  })
+  }),
+  role: z.nativeEnum(Role),
+  status: z.nativeEnum(AccountStatus)
 })
 
 export const RosterFormSchema = z.object({

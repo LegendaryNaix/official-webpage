@@ -128,7 +128,9 @@ export default function DeleteRosterForm({
                   삭제하기
                 </Button>
                 <DrawerClose asChild>
-                  <Button variant="outline">취소</Button>
+                  <Button type="button" variant="outline">
+                    취소
+                  </Button>
                 </DrawerClose>
               </DrawerFooter>
             </form>

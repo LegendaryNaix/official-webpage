@@ -91,10 +91,11 @@ export class UserController {
   @Put(':userId')
   async updateUser(
     @Param('userId', ParseIntPipe) userId: number,
-    @Body() userDTO: UpdateUserDTO
+    @Body() userDTO: UpdateUserDTO,
+    @Req() req: AuthenticatedRequest
   ): Promise<ReducedUserDTO> {
     try {
-      return await this.userService.updateUser(userId, userDTO)
+      return await this.userService.updateUser(req.user.id, userId, userDTO)
     } catch (error) {
       BusinessExceptionHandler(error)
     }
@@ -112,6 +113,18 @@ export class UserController {
 
     try {
       return await this.userService.updateProfileImage(req.user.id, image)
+    } catch (error) {
+      BusinessExceptionHandler(error)
+    }
+  }
+
+  @Roles(Role.Admin)
+  @Post('temp')
+  async createTempUser(
+    @Body() userDTO: CreateUserDTO
+  ): Promise<ReducedUserDTO> {
+    try {
+      return await this.userService.createTempUser(userDTO)
     } catch (error) {
       BusinessExceptionHandler(error)
     }
