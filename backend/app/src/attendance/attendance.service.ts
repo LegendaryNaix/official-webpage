@@ -1,5 +1,9 @@
 import { Service } from '@libs/decorator'
-import { EntityNotExistException, UnexpectedException } from '@libs/exception'
+import {
+  ConflictFoundException,
+  EntityNotExistException,
+  UnexpectedException
+} from '@libs/exception'
 import { PrismaService } from '@libs/prisma'
 import { calculatePaginationOffset } from '@libs/utils'
 import {
@@ -39,11 +43,13 @@ export class AttendanceService {
         data: attendancesWithRosterId
       })
     } catch (error) {
-      if (
-        error instanceof Prisma.PrismaClientKnownRequestError &&
-        error.code === 'P2003'
-      ) {
-        throw new EntityNotExistException('로스터가 존재하지 않습니다')
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error.code === 'P2002') {
+          throw new ConflictFoundException('이미 제출한 출석조사입니다')
+        }
+        if (error.code === 'P2003') {
+          throw new EntityNotExistException('로스터가 존재하지 않습니다')
+        }
       }
       throw new UnexpectedException(error)
     }

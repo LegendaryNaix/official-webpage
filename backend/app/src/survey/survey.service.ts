@@ -3,7 +3,6 @@ import { RosterService } from '@/roster/roster.service'
 import { Service } from '@libs/decorator'
 import {
   BusinessException,
-  ConflictFoundException,
   EntityNotExistException,
   UnexpectedException
 } from '@libs/exception'
@@ -317,11 +316,11 @@ export class SurveyService {
       if (error instanceof BusinessException) {
         throw error
       }
-      if (error instanceof Prisma.PrismaClientKnownRequestError) {
-        if (error.code === 'P2002')
-          throw new ConflictFoundException('이미 완료한 출석조사입니다')
-        if (error.code === 'P2025')
-          throw new EntityNotExistException('출석조사 대상이 아닙니다')
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === 'P2025'
+      ) {
+        throw new EntityNotExistException('출석조사 대상이 아닙니다')
       }
       throw new UnexpectedException(error)
     }
