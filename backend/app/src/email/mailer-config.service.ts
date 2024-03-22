@@ -5,7 +5,7 @@ import type {
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter'
 import { Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
-import { SESClient } from '@aws-sdk/client-ses'
+import { SES, SendRawEmailCommand } from '@aws-sdk/client-ses'
 import { defaultProvider } from '@aws-sdk/credential-provider-node'
 import { calculateSesSmtpPassword } from '@pepperize/cdk-ses-smtp-credentials'
 import { join } from 'path'
@@ -28,10 +28,13 @@ export class MailerConfigService implements MailerOptionsFactory {
             }
           }
         : {
-            SES: new SESClient({
-              region: 'ap-northeast-2',
-              credentials: defaultProvider()
-            })
+            SES: {
+              ses: new SES({
+                region: 'ap-northeast-2',
+                credentials: defaultProvider()
+              }),
+              aws: { SendRawEmailCommand }
+            }
           },
       defaults: {
         from: this.config.get('NODEMAILER_FROM')
