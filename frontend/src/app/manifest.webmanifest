@@ -1,16 +1,27 @@
 {
   "name": "성균관대학교 미식축구부 로얄스",
-  "description": "성균관대학교 미식축구부 로얄스 홈페이지입니다.",
+  "description": "성균관대학교 미식축구부 로얄스",
   "short_name": "ROYALS",
   "icons": [
     {
-      "src": "/android-chrome-152x152.png",
-      "sizes": "152x152",
+      "src": "/badge-72x72.png",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512x512.png",
+      "sizes": "512x512",
       "type": "image/png"
     }
   ],
   "display": "standalone",
   "start_url": "/",
-  "background_color": "#000000",
-  "theme_color": "#000000"
+  "background_color": "#141517",
+  "theme_color": "#141517",
+  "orientation": "portrait"
 }
