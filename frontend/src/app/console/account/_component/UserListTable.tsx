@@ -7,11 +7,11 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import type { UserListItem } from '@/lib/types/user'
-import { DropdownMenuLabel } from '@radix-ui/react-dropdown-menu'
 import type { ColumnDef } from '@tanstack/react-table'
 import { MoreHorizontal } from 'lucide-react'
 import { useState } from 'react'
