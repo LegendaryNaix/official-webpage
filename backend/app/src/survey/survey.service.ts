@@ -319,7 +319,7 @@ export class SurveyService {
       }
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
         if (error.code === 'P2003')
-          throw new ConflictFoundException('이미 제출하였습니다')
+          throw new ConflictFoundException('이미 완료한 출석조사입니다')
         if (error.code === 'P2025')
           throw new EntityNotExistException('출석조사 대상이 아닙니다')
       }

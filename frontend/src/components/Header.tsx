@@ -7,6 +7,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
+import { toast } from 'sonner'
 import { ThemeToggle } from './ThemeToggle'
 
 const navigation = [
@@ -31,6 +32,10 @@ export default function Header() {
 
     getSession()
   }, [pathname])
+
+  const showNotImplemented = () => {
+    toast.warning('준비중입니다')
+  }
 
   return (
     <header className="fixed left-0 top-0 z-10 w-full border-b border-zinc-200 bg-transparent backdrop-blur-sm dark:border-zinc-800">
@@ -67,6 +72,7 @@ export default function Header() {
               key={item.name}
               href={item.href}
               className="text-sm font-semibold leading-6 text-zinc-900 dark:text-gray-50"
+              onClick={() => showNotImplemented()}
             >
               {item.name}
             </Link>
@@ -121,7 +127,10 @@ export default function Header() {
                     key={item.name}
                     href={item.href}
                     className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-zinc-900 hover:bg-gray-400 hover:text-zinc-900/90 dark:text-gray-50"
-                    onClick={() => setMobileMenuOpen(false)}
+                    onClick={() => {
+                      setMobileMenuOpen(false)
+                      showNotImplemented()
+                    }}
                   >
                     {item.name}
                   </Link>

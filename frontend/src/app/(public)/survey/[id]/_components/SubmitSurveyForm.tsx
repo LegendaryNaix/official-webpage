@@ -25,6 +25,7 @@ import {
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 import { AttendanceLocation, AttendanceStatus, ScheduleType } from '@/lib/enums'
+import { FetchError } from '@/lib/error'
 import fetcher from '@/lib/fetcher'
 import { AttendanceFormSchema } from '@/lib/forms'
 import type { Schedule } from '@/lib/types/schedule'
@@ -104,7 +105,11 @@ export default function SubmitSurveyForm({
       toast.success('출석조사 제출 완료')
       router.push('/survey')
     } catch (error) {
-      toast.error('출석조사를 제출하지 못했습니다')
+      if (error instanceof FetchError) {
+        toast.error(error.message)
+      } else {
+        toast.error('출석조사를 제출하지 못했습니다')
+      }
     } finally {
       setIsFetching(false)
     }

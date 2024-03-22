@@ -1,4 +1,5 @@
 import { auth } from '@/lib/auth'
+import { FetchError } from './error'
 import { HttpStatus } from './http-status'
 import { API_BASE_URL } from './vars'
 
@@ -56,7 +57,7 @@ const fetcher = {
         }
       }
 
-      throw new Error(data.message ?? 'Internal Server Error')
+      throw new FetchError(data.message ?? '알 수 없는 오류')
     }
 
     return data as T

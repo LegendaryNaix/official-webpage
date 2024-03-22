@@ -11,6 +11,7 @@ import {
   DrawerTitle
 } from '@/components/ui/drawer'
 import {
+  Form,
   FormControl,
   FormField,
   FormItem,
@@ -25,13 +26,14 @@ import {
   SelectValue
 } from '@/components/ui/select'
 import { AccountStatus, Role } from '@/lib/enums'
+import { FetchError } from '@/lib/error'
 import fetcher from '@/lib/fetcher'
 import { AccountFormSchema } from '@/lib/forms'
 import type { UserListItem } from '@/lib/types/user'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
 import { useState, type Dispatch, type SetStateAction, useEffect } from 'react'
-import { Form, useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import type { z } from 'zod'
 
@@ -66,10 +68,15 @@ export default function UpdateUserForm({
       setIsFetching(true)
       await fetcher.put(`/user/${user.id}`, data, false)
 
+      setOpen(false)
       toast.success('계정이 업데이트 되었습니다')
       router.refresh()
     } catch (error) {
-      toast.error('계정을 업데이트하지 못했습니다')
+      if (error instanceof FetchError) {
+        toast.error(error.message)
+      } else {
+        toast.error('계정을 업데이트하지 못했습니다')
+      }
     } finally {
       setIsFetching(false)
     }
