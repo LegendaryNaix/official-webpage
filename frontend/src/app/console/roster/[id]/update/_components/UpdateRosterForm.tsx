@@ -14,44 +14,42 @@ import {
   Select,
   SelectContent,
   SelectItem,
-  SelectTrigger
+  SelectTrigger,
+  SelectValue
 } from '@/components/ui/select'
 import { RosterStatus, RosterType } from '@/lib/enums'
 import fetcher from '@/lib/fetcher'
 import { RosterFormSchema } from '@/lib/forms'
+import type { Roster } from '@/lib/types/roster'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { SelectValue } from '@radix-ui/react-select'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import type { z } from 'zod'
 
-export default function CreateRosterForm() {
-  const router = useRouter()
-
+export default function UpdateRosterForm({ roster }: { roster: Roster }) {
   const [isFetching, setIsFetching] = useState(false)
 
-  const CreateRosterFormSchema = RosterFormSchema.omit({ id: true })
+  const router = useRouter()
 
-  const form = useForm<z.infer<typeof CreateRosterFormSchema>>({
-    resolver: zodResolver(CreateRosterFormSchema),
+  const UpdateRosterFormSchema = RosterFormSchema.omit({ id: true })
+
+  const form = useForm<z.infer<typeof UpdateRosterFormSchema>>({
+    resolver: zodResolver(UpdateRosterFormSchema),
     defaultValues: {
-      name: '',
-      studentId: '',
-      type: RosterType.Athlete,
-      status: RosterStatus.Enable,
-      class: '',
-      target: true
+      ...roster,
+      offPosition: roster.offPosition ?? undefined,
+      defPosition: roster.defPosition ?? undefined,
+      splPosition: roster.splPosition ?? undefined
     }
   })
 
-  const onSubmit = async (data: z.infer<typeof CreateRosterFormSchema>) => {
-    setIsFetching(true)
-
+  const onSubmit = async (data: z.infer<typeof UpdateRosterFormSchema>) => {
     try {
-      await fetcher.post(
-        '/rosters',
+      setIsFetching(true)
+      await fetcher.put(
+        `/rosters/${roster.id}`,
         {
           ...data,
           class: data.class === '' ? '없음' : data.class,
@@ -62,9 +60,9 @@ export default function CreateRosterForm() {
       )
       router.push('/console/roster?revalidate=true')
       router.refresh()
-      toast.success('부원을 등록했습니다')
+      toast.success('부원정보가 업데이트 되었습니다')
     } catch (error) {
-      toast.error('부원을 등록하지 못했습니다')
+      toast.error('부원을 업데이트하지 못했습니다')
     } finally {
       setIsFetching(false)
     }
@@ -266,7 +264,7 @@ export default function CreateRosterForm() {
         )}
         <div className="col-span-12 flex space-x-1">
           <Button type="submit" disabled={isFetching}>
-            생성하기
+            수정하기
           </Button>
           <Button
             type="button"

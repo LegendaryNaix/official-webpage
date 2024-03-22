@@ -17,8 +17,8 @@ import { UserIcon } from '@heroicons/react/24/outline'
 import type { ColumnDef } from '@tanstack/react-table'
 import { MoreHorizontal } from 'lucide-react'
 import Image from 'next/image'
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
-import { toast } from 'sonner'
 import DeleteRosterForm from './DeleteRosterForm'
 
 export default function RosterListTable({
@@ -28,6 +28,8 @@ export default function RosterListTable({
 }) {
   const [open, setOpen] = useState(false)
   const [targetRoster, setTargetRoster] = useState<RosterListItem>()
+
+  const router = useRouter()
 
   const handleClick = (roster: RosterListItem) => {
     setTargetRoster(roster)
@@ -132,7 +134,9 @@ export default function RosterListTable({
               <DropdownMenuLabel>메뉴</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem
-                onClick={() => toast.warning('준비중인 기능입니다')}
+                onClick={() =>
+                  router.push(`/console/roster/${roster.id}/update`)
+                }
               >
                 수정
               </DropdownMenuItem>

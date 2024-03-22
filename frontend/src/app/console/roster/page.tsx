@@ -3,7 +3,6 @@ import { Button } from '@/components/ui/button'
 import { getRosters } from '@/lib/actions'
 import { calculateTotalPages } from '@/lib/utils'
 import { PAGINATION_LIMIT_DEFAULT } from '@/lib/vars'
-import { revalidatePath } from 'next/cache'
 import Link from 'next/link'
 import RosterListTable from './_components/RosterListTable'
 
@@ -12,15 +11,10 @@ export default async function RosterPage({
 }: {
   searchParams?: {
     page?: string
-    revalidate?: string
   }
 }) {
   const currentPage = Number(searchParams?.page) || 1
   const rosterList = await getRosters(currentPage)
-
-  if (searchParams?.revalidate) {
-    revalidatePath('/console/roster')
-  }
 
   return (
     <main className="mx-auto flex w-full flex-grow flex-col items-center justify-start">

@@ -72,7 +72,19 @@ export const RosterFormSchema = z.object({
     .optional()
     .refine(
       (val) => {
-        return val === undefined || ['QB', 'OL', 'RB', 'WR', 'TE'].includes(val)
+        return (
+          val === undefined ||
+          [
+            'QB',
+            'OL',
+            'RB',
+            'WR',
+            'TE',
+            'HeadCoach',
+            'Coach',
+            'Staff'
+          ].includes(val)
+        )
       },
       {
         message:

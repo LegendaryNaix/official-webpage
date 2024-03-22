@@ -3,7 +3,7 @@
 import type { RosterType } from './enums'
 import fetcher from './fetcher'
 import type { AttendanceList } from './types/attendance'
-import type { RosterList } from './types/roster'
+import type { Roster, RosterList } from './types/roster'
 import type { ScheduleList, ScheduleListItem } from './types/schedule'
 import type {
   SurveyGroupList,
@@ -22,6 +22,10 @@ export const getUsers = async (page: number): Promise<UserList> => {
   return await fetcher.get<UserList>(
     `/user/list?page=${page}&limit=${PAGINATION_LIMIT_DEFAULT}`
   )
+}
+
+export const getRoster = async (rosterId: number): Promise<Roster> => {
+  return await fetcher.get<Roster>(`/rosters/${rosterId}`)
 }
 
 export const getRosters = async (page: number): Promise<RosterList> => {
