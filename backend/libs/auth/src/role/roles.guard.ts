@@ -52,8 +52,6 @@ export class RolesGuard implements CanActivate {
       return true
     }
 
-    console.log(request.url)
-
     if (user && request.url === '/api/user') {
       return true
     }
