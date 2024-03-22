@@ -5,6 +5,7 @@ import {
   Get,
   Param,
   ParseIntPipe,
+  Post,
   Put,
   Query,
   Req,
@@ -13,11 +14,16 @@ import {
 } from '@nestjs/common'
 import { FileInterceptor } from '@nestjs/platform-express'
 import { AuthenticatedRequest } from '@libs/auth'
-import { Roles } from '@libs/decorator'
+import { Public, Roles } from '@libs/decorator'
 import { BusinessExceptionHandler } from '@libs/exception'
 import { IMAGE_OPTIONS } from '@libs/storage'
-import { Role, type User } from '@prisma/client'
-import { UpdateUserProfileDTO, type UpdateUserDTO } from './dto/user.dto'
+import { Role } from '@prisma/client'
+import {
+  UpdateUserProfileDTO,
+  type UpdateUserDTO,
+  type ReducedUserDTO,
+  type CreateUserDTO
+} from './dto/user.dto'
 import { UserService } from './user.service'
 
 @Controller('user')
@@ -58,12 +64,35 @@ export class UserController {
     }
   }
 
+  @Public()
+  @Post()
+  async signUp(@Body() userDTO: CreateUserDTO): Promise<ReducedUserDTO> {
+    try {
+      return await this.userService.signUp(userDTO)
+    } catch (error) {
+      BusinessExceptionHandler(error)
+    }
+  }
+
+  @Public()
+  @Post('verify-email')
+  async verifyEmailAddress(
+    @Query('email') email: string,
+    @Query('pin') pin: string
+  ): Promise<{ valid: boolean }> {
+    try {
+      return await this.userService.verifyEmailPin(email, pin)
+    } catch (error) {
+      BusinessExceptionHandler(error)
+    }
+  }
+
   @Roles(Role.Admin)
   @Put(':userId')
   async updateUser(
     @Param('userId', ParseIntPipe) userId: number,
     @Body() userDTO: UpdateUserDTO
-  ): Promise<User> {
+  ): Promise<ReducedUserDTO> {
     try {
       return await this.userService.updateUser(userId, userDTO)
     } catch (error) {

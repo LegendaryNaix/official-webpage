@@ -1,0 +1,43 @@
+<style>
+  * { margin: 0; padding: 0; font-family: 'Manrope', Helvetica, Arial,
+  sans-serif; } body { background: #ececec; } p { margin: 16px 0; font-size:
+  16px; line-height: 24px; } h1 { margin-top: 32px; margin-bottom: 16px;
+  font-size: 24px; } #logo { display: block; margin-left: auto; margin-right:
+  auto; } #backgroundTable { margin-left: auto; margin-right: auto; } #mainTable
+  { max-width: 420px; background: white; margin: 20px; padding: 24px;
+  border-radius: 12px; box-shadow: 4px 4px 12px 4px rgba(0, 0, 0, 0.15); }
+  #backgroundTable { padding: 20px; } #pin { font-size: 36px; text-align:
+  center; margin: 60px 0; letter-spacing: 12px; } #team { margin-top: 40px;
+  text-align: right; } footer { border-top: 1px solid #777; color: #777;
+  margin-top: 40px; padding-top: 20px; font-size: 14px; }
+</style>
+
+<table id='backgroundTable' cellpadding='0' cellspacing='0' border='0'>
+  <tr>
+    <td>
+      <table id='mainTable' cellpadding='0' cellspacing='0' align='center'>
+        <tr>
+          <td>
+            <img
+              src='https://github.com/skku-royals/official-webpage/blob/main/frontend/public/text-logo-light.png?raw=true'
+              height='72'
+              alt='Royals'
+              id='logo'
+            />
+            <h1>Email Authentication</h1>
+            <p>You have requested an email authentication. Put the pin numbers
+              below into the form.</p>
+            <p id='pin'>{{pin}}</p>
+            <p>If you did not request to register or change your information,
+              please ignore this email.</p>
+            <p id='team'>성균관대학교 미식축구부 로얄스</p>
+            <footer>
+              Visit our website at
+              <a href='https://skku-royals.com'>skku-royals.com</a>.
+            </footer>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>

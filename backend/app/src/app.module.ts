@@ -1,3 +1,4 @@
+import { MailerModule } from '@nestjs-modules/mailer'
 import { CacheModule } from '@nestjs/cache-manager'
 import { Module } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
@@ -16,6 +17,8 @@ import { AppController } from './app.controller'
 import { AppService } from './app.service'
 import { AttendanceModule } from './attendance/attendance.module'
 import { AuthModule } from './auth/auth.module'
+import { EmailModule } from './email/email.module'
+import { MailerConfigService } from './email/mailer-config.service'
 import { RosterModule } from './roster/roster.module'
 import { SurveyModule } from './survey/survey.module'
 import { UserModule } from './user/user.module'
@@ -27,6 +30,9 @@ import { UserModule } from './user/user.module'
       isGlobal: true,
       useClass: CacheConfigService
     }),
+    MailerModule.forRootAsync({
+      useClass: MailerConfigService
+    }),
     AuthModule,
     PrismaModule,
     JwtAuthModule,
@@ -35,7 +41,8 @@ import { UserModule } from './user/user.module'
     StorageModule,
     RosterModule,
     SurveyModule,
-    AttendanceModule
+    AttendanceModule,
+    EmailModule
   ],
   controllers: [AppController],
   providers: [

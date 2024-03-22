@@ -9,7 +9,12 @@
     "watchAssets": true,
     "deleteOutDir": true,
     "tsConfigPath": "app/tsconfig.app.json",
-    "webpackConfigPath": "./webpack.config.js"
+    "webpackConfigPath": "./webpack.config.js",
+    "assets": [
+      {
+        "include": "email/templates/**/*"
+      }
+    ]
   },
   "projects": {
     "app": {
