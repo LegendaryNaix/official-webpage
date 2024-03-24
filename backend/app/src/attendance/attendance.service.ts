@@ -10,7 +10,9 @@ import {
   Prisma,
   RosterType,
   type Attendance,
-  type Roster
+  type Roster,
+  AttendanceResponse,
+  AttendanceLocation
 } from '@prisma/client'
 import type {
   AttendanceWithRoster,
@@ -150,54 +152,115 @@ export class AttendanceService {
     }
   }
 
-  async getAttendancesGroupedByPosition(scheduleId: number) {
+  async getAttendanceGroupedByRosterType(scheduleId: number) {
     try {
-      const athleteAttendances = await this.prisma.attendance.findMany({
+      const attendances = await this.prisma.attendance.findMany({
         where: {
-          scheduleId,
-          Roster: {
-            registerYear: {
-              not: new Date().getFullYear()
-            },
-            type: RosterType.Athlete
-          }
+          scheduleId
         },
         include: {
           Roster: true
         }
       })
 
-      const athleteNewbieAttendances = await this.prisma.attendance.findMany({
-        where: {
-          scheduleId,
-          Roster: {
-            registerYear: new Date().getFullYear(),
-            type: RosterType.Athlete
-          }
-        },
-        include: {
-          Roster: true
+      const statistics = attendances.map((attendance) => {
+        return {
+          type: attendance.Roster.type,
+          isNewbie: attendance.Roster.registerYear === new Date().getFullYear(),
+          response: attendance.response,
+          location: attendance.location
         }
       })
 
-      const staffAttendances = await this.prisma.attendance.findMany({
-        where: {
-          scheduleId,
-          Roster: {
-            type: RosterType.Staff
-          }
-        },
-        include: {
-          Roster: true
-        }
-      })
+      const athleteStatistics = statistics.filter(
+        (item) => item.type === RosterType.Athlete && !item.isNewbie
+      )
+
+      const athleteNewbieStatistics = statistics.filter(
+        (item) => item.type === RosterType.Athlete && item.isNewbie
+      )
+
+      const staffStatistics = statistics.filter(
+        (item) => item.type === RosterType.Staff && !item.isNewbie
+      )
+
+      const staffNewbieStatistics = statistics.filter(
+        (item) => item.type === RosterType.Staff && item.isNewbie
+      )
 
       return {
-        athlete: this.calculateAthleteAttendances(athleteAttendances),
-        athleteNewbie: this.calculateAthleteAttendances(
-          athleteNewbieAttendances
-        ),
-        staff: this.calculateStaffAttendances(staffAttendances)
+        athlete: {
+          total: athleteStatistics.filter(
+            (item) => item.response !== AttendanceResponse.Absence
+          ).length,
+          seoul: athleteStatistics.filter(
+            (item) =>
+              item.response !== AttendanceResponse.Absence &&
+              item.location === AttendanceLocation.Seoul
+          ).length,
+          suwon: athleteStatistics.filter(
+            (item) =>
+              item.response !== AttendanceResponse.Absence &&
+              item.location === AttendanceLocation.Suwon
+          ).length,
+          absence: athleteStatistics.filter(
+            (item) => item.response === AttendanceResponse.Absence
+          ).length
+        },
+        athleteNewbie: {
+          total: athleteNewbieStatistics.filter(
+            (item) => item.response !== AttendanceResponse.Absence
+          ).length,
+          seoul: athleteNewbieStatistics.filter(
+            (item) =>
+              item.response !== AttendanceResponse.Absence &&
+              item.location === AttendanceLocation.Seoul
+          ).length,
+          suwon: athleteNewbieStatistics.filter(
+            (item) =>
+              item.response !== AttendanceResponse.Absence &&
+              item.location === AttendanceLocation.Suwon
+          ).length,
+          absence: athleteNewbieStatistics.filter(
+            (item) => item.response === AttendanceResponse.Absence
+          ).length
+        },
+        staff: {
+          total: staffStatistics.filter(
+            (item) => item.response !== AttendanceResponse.Absence
+          ).length,
+          seoul: staffStatistics.filter(
+            (item) =>
+              item.response !== AttendanceResponse.Absence &&
+              item.location === AttendanceLocation.Seoul
+          ).length,
+          suwon: staffStatistics.filter(
+            (item) =>
+              item.response !== AttendanceResponse.Absence &&
+              item.location === AttendanceLocation.Suwon
+          ).length,
+          absence: staffStatistics.filter(
+            (item) => item.response === AttendanceResponse.Absence
+          ).length
+        },
+        staffNewbie: {
+          total: staffNewbieStatistics.filter(
+            (item) => item.response !== AttendanceResponse.Absence
+          ).length,
+          seoul: staffNewbieStatistics.filter(
+            (item) =>
+              item.response !== AttendanceResponse.Absence &&
+              item.location === AttendanceLocation.Seoul
+          ).length,
+          suwon: staffNewbieStatistics.filter(
+            (item) =>
+              item.response !== AttendanceResponse.Absence &&
+              item.location === AttendanceLocation.Suwon
+          ).length,
+          absence: staffNewbieStatistics.filter(
+            (item) => item.response === AttendanceResponse.Absence
+          ).length
+        }
       }
     } catch (error) {
       throw new UnexpectedException(error)

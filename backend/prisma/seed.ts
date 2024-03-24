@@ -148,7 +148,8 @@ const seedingDatabase = async () => {
       registerYear: 2019,
       studentId: '2019310003',
       status: RosterStatus.Enable,
-      type: RosterType.Staff
+      type: RosterType.Staff,
+      offPosition: ''
     },
     {
       name: 'staff02',
@@ -157,7 +158,8 @@ const seedingDatabase = async () => {
       registerYear: 2023,
       studentId: '2023310005',
       status: RosterStatus.Enable,
-      type: RosterType.Staff
+      type: RosterType.Staff,
+      offPosition: ''
     },
     {
       name: 'coach01',
@@ -166,7 +168,8 @@ const seedingDatabase = async () => {
       registerYear: 2014,
       studentId: '201401',
       status: RosterStatus.Enable,
-      type: RosterType.Coach
+      type: RosterType.Coach,
+      offPosition: ''
     },
     {
       name: 'headCoach01',
@@ -175,7 +178,8 @@ const seedingDatabase = async () => {
       registerYear: 2010,
       studentId: '201001',
       status: RosterStatus.Enable,
-      type: RosterType.HeadCoach
+      type: RosterType.HeadCoach,
+      offPosition: ''
     }
   ]
 

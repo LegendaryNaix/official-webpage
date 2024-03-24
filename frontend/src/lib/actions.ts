@@ -2,7 +2,7 @@
 
 import type { RosterType } from './enums'
 import fetcher from './fetcher'
-import type { AttendanceList } from './types/attendance'
+import type { AttendanceList, AttendanceStatistic } from './types/attendance'
 import type { Roster, RosterList } from './types/roster'
 import type { ScheduleList, ScheduleListItem } from './types/schedule'
 import type {
@@ -86,6 +86,14 @@ export const getAttendances = async (
 ): Promise<AttendanceList> => {
   return await fetcher.get<AttendanceList>(
     `/attendances?scheduleId=${scheduleId}&page=${page}&rosterType=${rosterType}&searchTerm=${searchTerm}&limit=${limit ? limit : PAGINATION_LIMIT_DEFAULT}`
+  )
+}
+
+export const getAttendanceStatistic = async (
+  scheduleId: number
+): Promise<AttendanceStatistic> => {
+  return await fetcher.get<AttendanceStatistic>(
+    `/attendances/statistic?scheduleId=${scheduleId}`
   )
 }
 

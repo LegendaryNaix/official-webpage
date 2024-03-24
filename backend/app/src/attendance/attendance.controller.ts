@@ -43,6 +43,20 @@ export class AttendanceController {
     }
   }
 
+  @Get('statistic')
+  @Roles(Role.Manager)
+  async getAttendanceGroupedByRosterType(
+    @Query('scheduleId', ParseIntPipe) scheduleId: number
+  ) {
+    try {
+      return await this.attendanceService.getAttendanceGroupedByRosterType(
+        scheduleId
+      )
+    } catch (error) {
+      BusinessExceptionHandler(error)
+    }
+  }
+
   @Put(':attendanceId')
   @Roles(Role.Manager)
   async updateAttendance(

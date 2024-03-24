@@ -18,3 +18,17 @@ export interface AttendanceList {
   attendances: AttendanceListItem[]
   total: number
 }
+
+export interface AttendanceStatistic {
+  athlete: AttendanceStatisticItem
+  athleteNewbie: AttendanceStatisticItem
+  staff: AttendanceStatisticItem
+  staffNewbie: AttendanceStatisticItem
+}
+
+export interface AttendanceStatisticItem {
+  total: number
+  seoul: number
+  suwon: number
+  absence: number
+}

@@ -2,6 +2,7 @@ import Search from '@/components/Search'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import AthleteAttendanceListTable from './_components/AthleteAttendanceListTable'
+import AttendanceStatisticSection from './_components/AttendanceStatisticSection'
 import ScheduleCard from './_components/ScheduleCard'
 import StaffAttendanceListTable from './_components/StaffAttendanceListTable'
 
@@ -34,7 +35,7 @@ export default async function AttendanceStatisticPage({
             </div>
             <div className="col-span-12 flex flex-col space-y-3 sm:col-span-9">
               <h2 className="text-base font-bold">포지션별 출석 통계</h2>
-              <p className="text-amber-400">준비중입니다</p>
+              <AttendanceStatisticSection params={params} />
             </div>
           </div>
           <div className="grid grid-cols-12 items-center gap-3">
