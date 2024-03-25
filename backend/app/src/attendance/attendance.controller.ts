@@ -43,6 +43,24 @@ export class AttendanceController {
     }
   }
 
+  @Get('unchecked')
+  @Roles(Role.Manager)
+  async getUncheckedAttendances(
+    @Query('scheduleId', ParseIntPipe) scheduleId: number,
+    @Query('page', ParseIntPipe) page: number,
+    @Query('limit', new ParseIntPipe({ optional: true })) limit?: number
+  ): Promise<{ attendances: AttendanceWithRoster[]; total: number }> {
+    try {
+      return await this.attendanceService.getUncheckedAttendances(
+        scheduleId,
+        page,
+        limit
+      )
+    } catch (error) {
+      BusinessExceptionHandler(error)
+    }
+  }
+
   @Get('statistic')
   @Roles(Role.Manager)
   async getAttendanceGroupedByRosterType(

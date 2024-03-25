@@ -23,9 +23,14 @@ export default async function AttendanceStatisticPage({
       <div className="mt-4 flex w-full flex-col items-center px-4 sm:px-6">
         <div className="mt-4 flex w-full items-center justify-between text-left">
           <h1 className="text-base font-bold sm:text-xl">출결상세</h1>
-          <Link href="/console/schedule">
-            <Button>목록으로</Button>
-          </Link>
+          <div className="flex items-center space-x-1.5">
+            <Link href={`/console/schedule/${params.id}/check`}>
+              <Button>출석체크</Button>
+            </Link>
+            <Link href="/console/schedule">
+              <Button variant="outline">목록으로</Button>
+            </Link>
+          </div>
         </div>
         <div className="flex w-full flex-grow flex-col gap-10 py-4">
           <div className="grid grid-cols-12 gap-x-5">

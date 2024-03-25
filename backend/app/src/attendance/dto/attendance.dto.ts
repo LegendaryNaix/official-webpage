@@ -45,7 +45,7 @@ export class UpdateAttendanceDTO {
 
   @IsEnum(AttendanceResponse)
   @IsOptional()
-  result: AttendanceResponse
+  result?: AttendanceResponse
 }
 
 export interface AttendanceWithRoster extends Attendance {

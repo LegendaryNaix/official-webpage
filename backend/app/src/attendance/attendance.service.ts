@@ -57,6 +57,37 @@ export class AttendanceService {
     }
   }
 
+  async getUncheckedAttendances(
+    scheduleId: number,
+    page: number,
+    limit = 1
+  ): Promise<{ attendances: AttendanceWithRoster[]; total: number }> {
+    try {
+      const attendances = await this.prisma.attendance.findMany({
+        where: {
+          scheduleId,
+          result: null
+        },
+        skip: calculatePaginationOffset(page, limit),
+        take: limit,
+        include: {
+          Roster: true
+        }
+      })
+
+      const total = await this.prisma.attendance.count({
+        where: {
+          scheduleId,
+          result: null
+        }
+      })
+
+      return { attendances, total }
+    } catch (error) {
+      throw new UnexpectedException(error)
+    }
+  }
+
   async getAttendances(
     scheduleId: number,
     searchTerm = '',
@@ -301,9 +332,7 @@ export class AttendanceService {
           id: attendanceId
         },
         data: {
-          location: attendanceDTO.location,
-          response: attendanceDTO.response,
-          reason: attendanceDTO.reason
+          ...attendanceDTO
         }
       })
     } catch (error) {
