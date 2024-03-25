@@ -5,7 +5,7 @@ import {
   UnexpectedException
 } from '@libs/exception'
 import { PrismaService } from '@libs/prisma'
-import { calculatePaginationOffset } from '@libs/utils'
+import { calculatePaginationOffset, formatFileUrl } from '@libs/utils'
 import {
   Prisma,
   RosterType,
@@ -87,6 +87,14 @@ export class AttendanceService {
         ]
       })
 
+      attendances.forEach((attendance) => {
+        if (attendance.Roster.profileImageUrl) {
+          attendance.Roster.profileImageUrl = formatFileUrl(
+            attendance.Roster.profileImageUrl
+          )
+        }
+      })
+
       const total = await this.prisma.attendance.count({
         where: {
           scheduleId,
@@ -155,6 +163,14 @@ export class AttendanceService {
             }
           }
         ]
+      })
+
+      attendances.forEach((attendance) => {
+        if (attendance.Roster.profileImageUrl) {
+          attendance.Roster.profileImageUrl = formatFileUrl(
+            attendance.Roster.profileImageUrl
+          )
+        }
       })
 
       const total = await this.prisma.attendance.count({

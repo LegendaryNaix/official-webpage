@@ -72,14 +72,14 @@ export default function RosterListTable({
 
         return (
           <div className="flex flex-nowrap items-center gap-x-1.5">
-            <div className="h-6 w-6 rounded-full">
+            <div className="h-6 w-6">
               {roster.profileImageUrl ? (
                 <Image
                   src={roster.profileImageUrl}
                   width={32}
                   height={32}
                   alt=""
-                  className="object-cover"
+                  className="h-full w-full rounded-full object-cover"
                 />
               ) : (
                 <UserIcon />

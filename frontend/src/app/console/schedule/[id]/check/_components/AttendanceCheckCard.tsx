@@ -58,20 +58,20 @@ export default function AttendanceCheckCard({
 
   return (
     <section className="flex aspect-square flex-col items-center justify-center p-0">
-      <div className="relative isolate flex w-full flex-col justify-end overflow-hidden rounded-2xl bg-gray-900 px-8 pb-8 pt-64">
+      <div className="relative isolate flex w-full flex-col justify-end overflow-hidden rounded-2xl bg-gray-800 px-8 pb-8 pt-64">
         {attendance.Roster.profileImageUrl ? (
           <Image
             src={attendance.Roster.profileImageUrl}
             width={480}
             height={640}
             alt="image"
-            className="absolute inset-0 -z-10 h-3/5 w-full object-cover"
+            className="absolute inset-0 -z-10 h-4/5 w-full object-cover"
           />
         ) : (
-          <UserIcon className="absolute inset-0 -z-10 h-3/5 w-full object-cover text-white" />
+          <UserIcon className="absolute inset-0 -z-10 h-4/5 w-full object-cover text-white" />
         )}
         <div className="absolute inset-0 -z-10 bg-gradient-to-t from-black via-gray-900/80" />
-        <div className="absolute inset-0 -z-10 rounded-2xl ring-1 ring-inset ring-gray-900/40" />
+        <div className="absolute inset-0 -z-10 ring-0" />
 
         <div className="flex flex-col space-y-3 text-white">
           <span className="text-base font-semibold">

@@ -8,7 +8,7 @@ import {
 } from '@libs/exception'
 import { PrismaService } from '@libs/prisma'
 import { StorageService } from '@libs/storage'
-import { calculatePaginationOffset } from '@libs/utils'
+import { calculatePaginationOffset, formatFileUrl } from '@libs/utils'
 import { Prisma, RosterStatus, type Roster } from '@prisma/client'
 import type { CreateRosterDTO, UpdateRosterDTO } from './dto/roster.dto'
 
@@ -22,11 +22,17 @@ export class RosterService {
 
   async getRoster(rosterId: number): Promise<Roster> {
     try {
-      return await this.prisma.roster.findUniqueOrThrow({
+      const roster = await this.prisma.roster.findUniqueOrThrow({
         where: {
           id: rosterId
         }
       })
+
+      if (roster.profileImageUrl) {
+        roster.profileImageUrl = formatFileUrl(roster.profileImageUrl)
+      }
+
+      return roster
     } catch (error) {
       if (
         error instanceof Prisma.PrismaClientKnownRequestError &&
@@ -40,11 +46,17 @@ export class RosterService {
 
   async getRosterByStudentId(studentId: string): Promise<Roster> {
     try {
-      return await this.prisma.roster.findUniqueOrThrow({
+      const roster = await this.prisma.roster.findUniqueOrThrow({
         where: {
           studentId
         }
       })
+
+      if (roster.profileImageUrl) {
+        roster.profileImageUrl = formatFileUrl(roster.profileImageUrl)
+      }
+
+      return roster
     } catch (error) {
       if (
         error instanceof Prisma.PrismaClientKnownRequestError &&
@@ -78,6 +90,12 @@ export class RosterService {
             name: 'asc'
           }
         ]
+      })
+
+      rosters.forEach((roster) => {
+        if (roster.profileImageUrl) {
+          roster.profileImageUrl = formatFileUrl(roster.profileImageUrl)
+        }
       })
 
       const total = await this.prisma.roster.count({

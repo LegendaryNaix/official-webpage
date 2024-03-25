@@ -86,14 +86,14 @@ export default function AttendanceListTable({
         const attendance = row.original
 
         return (
-          <div className="flex flex-nowrap gap-x-1">
+          <div className="flex flex-nowrap items-center gap-x-1">
             {attendance.Roster.profileImageUrl ? (
               <Image
                 src={attendance.Roster.profileImageUrl}
                 width={128}
                 height={128}
                 alt="profile"
-                className="h-6 w-6 object-cover"
+                className="h-6 w-6 rounded-full object-cover"
               />
             ) : (
               <UserIcon className="h-6 w-6 object-cover" />

@@ -1,5 +1,6 @@
 'use client'
 
+import { ImageInput } from '@/components/ImageInput'
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -30,6 +31,11 @@ import type { z } from 'zod'
 
 export default function UpdateRosterForm({ roster }: { roster: Roster }) {
   const [isFetching, setIsFetching] = useState(false)
+  const [selectedFile, setSelectedFile] = useState<File | null>(null)
+
+  const handleFileSelect = (file: File) => {
+    setSelectedFile(file)
+  }
 
   const router = useRouter()
 
@@ -39,9 +45,18 @@ export default function UpdateRosterForm({ roster }: { roster: Roster }) {
     resolver: zodResolver(UpdateRosterFormSchema),
     defaultValues: {
       ...roster,
-      offPosition: roster.offPosition ?? undefined,
-      defPosition: roster.defPosition ?? undefined,
-      splPosition: roster.splPosition ?? undefined
+      offPosition:
+        roster.type === RosterType.Athlete
+          ? roster.offPosition ?? undefined
+          : undefined,
+      defPosition:
+        roster.type === RosterType.Athlete
+          ? roster.defPosition ?? undefined
+          : undefined,
+      splPosition:
+        roster.type === RosterType.Athlete
+          ? roster.splPosition ?? undefined
+          : undefined
     }
   })
 
@@ -58,6 +73,17 @@ export default function UpdateRosterForm({ roster }: { roster: Roster }) {
         },
         false
       )
+
+      if (selectedFile) {
+        const formData = new FormData()
+        formData.append('image', selectedFile)
+        await fetcher.put(
+          `/rosters/${roster.id}/profile-image`,
+          formData,
+          false
+        )
+      }
+
       router.push('/console/roster?revalidate=true')
       router.refresh()
       toast.success('부원정보가 업데이트 되었습니다')
@@ -74,6 +100,12 @@ export default function UpdateRosterForm({ roster }: { roster: Roster }) {
         onSubmit={form.handleSubmit(onSubmit)}
         className="grid grid-cols-12 gap-5"
       >
+        <div className="col-span-12">
+          <p className="text-sm font-medium leading-6 peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+            프로필 이미지 변경
+          </p>
+          <ImageInput onFileSelect={handleFileSelect} />
+        </div>
         <div className="col-span-12 sm:col-span-6 lg:col-span-4">
           <FormField
             control={form.control}
