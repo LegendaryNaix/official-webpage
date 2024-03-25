@@ -48,11 +48,20 @@ export default function AttendanceCheckCard({
   const renderAttendanceLocation = (attendance: AttendanceListItem) => {
     switch (attendance.location) {
       case AttendanceLocation.Seoul:
-        return <Badge color={BadgeColor.red} content="명륜" />
+        return <Badge color={BadgeColor.pink} content="명륜" />
       case AttendanceLocation.Suwon:
-        return <Badge color={BadgeColor.red} content="율전" />
+        return <Badge color={BadgeColor.indigo} content="율전" />
       default:
         return <Badge color={BadgeColor.gray} content="통합" />
+    }
+  }
+
+  const renderType = (attendance: AttendanceListItem) => {
+    switch (attendance.Roster.registerYear) {
+      case new Date().getFullYear():
+        return <Badge color={BadgeColor.yellow} content="신입생" />
+      default:
+        return <Badge color={BadgeColor.blue} content="재학생" />
     }
   }
 
@@ -76,17 +85,20 @@ export default function AttendanceCheckCard({
         <div className="flex flex-col space-y-3 text-white">
           <span className="text-base font-semibold">
             {attendance.Roster.name} /{' '}
-            {attendance.Roster.admissionYear.toString().slice(2)}학번
+            {attendance.Roster.admissionYear.toString().slice(2)}학번{' '}
+            {renderType(attendance)}
           </span>
           <div className="flex items-center space-x-3">
             <div className="flex items-center space-x-1.5">
               <p className="text-sm">응답:</p>
               {renderAttendanceStatus(attendance)}
             </div>
-            <div className="flex items-center space-x-1.5">
-              <p className="text-sm">위치:</p>
-              {renderAttendanceLocation(attendance)}
-            </div>
+            {attendance.response !== AttendanceStatus.Absence && (
+              <div className="flex items-center space-x-1.5">
+                <p className="text-sm">위치:</p>
+                {renderAttendanceLocation(attendance)}
+              </div>
+            )}
           </div>
           <div className="flex w-full flex-col items-center space-y-2">
             <Button
