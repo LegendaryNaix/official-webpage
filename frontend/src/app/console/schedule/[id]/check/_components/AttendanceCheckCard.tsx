@@ -65,10 +65,10 @@ export default function AttendanceCheckCard({
             width={480}
             height={640}
             alt="image"
-            className="absolute inset-0 -z-10 h-4/5 w-full object-cover"
+            className="absolute inset-0 -z-10 h-full w-full object-cover"
           />
         ) : (
-          <UserIcon className="absolute inset-0 -z-10 h-4/5 w-full object-cover text-white" />
+          <UserIcon className="absolute inset-0 -z-10 h-full w-full object-cover text-white" />
         )}
         <div className="absolute inset-0 -z-10 bg-gradient-to-t from-black via-gray-900/80" />
         <div className="absolute inset-0 -z-10 ring-0" />
