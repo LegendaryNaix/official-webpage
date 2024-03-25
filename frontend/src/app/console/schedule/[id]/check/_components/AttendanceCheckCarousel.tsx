@@ -53,6 +53,7 @@ export default function AttendanceCheckCarousel({
     api.scrollNext()
 
     const currentIdx = (api.selectedScrollSnap() + 1) as number
+
     if (
       currentIdx % PAGINATION_LIMIT === 0 &&
       Math.floor(currentIdx / PAGINATION_LIMIT) === page
@@ -87,7 +88,7 @@ export default function AttendanceCheckCarousel({
         opts={{
           loop: true
         }}
-        className="w-full max-w-xs"
+        className="w-full max-w-[280px]"
       >
         <CarouselContent>
           {attendances.map((item) => (
@@ -96,7 +97,7 @@ export default function AttendanceCheckCarousel({
             </CarouselItem>
           ))}
         </CarouselContent>
-        <CarouselPrevious />
+        <CarouselPrevious disabled={current === 1} />
         <CarouselNext disabled={isFethcing} onClick={() => handleNextClick()} />
       </Carousel>
       <div className="text-muted-foreground py-2 text-center text-sm">

@@ -72,7 +72,19 @@ export class AttendanceService {
         take: limit,
         include: {
           Roster: true
-        }
+        },
+        orderBy: [
+          {
+            Roster: {
+              admissionYear: 'asc'
+            }
+          },
+          {
+            Roster: {
+              name: 'asc'
+            }
+          }
+        ]
       })
 
       const total = await this.prisma.attendance.count({
