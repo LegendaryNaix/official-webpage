@@ -46,7 +46,12 @@ export default function AttendanceCheckCarousel({
   }, [api])
 
   const handleNextClick = async () => {
+    if (!api) {
+      return
+    }
+
     api.scrollNext()
+
     const currentIdx = (api.selectedScrollSnap() + 1) as number
     if (
       currentIdx % PAGINATION_LIMIT === 0 &&
