@@ -70,7 +70,7 @@ export default function AttendanceCheckCard({
         ) : (
           <UserIcon className="absolute inset-0 -z-10 h-full w-full object-cover text-white" />
         )}
-        <div className="absolute inset-0 -z-10 bg-gradient-to-t from-black via-gray-900/80" />
+        <div className="absolute inset-0 -z-10 bg-gradient-to-t from-black via-gray-900/40" />
         <div className="absolute inset-0 -z-10 ring-0" />
 
         <div className="flex flex-col space-y-3 text-white">
