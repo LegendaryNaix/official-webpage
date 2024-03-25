@@ -16,7 +16,7 @@ export default function AttendanceCheckPage({
         <h1 className="text-xl font-bold">출석 체크</h1>
         <ScheduleCard params={params} />
         <AttendanceCheckCarousel params={params} />
-        <Link href="/console/schedule/1" className="w-full">
+        <Link href={`/console/schedule/${params.id}`} className="w-full">
           <Button className="w-full">뒤로가기</Button>
         </Link>
       </div>
