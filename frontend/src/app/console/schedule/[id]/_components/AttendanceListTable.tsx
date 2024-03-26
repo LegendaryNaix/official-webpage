@@ -53,8 +53,9 @@ export default function AttendanceListTable({
       case AttendanceStatus.Tardy:
         return <Badge color={BadgeColor.yellow} content="부분참석" />
       case AttendanceStatus.Present:
-      default:
         return <Badge color={BadgeColor.green} content="참석" />
+      default:
+        return <Badge color={BadgeColor.gray} content="체크전" />
     }
   }
 
@@ -141,6 +142,15 @@ export default function AttendanceListTable({
     {
       accessorKey: 'response',
       header: '응답',
+      cell: ({ row }) => {
+        const attendance = row.original
+
+        return renderAttendanceStatus(attendance)
+      }
+    },
+    {
+      accessorKey: 'result',
+      header: '실제 출석',
       cell: ({ row }) => {
         const attendance = row.original
 
