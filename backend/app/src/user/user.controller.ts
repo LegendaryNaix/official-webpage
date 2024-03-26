@@ -87,20 +87,6 @@ export class UserController {
     }
   }
 
-  @Roles(Role.Admin)
-  @Put(':userId')
-  async updateUser(
-    @Param('userId', ParseIntPipe) userId: number,
-    @Body() userDTO: UpdateUserDTO,
-    @Req() req: AuthenticatedRequest
-  ): Promise<ReducedUserDTO> {
-    try {
-      return await this.userService.updateUser(req.user.id, userId, userDTO)
-    } catch (error) {
-      BusinessExceptionHandler(error)
-    }
-  }
-
   @Put('profile-image')
   @UseInterceptors(FileInterceptor('image', IMAGE_OPTIONS))
   async updateCurrentUserProfileImage(
@@ -113,6 +99,20 @@ export class UserController {
 
     try {
       return await this.userService.updateProfileImage(req.user.id, image)
+    } catch (error) {
+      BusinessExceptionHandler(error)
+    }
+  }
+
+  @Roles(Role.Admin)
+  @Put(':userId')
+  async updateUser(
+    @Param('userId', ParseIntPipe) userId: number,
+    @Body() userDTO: UpdateUserDTO,
+    @Req() req: AuthenticatedRequest
+  ): Promise<ReducedUserDTO> {
+    try {
+      return await this.userService.updateUser(req.user.id, userId, userDTO)
     } catch (error) {
       BusinessExceptionHandler(error)
     }
