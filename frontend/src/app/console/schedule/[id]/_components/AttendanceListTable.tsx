@@ -46,8 +46,8 @@ export default function AttendanceListTable({
     }
   }
 
-  const renderAttendanceStatus = (attendance: AttendanceListItem) => {
-    switch (attendance.response) {
+  const renderAttendanceStatus = (status: AttendanceStatus) => {
+    switch (status) {
       case AttendanceStatus.Absence:
         return <Badge color={BadgeColor.red} content="불참" />
       case AttendanceStatus.Tardy:
@@ -145,7 +145,7 @@ export default function AttendanceListTable({
       cell: ({ row }) => {
         const attendance = row.original
 
-        return renderAttendanceStatus(attendance)
+        return renderAttendanceStatus(attendance.response)
       }
     },
     {
@@ -154,7 +154,7 @@ export default function AttendanceListTable({
       cell: ({ row }) => {
         const attendance = row.original
 
-        return renderAttendanceStatus(attendance)
+        return renderAttendanceStatus(attendance.result)
       }
     },
     {
