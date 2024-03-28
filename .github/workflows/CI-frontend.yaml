@@ -67,10 +67,10 @@ jobs:
         run: echo "${{ github.event.pull_request.title }}" | pnpm commitlint --verbose
 
       - name: Check style
-        run: pnpm --filter frontend format:check
+        run: pnpm format:check
 
       - name: Lint
-        run: pnpm --filter frontend lint
+        run: pnpm lint
 
   test:
     runs-on: ${{ matrix.os }}

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 module.exports = {
-  extends: ['next/core-web-vitals', 'plugin:storybook/recommended'],
+  extends: ['next', 'next/core-web-vitals'],
   env: {
     browser: true,
     node: true
@@ -12,14 +12,6 @@ module.exports = {
     ]
   },
   overrides: [
-    // TODO: If there is another way to solve the '@next/babel' error, remove below object
-    {
-      files: ['*.js'],
-      parser: 'espree',
-      parserOptions: {
-        ecmaVersion: 2020
-      }
-    },
     {
       files: ['*.tsx'],
       excludedFiles: ['src/components/ui/*.tsx'],
