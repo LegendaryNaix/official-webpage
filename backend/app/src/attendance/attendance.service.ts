@@ -10,10 +10,10 @@ import {
   Prisma,
   RosterType,
   type Attendance,
-  type Roster,
   AttendanceResponse,
   AttendanceLocation
 } from '@prisma/client'
+import * as XLSX from 'xlsx'
 import type {
   AttendanceWithRoster,
   CreateAttendanceDTO,
@@ -374,93 +374,112 @@ export class AttendanceService {
     }
   }
 
-  private calculateStaffAttendances(
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    attendancesWithRosters: (Attendance & { Roster: Roster })[]
-  ): Record<string, Record<string, AttendanceCount>> {
-    const positionCounts = {
-      staff: {
-        normal: {
-          present: 0,
-          absence: 0,
-          tardy: 0
+  async getAttendancesWithExcelFile(scheduleId: number) {
+    try {
+      const attendancesWithRoster = await this.prisma.attendance.findMany({
+        where: {
+          scheduleId
         },
-        newbie: {
-          present: 0,
-          absence: 0,
-          tardy: 0
-        }
-      }
-    }
-
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    attendancesWithRosters.forEach(({ Roster, response }) => {
-      const isNewbie = Roster.registerYear === new Date().getFullYear()
-      const counts = positionCounts['staff'][isNewbie ? 'newbie' : 'normal']
-
-      switch (response) {
-        case 'Present':
-          counts.present++
-          break
-        case 'Absence':
-          counts.absence++
-          break
-        case 'Tardy':
-          counts.tardy++
-          break
-      }
-    })
-
-    return positionCounts
-  }
-
-  private calculateAthleteAttendances(
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    attendancesWithRosters: (Attendance & { Roster: Roster })[]
-  ): Record<string, Record<string, AttendanceCount>> {
-    const positionCounts = {
-      off: {},
-      def: {},
-      spl: {}
-    }
-
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    attendancesWithRosters.forEach(({ Roster, response }) => {
-      const updateCounts = (
-        positionType: string,
-        positionValue: string | null
-      ) => {
-        if (positionValue) {
-          if (!positionCounts[positionType][positionValue]) {
-            positionCounts[positionType][positionValue] = {
-              present: 0,
-              absence: 0,
-              tardy: 0
+        orderBy: [
+          {
+            Roster: {
+              admissionYear: 'asc'
+            }
+          },
+          {
+            Roster: {
+              name: 'asc'
             }
           }
-
-          const counts = positionCounts[positionType][positionValue]
-
-          switch (response) {
-            case 'Present':
-              counts.present++
-              break
-            case 'Absence':
-              counts.absence++
-              break
-            case 'Tardy':
-              counts.tardy++
-              break
-          }
+        ],
+        include: {
+          Roster: true
         }
-      }
+      })
 
-      updateCounts('off', Roster.offPosition)
-      updateCounts('def', Roster.defPosition)
-      updateCounts('spl', Roster.splPosition)
-    })
+      const attendances = attendancesWithRoster.map((item) => {
+        return {
+          이름: item.Roster.name,
+          학번: item.Roster.admissionYear,
+          입부년도: item.Roster.registerYear,
+          출석조사: this.translateAttendanceResponse(item.response),
+          위치: this.translateAttendanceLocation(item.location),
+          실제출석: this.translateAttendanceResponse(item.result),
+          사유: item.reason ?? '',
+          구분: this.translateRosterType(item.Roster.type),
+          오펜스: item.Roster.offPosition ?? '',
+          디펜스: item.Roster.defPosition ?? '',
+          스페셜: item.Roster.splPosition ?? ''
+        }
+      })
 
-    return positionCounts
+      const workbook = XLSX.utils.book_new()
+
+      const athleteWorkSheet = XLSX.utils.json_to_sheet(
+        attendances.filter(
+          (attendance) =>
+            attendance.구분 === '선수' &&
+            attendance.입부년도 !== new Date().getFullYear()
+        )
+      )
+
+      const staffWorkSheet = XLSX.utils.json_to_sheet(
+        attendances.filter(
+          (attendance) =>
+            attendance.구분 === '스태프' &&
+            attendance.입부년도 !== new Date().getFullYear()
+        )
+      )
+
+      const newbieWorkSheet = XLSX.utils.json_to_sheet(
+        attendances.filter(
+          (attendance) => attendance.입부년도 === new Date().getFullYear()
+        )
+      )
+
+      XLSX.utils.book_append_sheet(workbook, athleteWorkSheet, '재학생(선수)')
+      XLSX.utils.book_append_sheet(workbook, staffWorkSheet, '재학생(스태프)')
+      XLSX.utils.book_append_sheet(workbook, newbieWorkSheet, '신입생(전체)')
+
+      return XLSX.write(workbook, { bookType: 'xlsx', type: 'buffer' })
+    } catch (error) {
+      throw new UnexpectedException(error)
+    }
+  }
+
+  private translateRosterType(rosterType: RosterType): string {
+    switch (rosterType) {
+      case RosterType.Athlete:
+        return '선수'
+      case RosterType.Staff:
+        return '스태프'
+      default:
+        return '감독 및 코치진'
+    }
+  }
+
+  private translateAttendanceResponse(status: AttendanceResponse): string {
+    switch (status) {
+      case AttendanceResponse.Present:
+        return '참석'
+      case AttendanceResponse.Tardy:
+        return '부분참석'
+      case AttendanceResponse.Absence:
+        return '불참'
+      default:
+        return '-'
+    }
+  }
+
+  private translateAttendanceLocation(location: AttendanceLocation): string {
+    switch (location) {
+      case AttendanceLocation.Seoul:
+        return '명륜'
+      case AttendanceLocation.Suwon:
+        return '수원'
+      default:
+        return ''
+    }
   }
 
   private transformRosterType(rosterType: string): RosterType {

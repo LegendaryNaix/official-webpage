@@ -6,11 +6,13 @@ import {
   ParseIntPipe,
   Post,
   Put,
-  Query
+  Query,
+  Res
 } from '@nestjs/common'
 import { Roles } from '@libs/decorator'
 import { BusinessExceptionHandler } from '@libs/exception'
 import { Role, type Attendance } from '@prisma/client'
+import { Response } from 'express'
 import { AttendanceService } from './attendance.service'
 import {
   type AttendanceWithRoster,
@@ -38,6 +40,28 @@ export class AttendanceController {
         rosterType,
         limit
       )
+    } catch (error) {
+      BusinessExceptionHandler(error)
+    }
+  }
+
+  @Get('excel-file')
+  @Roles(Role.Manager)
+  async getAttendancesWithExcel(
+    @Query('scheduleId', ParseIntPipe) scheduleId: number,
+    @Res() res: Response
+  ) {
+    try {
+      const excelBuffer =
+        await this.attendanceService.getAttendancesWithExcelFile(scheduleId)
+
+      res.set({
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        'Content-Type':
+          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+      })
+
+      res.end(excelBuffer)
     } catch (error) {
       BusinessExceptionHandler(error)
     }
