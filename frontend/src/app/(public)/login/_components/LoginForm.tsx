@@ -54,7 +54,11 @@ export default function LoginForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-3">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="w-full space-y-3"
+        autoComplete="on"
+      >
         <FormField
           control={form.control}
           name="username"
