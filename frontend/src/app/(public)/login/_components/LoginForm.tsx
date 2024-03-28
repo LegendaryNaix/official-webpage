@@ -62,7 +62,11 @@ export default function LoginForm() {
             <FormItem>
               <FormLabel className="sr-only">Username</FormLabel>
               <FormControl>
-                <Input placeholder="아이디" {...field} />
+                <Input
+                  autoComplete="username"
+                  placeholder="아이디"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -75,7 +79,12 @@ export default function LoginForm() {
             <FormItem>
               <FormLabel className="sr-only">Password</FormLabel>
               <FormControl>
-                <Input type="password" placeholder="패스워드" {...field} />
+                <Input
+                  autoComplete="password"
+                  type="password"
+                  placeholder="패스워드"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
