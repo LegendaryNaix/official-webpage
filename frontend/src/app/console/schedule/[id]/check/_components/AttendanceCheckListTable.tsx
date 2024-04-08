@@ -72,15 +72,11 @@ export default function AttendanceCheckListTable({
       cell: ({ row }) => {
         const attendance = row.original
 
-        return <p className="text-nowrap text-base">{attendance.Roster.name}</p>
-      }
-    },
-    {
-      id: 'admissionYear',
-      header: '학번',
-      cell: ({ row }) => {
-        const attendance = row.original
-        return attendance.Roster.admissionYear
+        return (
+          <p className="text-nowrap text-sm">
+            {attendance.Roster.name}/{attendance.Roster.admissionYear}
+          </p>
+        )
       }
     },
     {

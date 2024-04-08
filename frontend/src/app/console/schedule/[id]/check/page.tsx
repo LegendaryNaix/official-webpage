@@ -32,25 +32,27 @@ export default async function AttendanceCheckPage({
   )
 
   return (
-    <main className="mx-auto flex w-full flex-grow flex-col items-center justify-center">
-      <div className="mt-4 flex w-full max-w-sm flex-col items-center space-y-5 px-4 sm:px-6">
+    <main className="mx-auto flex w-full flex-grow flex-col items-center justify-center space-y-3">
+      <div className="mt-4 w-full px-4 text-left sm:px-6">
         <h1 className="text-xl font-bold">출석 체크</h1>
-        <ScheduleCard params={params} />
-        <p className="text-sm font-semibold text-amber-400">
-          남은 인원: {attendanceList.total}명
-        </p>
-        <AttendanceTypeTab />
-        <AttendanceCheckListTable attendances={attendanceList.attendances} />
-        <Pagination
-          totalPages={calculateTotalPages(
-            attendanceList.total,
-            PAGINATION_LIMIT_DEFAULT
-          )}
-        />
-        <Link href={`/console/schedule/${params.id}`} className="w-full">
-          <Button className="w-full">뒤로가기</Button>
-        </Link>
       </div>
+      <ScheduleCard params={params} />
+      <p className="text-sm font-semibold text-amber-400">
+        남은 인원: {attendanceList.total}명
+      </p>
+      <AttendanceTypeTab />
+      <div className="flex w-full flex-grow flex-col gap-5 py-4 sm:px-6">
+        <AttendanceCheckListTable attendances={attendanceList.attendances} />
+      </div>
+      <Pagination
+        totalPages={calculateTotalPages(
+          attendanceList.total,
+          PAGINATION_LIMIT_DEFAULT
+        )}
+      />
+      <Link href={`/console/schedule/${params.id}`} className="w-full">
+        <Button className="w-full">뒤로가기</Button>
+      </Link>
     </main>
   )
 }
