@@ -72,11 +72,13 @@ export class AttendanceController {
   async getUncheckedAttendances(
     @Query('scheduleId', ParseIntPipe) scheduleId: number,
     @Query('page', ParseIntPipe) page: number,
+    @Query('response') response: string,
     @Query('limit', new ParseIntPipe({ optional: true })) limit?: number
   ): Promise<{ attendances: AttendanceWithRoster[]; total: number }> {
     try {
       return await this.attendanceService.getUncheckedAttendances(
         scheduleId,
+        response,
         page,
         limit
       )

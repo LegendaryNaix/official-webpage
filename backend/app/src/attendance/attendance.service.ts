@@ -59,6 +59,7 @@ export class AttendanceService {
 
   async getUncheckedAttendances(
     scheduleId: number,
+    response: string,
     page: number,
     limit = 1
   ): Promise<{ attendances: AttendanceWithRoster[]; total: number }> {
@@ -66,7 +67,8 @@ export class AttendanceService {
       const attendances = await this.prisma.attendance.findMany({
         where: {
           scheduleId,
-          result: null
+          result: null,
+          response: this.transformAttendanceResponse(response)
         },
         skip: calculatePaginationOffset(page, limit),
         take: limit,
@@ -98,7 +100,8 @@ export class AttendanceService {
       const total = await this.prisma.attendance.count({
         where: {
           scheduleId,
-          result: null
+          result: null,
+          response: this.transformAttendanceResponse(response)
         }
       })
 
@@ -476,9 +479,17 @@ export class AttendanceService {
       case AttendanceLocation.Seoul:
         return '명륜'
       case AttendanceLocation.Suwon:
-        return '수원'
+        return '율전'
       default:
         return ''
+    }
+  }
+
+  private transformAttendanceResponse(response: string): AttendanceResponse {
+    try {
+      return AttendanceResponse[response]
+    } catch (error) {
+      return AttendanceResponse.Present
     }
   }
 

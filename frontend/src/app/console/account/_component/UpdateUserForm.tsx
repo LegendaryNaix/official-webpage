@@ -120,7 +120,7 @@ export default function UpdateUserForm({
                         </FormControl>
                         <SelectContent>
                           <SelectItem value={Role.User}>일반</SelectItem>
-                          <SelectItem value={Role.Manager}>매니자</SelectItem>
+                          <SelectItem value={Role.Manager}>매니저</SelectItem>
                           <SelectItem value={Role.Admin}>관리자</SelectItem>
                         </SelectContent>
                       </Select>
