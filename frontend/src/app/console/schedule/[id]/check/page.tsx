@@ -36,7 +36,9 @@ export default async function AttendanceCheckPage({
       <div className="mt-4 w-full px-4 text-left sm:px-6">
         <h1 className="text-xl font-bold">출석 체크</h1>
       </div>
-      <ScheduleCard params={params} />
+      <div className="w-full max-w-screen-sm px-4 sm:px-6">
+        <ScheduleCard params={params} />
+      </div>
       <p className="text-sm font-semibold text-amber-400">
         남은 인원: {attendanceList.total}명
       </p>
@@ -50,7 +52,10 @@ export default async function AttendanceCheckPage({
           PAGINATION_LIMIT_DEFAULT
         )}
       />
-      <Link href={`/console/schedule/${params.id}`} className="w-full">
+      <Link
+        href={`/console/schedule/${params.id}`}
+        className="w-full max-w-screen-sm px-4 sm:px-6"
+      >
         <Button className="w-full">뒤로가기</Button>
       </Link>
     </main>
