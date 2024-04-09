@@ -5,7 +5,7 @@ import { AppModule } from './app.module'
 
 const bootstrap = async () => {
   const app = await NestFactory.create(AppModule)
-  app.useGlobalPipes(new ValidationPipe())
+  app.useGlobalPipes(new ValidationPipe({ whitelist: true }))
   app.use(cookieParser())
   app.setGlobalPrefix('api')
 

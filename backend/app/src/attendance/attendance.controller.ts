@@ -12,6 +12,7 @@ import {
 } from '@nestjs/common'
 import { Roles } from '@libs/decorator'
 import { BusinessExceptionHandler } from '@libs/exception'
+import { ParseDatePipe } from '@libs/pipe'
 import { Role, type Attendance } from '@prisma/client'
 import { Response } from 'express'
 import { AttendanceService } from './attendance.service'
@@ -57,6 +58,32 @@ export class AttendanceController {
     try {
       const excelBuffer =
         await this.attendanceService.getAttendancesWithExcelFile(scheduleId)
+
+      res.set({
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        'Content-Type':
+          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+      })
+
+      res.end(excelBuffer)
+    } catch (error) {
+      BusinessExceptionHandler(error)
+    }
+  }
+
+  @Get('excel-file/range')
+  @Roles(Role.Admin)
+  async getRangedAttendancesWithExcelFile(
+    @Query('start', ParseDatePipe) start: Date,
+    @Query('end', ParseDatePipe) end: Date,
+    @Res() res: Response
+  ) {
+    try {
+      const excelBuffer =
+        await this.attendanceService.getRangedAttendancesWithExcelFile(
+          start,
+          end
+        )
 
       res.set({
         // eslint-disable-next-line @typescript-eslint/naming-convention

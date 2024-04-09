@@ -22,7 +22,8 @@ export default defineConfig({
       '@libs/constants': './libs/constants/src/index.ts',
       '@libs/cache': './libs/cache/src/index.ts',
       '@libs/storage': './libs/storage/src/index.ts',
-      '@libs/utils': './libs/utils/src/index.ts'
+      '@libs/utils': './libs/utils/src/index.ts',
+      '@libs/pipe': './libs/pipe/src/index.ts'
     }
   },
   plugins: [swc.vite()]

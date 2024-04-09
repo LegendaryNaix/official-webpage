@@ -1,7 +1,9 @@
 import { Service } from '@libs/decorator'
 import {
+  BusinessException,
   ConflictFoundException,
   EntityNotExistException,
+  ParameterValidationException,
   UnexpectedException
 } from '@libs/exception'
 import { PrismaService } from '@libs/prisma'
@@ -12,7 +14,8 @@ import {
   type Attendance,
   AttendanceResponse,
   AttendanceLocation,
-  RosterStatus
+  RosterStatus,
+  ScheduleType
 } from '@prisma/client'
 import * as XLSX from 'xlsx'
 import type {
@@ -476,6 +479,158 @@ export class AttendanceService {
 
       return XLSX.write(workbook, { bookType: 'xlsx', type: 'buffer' })
     } catch (error) {
+      throw new UnexpectedException(error)
+    }
+  }
+
+  async getRangedAttendancesWithExcelFile(start: Date, end: Date) {
+    try {
+      if (end.getTime() - start.getTime() > 31 * 24 * 60 * 60 * 1000) {
+        throw new ParameterValidationException(
+          '검색 기간은 1달(31일) 이내여야 합니다'
+        )
+      }
+
+      if (start.getTime() > end.getTime()) {
+        throw new ParameterValidationException(
+          '시작 날짜는 종료 날짜보다 작아야합니다'
+        )
+      }
+
+      const schedules = await this.prisma.schedule.findMany({
+        where: {
+          type: {
+            not: ScheduleType.Event
+          },
+          startedAt: {
+            gte: start
+          },
+          endedAt: {
+            lte: end
+          }
+        },
+        select: {
+          id: true,
+          startedAt: true
+        }
+      })
+
+      const attendances = await this.prisma.attendance.findMany({
+        where: {
+          Schedule: {
+            id: {
+              in: schedules.map((schedule) => schedule.id)
+            }
+          },
+          Roster: {
+            status: RosterStatus.Enable
+          }
+        },
+        select: {
+          result: true,
+          Schedule: {
+            select: {
+              id: true,
+              startedAt: true
+            }
+          },
+          Roster: {
+            select: {
+              id: true,
+              name: true,
+              admissionYear: true,
+              registerYear: true,
+              type: true
+            }
+          }
+        },
+        orderBy: [
+          {
+            Roster: {
+              admissionYear: 'asc'
+            }
+          },
+          {
+            Roster: {
+              name: 'asc'
+            }
+          }
+        ]
+      })
+
+      const scheduleMap = schedules.reduce((acc, schedule) => {
+        // 한국 시간으로 변환 (UTC+9)
+        const kstOffset = 9 * 60 * 60 * 1000
+        const kstDate = new Date(schedule.startedAt.getTime() + kstOffset)
+        acc[schedule.id] = kstDate.toISOString().slice(5, 10)
+        return acc
+      }, {})
+
+      const attendanceMap = attendances.reduce(
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        (acc, { Roster, Schedule, result }) => {
+          if (!acc[Roster.id]) {
+            acc[Roster.id] = {
+              name: Roster.name,
+              admissionYear: Roster.admissionYear,
+              registerYear: Roster.registerYear,
+              type: Roster.type,
+              results: {}
+            }
+          }
+          acc[Roster.id].results[scheduleMap[Schedule.id]] = result || '-'
+          return acc
+        },
+        {}
+      )
+
+      const result = Object.values(attendanceMap).map(
+        ({ name, admissionYear, registerYear, type, results }) => {
+          return {
+            이름: name,
+            학번: admissionYear,
+            입부년도: registerYear,
+            type,
+            ...Object.keys(scheduleMap).reduce((acc, scheduleId) => {
+              const date = scheduleMap[scheduleId]
+              acc[date] = this.translateAttendanceResponse(results[date]) || ''
+              return acc
+            }, {})
+          }
+        }
+      )
+
+      const workbook = XLSX.utils.book_new()
+
+      const athleteWorkSheet = XLSX.utils.json_to_sheet(
+        result.filter(
+          (item) =>
+            item.type === RosterType.Athlete &&
+            item.입부년도 !== new Date().getFullYear()
+        )
+      )
+
+      const staffWorkSheet = XLSX.utils.json_to_sheet(
+        result.filter(
+          (item) =>
+            item.type === RosterType.Staff &&
+            item.입부년도 !== new Date().getFullYear()
+        )
+      )
+
+      const newbieWorkSheet = XLSX.utils.json_to_sheet(
+        result.filter((item) => item.입부년도 === new Date().getFullYear())
+      )
+
+      XLSX.utils.book_append_sheet(workbook, athleteWorkSheet, '재학생(선수)')
+      XLSX.utils.book_append_sheet(workbook, staffWorkSheet, '재학생(스태프)')
+      XLSX.utils.book_append_sheet(workbook, newbieWorkSheet, '신입생(전체)')
+
+      return XLSX.write(workbook, { bookType: 'xlsx', type: 'buffer' })
+    } catch (error) {
+      if (error instanceof BusinessException) {
+        throw error
+      }
       throw new UnexpectedException(error)
     }
   }
