@@ -71,6 +71,7 @@ export class RosterService {
   async getRosters(
     page: number,
     limit = 10,
+    searchTerm = '',
     filter?: string
   ): Promise<{ total: number; rosters: Roster[] }> {
     try {
@@ -78,7 +79,10 @@ export class RosterService {
 
       const rosters = await this.prisma.roster.findMany({
         where: {
-          status
+          status,
+          name: {
+            contains: searchTerm
+          }
         },
         take: limit,
         skip: calculatePaginationOffset(page, limit),
@@ -100,7 +104,10 @@ export class RosterService {
 
       const total = await this.prisma.roster.count({
         where: {
-          status
+          status,
+          name: {
+            contains: searchTerm
+          }
         }
       })
 

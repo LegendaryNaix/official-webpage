@@ -28,9 +28,12 @@ export const getRoster = async (rosterId: number): Promise<Roster> => {
   return await fetcher.get<Roster>(`/rosters/${rosterId}`)
 }
 
-export const getRosters = async (page: number): Promise<RosterList> => {
+export const getRosters = async (
+  page: number,
+  searchTerm: string
+): Promise<RosterList> => {
   return await fetcher.get<RosterList>(
-    `/rosters?page=${page}&limit=${PAGINATION_LIMIT_DEFAULT}&filter=Enable`
+    `/rosters?page=${page}&limit=${PAGINATION_LIMIT_DEFAULT}&filter=Enable&searchTerm=${searchTerm}`
   )
 }
 

@@ -29,10 +29,16 @@ export class RosterController {
   async getRosters(
     @Query('page', ParseIntPipe) page: number,
     @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
-    @Query('filter') filter?: string
+    @Query('filter') filter?: string,
+    @Query('searchTerm') searchTerm?: string
   ): Promise<{ total: number; rosters: Roster[] }> {
     try {
-      return await this.rosterService.getRosters(page, limit, filter)
+      return await this.rosterService.getRosters(
+        page,
+        limit,
+        searchTerm,
+        filter
+      )
     } catch (error) {
       BusinessExceptionHandler(error)
     }
