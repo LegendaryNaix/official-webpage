@@ -11,7 +11,8 @@ import {
   RosterType,
   type Attendance,
   AttendanceResponse,
-  AttendanceLocation
+  AttendanceLocation,
+  RosterStatus
 } from '@prisma/client'
 import * as XLSX from 'xlsx'
 import type {
@@ -116,9 +117,20 @@ export class AttendanceService {
     searchTerm = '',
     page: number,
     rosterType?: string,
+    newbie?: boolean,
     limit = 10
   ): Promise<{ attendances: AttendanceWithRoster[]; total: number }> {
     try {
+      const isNewbie = newbie
+        ? {
+            registerYear: new Date().getFullYear()
+          }
+        : {
+            registerYear: {
+              not: new Date().getFullYear()
+            }
+          }
+
       const attendances = await this.prisma.attendance.findMany({
         where: {
           scheduleId,
@@ -128,7 +140,16 @@ export class AttendanceService {
                 type: this.transformRosterType(rosterType)
               },
               {
+                status: RosterStatus.Enable
+              },
+              isNewbie,
+              {
                 OR: [
+                  {
+                    name: {
+                      contains: searchTerm
+                    }
+                  },
                   {
                     offPosition: {
                       contains: searchTerm
@@ -185,7 +206,16 @@ export class AttendanceService {
                 type: this.transformRosterType(rosterType)
               },
               {
+                status: RosterStatus.Enable
+              },
+              isNewbie,
+              {
                 OR: [
+                  {
+                    name: {
+                      contains: searchTerm
+                    }
+                  },
                   {
                     offPosition: {
                       contains: searchTerm

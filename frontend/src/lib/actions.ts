@@ -1,6 +1,6 @@
 'use server'
 
-import type { AttendanceStatus, RosterType } from './enums'
+import type { AttendanceStatus } from './enums'
 import fetcher from './fetcher'
 import type { AttendanceList, AttendanceStatistic } from './types/attendance'
 import type { Roster, RosterList } from './types/roster'
@@ -80,12 +80,13 @@ export const getSchedule = async (
 export const getAttendances = async (
   scheduleId: number,
   page: number,
-  rosterType: RosterType,
+  rosterType: string,
   searchTerm: string,
+  newbie: string,
   limit?: number
 ): Promise<AttendanceList> => {
   return await fetcher.get<AttendanceList>(
-    `/attendances?scheduleId=${scheduleId}&page=${page}&rosterType=${rosterType}&searchTerm=${searchTerm}&limit=${limit ? limit : PAGINATION_LIMIT_DEFAULT}`
+    `/attendances?scheduleId=${scheduleId}&page=${page}&rosterType=${rosterType}&searchTerm=${searchTerm}&newbie=${newbie}&limit=${limit ? limit : PAGINATION_LIMIT_DEFAULT}`
   )
 }
 

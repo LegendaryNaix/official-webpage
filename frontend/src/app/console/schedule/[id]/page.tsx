@@ -1,11 +1,12 @@
 import Search from '@/components/Search'
 import { Button } from '@/components/ui/button'
+import { SearchIcon } from 'lucide-react'
 import Link from 'next/link'
-import AthleteAttendanceListTable from './_components/AthleteAttendanceListTable'
+import AttendanceListTableSection from './_components/AttendanceListTableSection'
+import AttendanceRosterTypeTab from './_components/AttendanceRosterTypeTab'
 import AttendanceStatisticSection from './_components/AttendanceStatisticSection'
 import DownloadExcelButton from './_components/DownloadExcelButton'
 import ScheduleCard from './_components/ScheduleCard'
-import StaffAttendanceListTable from './_components/StaffAttendanceListTable'
 
 export default async function AttendanceStatisticPage({
   params,
@@ -36,40 +37,30 @@ export default async function AttendanceStatisticPage({
         </div>
         <div className="flex w-full flex-grow flex-col gap-10 py-4">
           <div className="grid grid-cols-12 gap-5">
-            <div className="col-span-12 flex flex-col space-y-3 sm:col-span-3">
+            <div className="col-span-12 flex flex-col space-y-3 lg:col-span-4">
               <h2 className="text-base font-bold">일정</h2>
               <ScheduleCard params={params} />
             </div>
-            <div className="col-span-12 flex flex-col space-y-3 sm:col-span-9">
+            <div className="col-span-12 flex flex-col space-y-3 lg:col-span-8">
               <h2 className="text-base font-bold">포지션별 출석 통계</h2>
               <AttendanceStatisticSection params={params} />
             </div>
           </div>
           <div className="grid grid-cols-12 items-center gap-3">
-            <div className="col-span-6 sm:col-span-1">
-              <h2 className="text-base font-bold">선수단</h2>
+            <div className="col-span-12 lg:col-span-6">
+              <AttendanceRosterTypeTab />
             </div>
-            <div className="col-span-6 sm:col-span-2">
-              <Search placeholder="포지션 검색..." />
+            <div className="col-span-6 flex items-center space-x-2 lg:col-span-6">
+              <SearchIcon className="h-6 w-6" />
+              <Search placeholder="이름 또는 포지션 검색" />
             </div>
             <div className="col-span-12 flex flex-col space-y-5">
-              <AthleteAttendanceListTable
+              <AttendanceListTableSection
                 params={params}
                 searchParams={searchParams}
               />
             </div>
           </div>
-          <div className="grid grid-cols-12 items-center gap-3">
-            <div className="col-span-6 sm:col-span-1">
-              <h2 className="text-base font-bold">스태프</h2>
-            </div>
-            <div className="col-span-12 flex flex-col space-y-5">
-              <StaffAttendanceListTable params={params} />
-            </div>
-          </div>
-          {/* <div>
-            <h2 className="text-base font-bold">코치진</h2>
-          </div> */}
         </div>
       </div>
     </main>

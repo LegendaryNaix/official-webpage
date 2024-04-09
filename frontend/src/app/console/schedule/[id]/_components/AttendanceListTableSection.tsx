@@ -5,7 +5,7 @@ import { calculateTotalPages } from '@/lib/utils'
 import { PAGINATION_LIMIT_DEFAULT } from '@/lib/vars'
 import AttendanceListTable from './AttendanceListTable'
 
-export default async function AthleteAttendanceListTable({
+export default async function AttendanceListTableSection({
   params,
   searchParams
 }: {
@@ -15,16 +15,22 @@ export default async function AthleteAttendanceListTable({
   searchParams: {
     searchTerm?: string
     page?: string
+    type?: string
+    newbie?: string
   }
 }) {
   const searchTerm = searchParams?.searchTerm || ''
+  const type = searchParams?.type || RosterType.Athlete
+  const newbie = searchParams?.newbie || 'false'
   const currentPage = Number(searchParams?.page) || 1
 
   const attendanceList = await getAttendances(
     params.id,
     currentPage,
-    RosterType.Athlete,
-    searchTerm
+    type,
+    searchTerm,
+    newbie,
+    PAGINATION_LIMIT_DEFAULT
   )
 
   return (

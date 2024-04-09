@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Param,
+  ParseBoolPipe,
   ParseIntPipe,
   Post,
   Put,
@@ -30,6 +31,7 @@ export class AttendanceController {
     @Query('page', ParseIntPipe) page: number,
     @Query('searchTerm') searchTerm: string,
     @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
+    @Query('newbie', new ParseBoolPipe({ optional: true })) newbie?: boolean,
     @Query('rosterType') rosterType?: string
   ): Promise<{ attendances: AttendanceWithRoster[]; total: number }> {
     try {
@@ -38,6 +40,7 @@ export class AttendanceController {
         searchTerm,
         page,
         rosterType,
+        newbie,
         limit
       )
     } catch (error) {

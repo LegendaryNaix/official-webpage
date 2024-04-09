@@ -13,6 +13,7 @@ export default function AttendanceTypeTab() {
     const params = new URLSearchParams(searchParams)
 
     params.set('response', status)
+    params.set('page', '1')
     replace(`${pathname}?${params.toString()}`)
   }
 
