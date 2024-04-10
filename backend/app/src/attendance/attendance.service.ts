@@ -543,19 +543,7 @@ export class AttendanceService {
               type: true
             }
           }
-        },
-        orderBy: [
-          {
-            Roster: {
-              admissionYear: 'asc'
-            }
-          },
-          {
-            Roster: {
-              name: 'asc'
-            }
-          }
-        ]
+        }
       })
 
       const scheduleMap = schedules.reduce((acc, schedule) => {
@@ -600,6 +588,16 @@ export class AttendanceService {
         }
       )
 
+      result.sort((a, b) => {
+        if (a.학번 < b.학번) return -1
+        if (a.학번 > b.학번) return 1
+
+        if (a.이름 < b.이름) return -1
+        if (a.이름 > b.이름) return 1
+
+        return 0
+      })
+
       const workbook = XLSX.utils.book_new()
 
       const athleteWorkSheet = XLSX.utils.json_to_sheet(
@@ -618,13 +616,34 @@ export class AttendanceService {
         )
       )
 
-      const newbieWorkSheet = XLSX.utils.json_to_sheet(
-        result.filter((item) => item.입부년도 === new Date().getFullYear())
+      const athleteNewbieWorkSheet = XLSX.utils.json_to_sheet(
+        result.filter(
+          (item) =>
+            item.type === RosterType.Athlete &&
+            item.입부년도 === new Date().getFullYear()
+        )
+      )
+
+      const staffNewbieWorkSheet = XLSX.utils.json_to_sheet(
+        result.filter(
+          (item) =>
+            item.type === RosterType.Staff &&
+            item.입부년도 === new Date().getFullYear()
+        )
       )
 
       XLSX.utils.book_append_sheet(workbook, athleteWorkSheet, '재학생(선수)')
       XLSX.utils.book_append_sheet(workbook, staffWorkSheet, '재학생(스태프)')
-      XLSX.utils.book_append_sheet(workbook, newbieWorkSheet, '신입생(전체)')
+      XLSX.utils.book_append_sheet(
+        workbook,
+        athleteNewbieWorkSheet,
+        '신입생(선수)'
+      )
+      XLSX.utils.book_append_sheet(
+        workbook,
+        staffNewbieWorkSheet,
+        '신입생(스태프)'
+      )
 
       return XLSX.write(workbook, { bookType: 'xlsx', type: 'buffer' })
     } catch (error) {
