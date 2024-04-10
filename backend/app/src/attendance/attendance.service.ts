@@ -601,35 +601,43 @@ export class AttendanceService {
       const workbook = XLSX.utils.book_new()
 
       const athleteWorkSheet = XLSX.utils.json_to_sheet(
-        result.filter(
-          (item) =>
-            item.type === RosterType.Athlete &&
-            item.입부년도 !== new Date().getFullYear()
-        )
+        result
+          .filter(
+            (item) =>
+              item.type === RosterType.Athlete &&
+              item.입부년도 !== new Date().getFullYear()
+          ) // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          .map(({ 입부년도, type, ...rest }) => rest)
       )
 
       const staffWorkSheet = XLSX.utils.json_to_sheet(
-        result.filter(
-          (item) =>
-            item.type === RosterType.Staff &&
-            item.입부년도 !== new Date().getFullYear()
-        )
+        result
+          .filter(
+            (item) =>
+              item.type === RosterType.Staff &&
+              item.입부년도 !== new Date().getFullYear()
+          ) // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          .map(({ 입부년도, type, ...rest }) => rest)
       )
 
       const athleteNewbieWorkSheet = XLSX.utils.json_to_sheet(
-        result.filter(
-          (item) =>
-            item.type === RosterType.Athlete &&
-            item.입부년도 === new Date().getFullYear()
-        )
+        result
+          .filter(
+            (item) =>
+              item.type === RosterType.Athlete &&
+              item.입부년도 === new Date().getFullYear()
+          ) // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          .map(({ 입부년도, type, ...rest }) => rest)
       )
 
       const staffNewbieWorkSheet = XLSX.utils.json_to_sheet(
-        result.filter(
-          (item) =>
-            item.type === RosterType.Staff &&
-            item.입부년도 === new Date().getFullYear()
-        )
+        result
+          .filter(
+            (item) =>
+              item.type === RosterType.Staff &&
+              item.입부년도 === new Date().getFullYear()
+          ) // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          .map(({ 입부년도, type, ...rest }) => rest)
       )
 
       XLSX.utils.book_append_sheet(workbook, athleteWorkSheet, '재학생(선수)')
