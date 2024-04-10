@@ -78,8 +78,6 @@ export default function AttendanceRangeForm() {
       document.body.appendChild(link)
       link.click()
       link.remove()
-
-      router.refresh()
     } catch (error) {
       if (error instanceof FetchError) {
         toast.error(error.message)
