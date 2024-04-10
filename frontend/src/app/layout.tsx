@@ -12,7 +12,7 @@ const noto = Noto_Sans_KR({
 })
 
 export const viewport: Viewport = {
-  themeColor: '#141517'
+  themeColor: '#00265D'
 }
 
 export const metadata: Metadata = {
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   metadataBase: new URL('https://skku-royals.com'),
   appleWebApp: {
     title: 'ROYALS',
-    statusBarStyle: 'black-translucent',
+    statusBarStyle: 'black',
     startupImage: [
       {
         url: '/splashscreens/iphone5_splash.png',
