@@ -105,13 +105,14 @@ export const RosterFormSchema = z.object({
             'TE',
             'HeadCoach',
             'Coach',
-            'Staff'
+            'Staff',
+            '신입생'
           ].includes(val)
         )
       },
       {
         message:
-          '오펜스 포지션은 QB, OL, RB, WR, TE 중에 하나의 값이어야 합니다'
+          '오펜스 포지션은 QB, OL, RB, WR, TE, 신입생 중에 하나의 값이어야 합니다'
       }
     ),
   defPosition: z
@@ -119,10 +120,13 @@ export const RosterFormSchema = z.object({
     .optional()
     .refine(
       (val) => {
-        return val === undefined || ['DL', 'LB', 'HYB', 'DB'].includes(val)
+        return (
+          val === undefined || ['DL', 'LB', 'HYB', 'DB', '신입생'].includes(val)
+        )
       },
       {
-        message: '디펜스 포지션은 DL, LB, HYB, DB 중에 하나의 값이어야 합니다'
+        message:
+          '디펜스 포지션은 DL, LB, HYB, DB, 신입생 중에 하나의 값이어야 합니다'
       }
     ),
   splPosition: z
@@ -130,10 +134,11 @@ export const RosterFormSchema = z.object({
     .optional()
     .refine(
       (val) => {
-        return val === undefined || ['S', 'K', 'H', 'P'].includes(val)
+        return val === undefined || ['S', 'K', 'H', 'P', '신입생'].includes(val)
       },
       {
-        message: '디펜스 포지션은 S, K, H, P 중에 하나의 값이어야 합니다'
+        message:
+          '디펜스 포지션은 S, K, H, P, 신입생 중에 하나의 값이어야 합니다'
       }
     )
 })

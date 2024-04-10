@@ -8,6 +8,7 @@ import {
   ArrowRightStartOnRectangleIcon,
   Bars3Icon,
   CalendarIcon,
+  ChartPieIcon,
   HomeIcon,
   LockClosedIcon,
   PencilSquareIcon,
@@ -65,6 +66,12 @@ const navigation = [
     href: '/console/schedule',
     icon: CalendarIcon,
     role: 'Manager'
+  },
+  {
+    name: '출석통계',
+    href: '/console/statistic',
+    icon: ChartPieIcon,
+    role: 'Admin'
   }
 ]
 
