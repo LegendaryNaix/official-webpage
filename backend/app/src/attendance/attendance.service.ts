@@ -512,6 +512,9 @@ export class AttendanceService {
         select: {
           id: true,
           startedAt: true
+        },
+        orderBy: {
+          startedAt: 'asc'
         }
       })
 
