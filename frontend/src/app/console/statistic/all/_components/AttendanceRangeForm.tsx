@@ -185,6 +185,7 @@ export default function AttendanceRangeForm() {
               엑셀파일로 다운로드
             </Button>
             <Button
+              type="button"
               variant="outline"
               className="w-full"
               onClick={() => router.back()}
