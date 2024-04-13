@@ -42,6 +42,7 @@ export default function QuizSection({
     '10': 0
   })
   const [api, setApi] = useState<CarouselApi>()
+  const [isFetching, setIsFetching] = useState(false)
 
   const router = useRouter()
 
@@ -71,18 +72,18 @@ export default function QuizSection({
   }
 
   const handleSubmit = async () => {
-    if (submits[10] === 0) {
-      toast.error('정답을 선택하지 않았습니다')
-      return
-    }
-
-    let score = 0
-
-    answers.forEach((answer, index) => {
-      if (submits[(index + 1).toString()] === answer) score += 1
-    })
-
     try {
+      setIsFetching(true)
+      if (submits[10] === 0) {
+        toast.error('정답을 선택하지 않았습니다')
+        return
+      }
+
+      let score = 0
+
+      answers.forEach((answer, index) => {
+        if (submits[(index + 1).toString()] === answer) score += 1
+      })
       await fetcher.post(
         '/quiz',
         {
@@ -100,6 +101,8 @@ export default function QuizSection({
       } else {
         toast.error('퀴즈를 제출하지 못했습니다')
       }
+    } finally {
+      setIsFetching(false)
     }
   }
 
@@ -215,8 +218,12 @@ export default function QuizSection({
                   <Label>4. {quiz[4]}</Label>
                 </div>
                 {index === 9 && (
-                  <Button variant="accent" onClick={() => handleSubmit()}>
-                    결과 확인
+                  <Button
+                    disabled={isFetching}
+                    variant="accent"
+                    onClick={() => handleSubmit()}
+                  >
+                    정답 제출하기
                   </Button>
                 )}
               </RadioGroup>
