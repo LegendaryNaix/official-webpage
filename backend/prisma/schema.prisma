@@ -110,6 +110,7 @@ model Roster {
   User          User?          @relation(fields: [userId], references: [id], onDelete: SetNull)
   Attendances   Attendance[]
   SurveyTargets SurveyTarget[]
+  Quiz          Quiz[]
 
   @@map("roster")
 }
@@ -236,4 +237,12 @@ model PostAttachment {
   Storage Storage @relation(fields: [storageId], references: [id], onDelete: Cascade)
 
   @@map("postAttachment")
+}
+
+model Quiz {
+  id        Int      @id @default(autoincrement())
+  rosterId  Int      @unique @map("roster_id")
+  score     Int      @default(0)
+  createdAt DateTime @default(now()) @map("created_at")
+  Roster    Roster   @relation(fields: [rosterId], references: [id], onDelete: Cascade)
 }
