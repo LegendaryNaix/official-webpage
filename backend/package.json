@@ -18,7 +18,7 @@
     "@aws-sdk/client-s3": "^3.567.0",
     "@aws-sdk/client-ses": "^3.567.0",
     "@aws-sdk/credential-provider-node": "^3.567.0",
-    "@nestjs-modules/mailer": "1.11.2",
+    "@nestjs-modules/mailer": "2.0.2",
     "@nestjs/cache-manager": "^2.2.2",
     "@nestjs/common": "^10.3.8",
     "@nestjs/config": "^3.2.2",
