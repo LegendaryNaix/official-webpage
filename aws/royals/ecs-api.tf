@@ -43,7 +43,7 @@ resource "aws_lb_target_group" "api" {
 resource "aws_ecs_service" "main" {
   name                              = "skku-royals-ecs-service"
   cluster                           = aws_ecs_cluster.main.id
-  task_definition                   = aws_ecs_task_definition.api.arn
+  task_definition                   = aws_ecs_task_definition.api.family
   desired_count                     = 2
   launch_type                       = "FARGATE"
   health_check_grace_period_seconds = 300

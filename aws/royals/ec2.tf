@@ -21,14 +21,14 @@ resource "aws_instance" "database" {
 
 resource "aws_instance" "cache" {
   ami                         = "ami-0c28dbbd4ed200038"
-  instance_type               = "t4g.micro"
+  instance_type               = "t4g.small"
   subnet_id                   = aws_subnet.private_2.id
   key_name                    = "skku-royals-key-pair"
   vpc_security_group_ids      = [aws_security_group.ec2.id, data.aws_security_group.ssh-allow.id]
   associate_public_ip_address = true
 
   root_block_device {
-    volume_size           = 15
+    volume_size           = 30
     volume_type           = "gp3"
     delete_on_termination = true
   }
