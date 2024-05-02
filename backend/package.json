@@ -30,7 +30,7 @@
     "@prisma/client": "5.13.0",
     "argon2": "^0.40.1",
     "cache-manager": "^5.5.2",
-    "cache-manager-redis-yet": "^4.2.0",
+    "cache-manager-redis-yet": "^5.0.0",
     "cookie-parser": "^1.4.6",
     "express": "^4.19.2",
     "mime-types": "^2.1.35",
