@@ -75,6 +75,7 @@ export default function SubmitSurveyForm({
     setIsFetching(true)
 
     let validReason = true
+
     data.attendances.forEach((attendance, index) => {
       if (
         attendance.response !== AttendanceStatus.Present &&
@@ -85,7 +86,10 @@ export default function SubmitSurveyForm({
         )
         validReason = false
       }
-      if (attendance.reason && attendance.reason.trim().length === 0) {
+      if (
+        attendance.reason !== AttendanceStatus.Present &&
+        attendance.reason?.trim().length === 0
+      ) {
         toast.warning(
           `[#${index + 1} ${schedules[index].name}]의 불참 또는 부분참석 사유가 충분하지 않습니다`
         )
