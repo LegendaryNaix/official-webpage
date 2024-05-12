@@ -73,6 +73,8 @@ export default function SubmitSurveyForm({
 
   const onSubmit = async (data: z.infer<typeof CreateAttendanceFormSchema>) => {
     setIsFetching(true)
+
+    let validReason = true
     data.attendances.forEach((attendance, index) => {
       if (
         attendance.response !== AttendanceStatus.Present &&
@@ -81,10 +83,20 @@ export default function SubmitSurveyForm({
         toast.warning(
           `[#${index + 1} ${schedules[index].name}]의 불참 또는 부분참석 사유를 입력하지 않았습니다`
         )
-        setIsFetching(false)
-        return
+        validReason = false
+      }
+      if (attendance.reason && attendance.reason.trim().length === 0) {
+        toast.warning(
+          `[#${index + 1} ${schedules[index].name}]의 불참 또는 부분참석 사유가 충분하지 않습니다`
+        )
+        validReason = false
       }
     })
+
+    if (!validReason) {
+      setIsFetching(false)
+      return
+    }
 
     try {
       data.attendances.forEach((attendance) => {
