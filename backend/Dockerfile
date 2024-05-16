@@ -2,7 +2,7 @@
 # ex) `docker build -f backend/Dockerfile .`
 
 ### BUILDER ###
-FROM node:20.12.2-alpine AS builder
+FROM node:20.13.1-alpine AS builder
 
 COPY . /build
 WORKDIR /build
@@ -15,7 +15,7 @@ RUN npx prisma generate
 RUN npm run build
 
 ### PRODUCTION ###
-FROM node:20.12.2-alpine
+FROM node:20.13.1-alpine
 
 ENV NODE_ENV=production
 
