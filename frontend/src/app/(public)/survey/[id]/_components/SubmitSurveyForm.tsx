@@ -87,9 +87,10 @@ export default function SubmitSurveyForm({
         validReason = false
       }
       if (
-        attendance.reason !== AttendanceStatus.Present &&
+        attendance.response !== AttendanceStatus.Present &&
         attendance.reason?.trim().length === 0
       ) {
+        console.log(attendance.reason)
         toast.warning(
           `[#${index + 1} ${schedules[index].name}]의 불참 또는 부분참석 사유가 충분하지 않습니다`
         )
