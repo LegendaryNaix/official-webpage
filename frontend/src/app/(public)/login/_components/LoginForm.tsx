@@ -41,7 +41,8 @@ export default function LoginForm() {
       })
 
       if (!res?.error) {
-        router.replace(searchParams.get('callbackUrl') ?? '/console/dashboard')
+        router.refresh()
+        router.push(searchParams.get('callbackUrl') ?? '/console/dashboard')
       } else {
         toast.error('로그인 실패')
       }
