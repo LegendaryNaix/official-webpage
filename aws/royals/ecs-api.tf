@@ -47,6 +47,7 @@ resource "aws_ecs_service" "main" {
   desired_count                     = 2
   launch_type                       = "FARGATE"
   health_check_grace_period_seconds = 300
+  force_new_deployment              = true
 
   network_configuration {
     assign_public_ip = true
